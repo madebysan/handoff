@@ -2,7 +2,6 @@ import { SECTIONS } from '../../lib/interview-data'
 import { Link } from 'react-router-dom'
 import { useInterview } from '../../hooks/useInterview'
 import { CheckCircle2 } from 'lucide-react'
-import * as Icons from 'lucide-react'
 
 interface ProgressSidebarProps {
   currentSectionId: string
@@ -51,7 +50,6 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
         {SECTIONS.map((section) => {
           const isActive = section.id === currentSectionId
           const hasData = sectionHasData(state, section.id)
-          const IconComponent = (Icons as Record<string, React.ComponentType<{ className?: string }>>)[section.icon]
 
           return (
             <button
