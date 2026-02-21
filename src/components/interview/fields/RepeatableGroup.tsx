@@ -16,12 +16,13 @@ export default function RepeatableGroup({ label, items, onAdd, onRemove, childre
       <h3 className="text-sm font-medium text-charcoal mb-4">{label}</h3>
       <div className="space-y-4">
         {items.map((_, index) => (
-          <div key={index} className="relative bg-white rounded-xl border border-border p-5">
+          <div key={index} className="relative bg-white rounded-xl border border-border p-4 sm:p-5">
             {items.length > 1 && (
               <button
                 onClick={() => onRemove(index)}
-                className="absolute top-3 right-3 p-1.5 text-charcoal-muted hover:text-error rounded-lg hover:bg-error-bg transition-colors"
+                className="absolute top-2 right-2 p-2.5 text-charcoal-muted hover:text-error rounded-lg hover:bg-error-bg transition-colors"
                 title="Remove"
+                aria-label="Remove item"
               >
                 <Trash2 className="w-4 h-4" />
               </button>

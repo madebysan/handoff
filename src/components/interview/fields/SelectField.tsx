@@ -19,7 +19,7 @@ export default function SelectField({ label, value, onChange, options, placehold
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-charcoal focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage transition-colors"
+        className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-base text-charcoal focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage transition-colors"
       >
         <option value="">{placeholder || 'Select...'}</option>
         {options.map((opt) => (

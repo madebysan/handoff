@@ -21,7 +21,7 @@ export default function TextField({ label, value, onChange, placeholder, helpTex
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-charcoal placeholder:text-charcoal-muted/50 focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage transition-colors"
+        className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-base text-charcoal placeholder:text-charcoal-muted/50 focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage transition-colors"
       />
     </div>
   )
