@@ -1,4 +1,6 @@
 import { SECTIONS } from '../../lib/interview-data'
+import { mockState } from '../../lib/mock-data'
+import { initialState } from '../../context/InterviewContext'
 import { Link } from 'react-router-dom'
 import { useInterview } from '../../hooks/useInterview'
 import { CheckCircle2 } from 'lucide-react'
@@ -37,14 +39,37 @@ function sectionHasData(state: ReturnType<typeof useInterview>['state'], section
 }
 
 export default function ProgressSidebar({ currentSectionId, onNavigate }: ProgressSidebarProps) {
-  const { state } = useInterview()
+  const { state, dispatch } = useInterview()
+
+  const isDemoMode = state.contacts.length > 0 && state.contacts[0].name === 'David Mitchell'
+
+  const handleToggleDemo = () => {
+    if (isDemoMode) {
+      dispatch({ type: 'LOAD_STATE', state: { ...initialState, currentSection: state.currentSection } })
+    } else {
+      dispatch({ type: 'LOAD_STATE', state: { ...mockState, currentSection: state.currentSection } })
+    }
+  }
 
   return (
     <aside className="w-72 h-screen sticky top-0 border-r border-border bg-white p-6 overflow-y-auto">
-      <Link to="/" className="block mb-8">
+      <Link to="/" className="block mb-6">
         <h2 className="text-lg font-bold text-charcoal">Relay</h2>
         <p className="text-xs text-charcoal-muted">Your letter of instruction</p>
       </Link>
+
+      {/* Demo mode toggle */}
+      <button
+        onClick={handleToggleDemo}
+        className="w-full flex items-center justify-between mb-6 px-3 py-2 rounded-lg border border-border bg-warm-gray-light hover:bg-warm-gray transition-colors"
+      >
+        <span className="text-xs font-medium text-charcoal-light">
+          {isDemoMode ? 'Prefilled demo' : 'Empty state'}
+        </span>
+        <div className={`relative w-9 h-5 rounded-full transition-colors ${isDemoMode ? 'bg-sage' : 'bg-charcoal-muted/30'}`}>
+          <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[18px]' : 'left-0.5'}`} />
+        </div>
+      </button>
 
       <nav className="space-y-1">
         {SECTIONS.map((section) => {

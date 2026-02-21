@@ -1,4 +1,7 @@
 import { SECTIONS } from '../../lib/interview-data'
+import { mockState } from '../../lib/mock-data'
+import { initialState } from '../../context/InterviewContext'
+import { useInterview } from '../../hooks/useInterview'
 import { Link } from 'react-router-dom'
 
 interface ProgressBarProps {
@@ -7,8 +10,19 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBarProps) {
+  const { state, dispatch } = useInterview()
   const currentIndex = SECTIONS.findIndex(s => s.id === currentSectionId)
   const progress = ((currentIndex + 1) / SECTIONS.length) * 100
+
+  const isDemoMode = state.contacts.length > 0 && state.contacts[0].name === 'David Mitchell'
+
+  const handleToggleDemo = () => {
+    if (isDemoMode) {
+      dispatch({ type: 'LOAD_STATE', state: { ...initialState, currentSection: state.currentSection } })
+    } else {
+      dispatch({ type: 'LOAD_STATE', state: { ...mockState, currentSection: state.currentSection } })
+    }
+  }
 
   return (
     <div className="sticky top-0 z-50 bg-white border-b border-border">
@@ -17,9 +31,16 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
         <span className="text-sm font-medium text-charcoal flex-1 truncate">
           {SECTIONS[currentIndex]?.letter}. {SECTIONS[currentIndex]?.title}
         </span>
-        <span className="text-xs text-charcoal-muted ml-2 flex-shrink-0">
-          {currentIndex + 1}/{SECTIONS.length}
-        </span>
+        <button
+          onClick={handleToggleDemo}
+          className="flex items-center gap-1.5 ml-2 flex-shrink-0"
+          aria-label={isDemoMode ? 'Switch to empty state' : 'Switch to demo data'}
+        >
+          <span className="text-[10px] text-charcoal-muted">{isDemoMode ? 'Demo' : 'Empty'}</span>
+          <div className={`relative w-7 h-4 rounded-full transition-colors ${isDemoMode ? 'bg-sage' : 'bg-charcoal-muted/30'}`}>
+            <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[14px]' : 'left-0.5'}`} />
+          </div>
+        </button>
       </div>
       <div className="h-1 bg-warm-gray">
         <div
