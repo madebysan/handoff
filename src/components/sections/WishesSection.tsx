@@ -1,0 +1,65 @@
+import { useInterview } from '../../hooks/useInterview'
+import { SECTIONS } from '../../lib/interview-data'
+import SectionIntro from '../interview/SectionIntro'
+import TextArea from '../interview/fields/TextArea'
+
+export default function WishesSection() {
+  const { state, dispatch } = useInterview()
+  const section = SECTIONS[9]
+
+  const update = (field: string, value: string) => {
+    dispatch({ type: 'SET_NESTED_FIELD', section: 'wishes', field, value })
+  }
+
+  return (
+    <div>
+      <SectionIntro {...section} />
+
+      <div className="bg-sage-bg/50 rounded-lg p-4 mb-8 text-sm text-charcoal-light">
+        Take a moment with this section. There are no right or wrong answers — just what matters to you. Many people find this section unexpectedly meaningful.
+      </div>
+
+      <TextArea
+        label="Funeral or memorial preferences"
+        value={state.wishes.funeralPreferences}
+        onChange={(v) => update('funeralPreferences', v)}
+        placeholder="Burial or cremation? Any specific wishes for a service? Music, readings, location? Do you want a celebration of life, a traditional service, or something else entirely?"
+        rows={4}
+      />
+
+      <TextArea
+        label="Organ donation"
+        value={state.wishes.organDonation}
+        onChange={(v) => update('organDonation', v)}
+        placeholder="Are you registered as an organ donor? Any specific wishes about organ or tissue donation? e.g., Yes, registered through the DMV. I'm comfortable with any organ donation."
+        rows={3}
+      />
+
+      <TextArea
+        label="Personal messages"
+        value={state.wishes.personalMessages}
+        onChange={(v) => update('personalMessages', v)}
+        placeholder="Is there anything you want specific people to know? This could be as simple as 'Tell my kids I was proud of them' or as detailed as individual letters. Write whatever feels right."
+        helpText="This is entirely optional, but many people find it the most meaningful part"
+        rows={6}
+      />
+
+      <TextArea
+        label="Values and what matters most"
+        value={state.wishes.valuesStatement}
+        onChange={(v) => update('valuesStatement', v)}
+        placeholder="What do you want your family to remember about what mattered to you? What principles guided your life? This is your chance to say it in your own words."
+        helpText="Sometimes called an 'ethical will' — a statement of values rather than valuables"
+        rows={6}
+      />
+
+      <TextArea
+        label="Anything else"
+        value={state.wishes.otherWishes}
+        onChange={(v) => update('otherWishes', v)}
+        placeholder="Charitable giving wishes, specific instructions, or anything else your family should know about your preferences"
+        rows={3}
+      />
+    </div>
+  )
+}

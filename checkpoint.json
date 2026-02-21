@@ -1,0 +1,37 @@
+{
+  "project": "relay",
+  "type": "react-web",
+  "started_at": "2026-02-21T21:30:00Z",
+  "current_phase": 1,
+  "current_phase_step": "scaffolding project",
+  "iteration": 1,
+  "last_clean_commit": null,
+  "phases": {
+    "1_implement": {
+      "status": "in_progress",
+      "features": [
+        { "name": "project-scaffold", "status": "in_progress", "approach": "vite react-ts + tailwind + shadcn + router", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "interview-state-context", "status": "pending", "approach": "React Context + useReducer", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "interview-layout", "status": "pending", "approach": "sidebar + progress + section shell", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "reusable-field-components", "status": "pending", "approach": "TextField, TextArea, RepeatableGroup, SelectField, RadioGroup", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "all-10-sections", "status": "pending", "approach": "hybrid: structured fields + guided free-text", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "auto-save-localstorage", "status": "pending", "approach": "debounced save, resume prompt, security warning", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "landing-page", "status": "pending", "approach": "hero + value prop + do-it-together + CTA", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "markdown-export", "status": "pending", "approach": "client-side string templating", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "pdf-export", "status": "pending", "approach": "jsPDF with cover, TOC, professional layout", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "export-page-guidance", "status": "pending", "approach": "download options + storage/sharing recs", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "mobile-responsive", "status": "pending", "approach": "sidebar collapse, touch targets, responsive type", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
+        { "name": "polish-pass", "status": "pending", "approach": "transitions, loading states, empty states, copy", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] }
+      ]
+    },
+    "2_test": { "status": "pending", "tests_passed": 0, "tests_failed": 0 },
+    "3_qa": { "status": "pending", "issues_found": 0, "issues_fixed": 0 },
+    "4_visual": { "status": "pending", "agentation_available": false, "agentation_session_id": null, "passes": [], "total_issues_found": 0, "total_issues_fixed": 0, "total_passes": 0, "exit_reason": null },
+    "5_security": { "status": "pending" },
+    "6_verify": { "status": "pending" }
+  },
+  "decisions_made": [],
+  "regressions_caught": [],
+  "deferred_to_v1": [],
+  "blocked": []
+}
