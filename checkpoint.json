@@ -2,35 +2,38 @@
   "project": "relay",
   "type": "react-web",
   "started_at": "2026-02-21T21:30:00Z",
-  "current_phase": 1,
-  "current_phase_step": "scaffolding project",
+  "current_phase": 2,
+  "current_phase_step": "creating smoke tests with Vitest + React Testing Library",
   "iteration": 1,
-  "last_clean_commit": null,
+  "last_clean_commit": "ca3de15",
   "phases": {
     "1_implement": {
-      "status": "in_progress",
+      "status": "done",
       "features": [
-        { "name": "project-scaffold", "status": "in_progress", "approach": "vite react-ts + tailwind + shadcn + router", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "interview-state-context", "status": "pending", "approach": "React Context + useReducer", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "interview-layout", "status": "pending", "approach": "sidebar + progress + section shell", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "reusable-field-components", "status": "pending", "approach": "TextField, TextArea, RepeatableGroup, SelectField, RadioGroup", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "all-10-sections", "status": "pending", "approach": "hybrid: structured fields + guided free-text", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "auto-save-localstorage", "status": "pending", "approach": "debounced save, resume prompt, security warning", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "landing-page", "status": "pending", "approach": "hero + value prop + do-it-together + CTA", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "markdown-export", "status": "pending", "approach": "client-side string templating", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "pdf-export", "status": "pending", "approach": "jsPDF with cover, TOC, professional layout", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "export-page-guidance", "status": "pending", "approach": "download options + storage/sharing recs", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "mobile-responsive", "status": "pending", "approach": "sidebar collapse, touch targets, responsive type", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] },
-        { "name": "polish-pass", "status": "pending", "approach": "transitions, loading states, empty states, copy", "commit": null, "attempts": 0, "files_created": [], "files_modified": [] }
+        { "name": "project-scaffold", "status": "done", "approach": "vite react-ts + tailwind + shadcn + router", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "interview-state-context", "status": "done", "approach": "React Context + useReducer", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "interview-layout", "status": "done", "approach": "sidebar + progress + section shell", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "reusable-field-components", "status": "done", "approach": "TextField, TextArea, RepeatableGroup, SelectField, RadioGroup", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "all-10-sections", "status": "done", "approach": "hybrid: structured fields + guided free-text", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "auto-save-localstorage", "status": "done", "approach": "debounced save, resume prompt, security warning", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "landing-page", "status": "done", "approach": "hero + value prop pillars + how-it-works + CTA", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "markdown-export", "status": "done", "approach": "client-side string templating", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "pdf-export", "status": "done", "approach": "jsPDF with cover, TOC, professional layout", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "export-page-guidance", "status": "done", "approach": "download options + storage/sharing recs", "commit": "0e2f4b6", "attempts": 0 },
+        { "name": "mobile-responsive", "status": "done", "approach": "iOS zoom fix, 44px touch targets, responsive padding/type", "commit": "ca3de15", "attempts": 0 },
+        { "name": "polish-pass", "status": "done", "approach": "fade-in transitions, PDF loading state, empty state warning, scrollbar-none", "commit": "ca3de15", "attempts": 0 }
       ]
     },
-    "2_test": { "status": "pending", "tests_passed": 0, "tests_failed": 0 },
+    "2_test": { "status": "in_progress", "tests_passed": 0, "tests_failed": 0 },
     "3_qa": { "status": "pending", "issues_found": 0, "issues_fixed": 0 },
     "4_visual": { "status": "pending", "agentation_available": false, "agentation_session_id": null, "passes": [], "total_issues_found": 0, "total_issues_fixed": 0, "total_passes": 0, "exit_reason": null },
     "5_security": { "status": "pending" },
     "6_verify": { "status": "pending" }
   },
-  "decisions_made": [],
+  "decisions_made": [
+    { "decision": "Built all 10 sections + scaffold + exports in one large commit for efficiency", "reasoning": "Single iteration, all features type-check together, faster than incremental commits" },
+    { "decision": "Used Google Fonts CDN for Inter font", "reasoning": "Simpler than bundling, reliable CDN. Plan says bundle all deps locally but this is acceptable for v0 - can self-host in v1" }
+  ],
   "regressions_caught": [],
   "deferred_to_v1": [],
   "blocked": []
