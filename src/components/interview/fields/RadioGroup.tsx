@@ -15,13 +15,13 @@ export default function RadioGroup({ label, value, onChange, options, helpText }
       {helpText && (
         <p className="text-xs text-charcoal-muted mb-1.5">{helpText}</p>
       )}
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         {options.map((opt) => (
           <button
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+            className={`px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors min-h-[44px] ${
               value === opt
                 ? 'bg-sage text-cream border-sage'
                 : 'bg-white text-charcoal-light border-border hover:border-sage'

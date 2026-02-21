@@ -25,7 +25,7 @@ export default function BusinessSection() {
       />
 
       {state.business.hasBusiness === 'Yes' && (
-        <div className="mt-6 space-y-1">
+        <div className="mt-6 space-y-1 animate-fade-in">
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField
               label="Business name"

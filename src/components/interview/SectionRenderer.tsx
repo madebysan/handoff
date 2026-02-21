@@ -40,16 +40,16 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
   if (!SectionComponent || !currentSection) return null
 
   return (
-    <div>
+    <div key={sectionId} className="animate-fade-in">
       <SectionComponent />
 
       {/* Navigation */}
-      <div className="mt-12 pt-8 border-t border-border flex items-center justify-between">
+      <div className="mt-12 pt-8 border-t border-border flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div>
           {!isFirst && onPrev && (
             <button
               onClick={onPrev}
-              className="inline-flex items-center gap-2 text-charcoal-muted hover:text-charcoal transition-colors"
+              className="inline-flex items-center justify-center gap-2 text-charcoal-muted hover:text-charcoal transition-colors min-h-[44px]"
             >
               <ArrowLeft className="w-4 h-4" />
               Previous
@@ -60,14 +60,14 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
         <div className="flex items-center gap-3">
           <button
             onClick={onSkip}
-            className="inline-flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors min-h-[44px] px-3"
           >
             <SkipForward className="w-3.5 h-3.5" />
             Skip
           </button>
           <button
             onClick={onNext}
-            className="inline-flex items-center gap-2 bg-sage text-cream px-6 py-2.5 rounded-lg font-medium hover:bg-sage-dark transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-sage text-cream px-6 py-3 rounded-lg font-medium hover:bg-sage-dark transition-colors flex-1 sm:flex-initial min-h-[44px]"
           >
             {isLast ? 'Generate Document' : 'Continue'}
             {!isLast && <ArrowRight className="w-4 h-4" />}

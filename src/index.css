@@ -36,3 +36,29 @@ html {
   outline: 2px solid var(--color-sage);
   outline-offset: 2px;
 }
+
+/* Hide scrollbar on mobile section dots */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Prevent iOS from zooming on input focus (handled via text-base class) */
+@supports (-webkit-touch-callout: none) {
+  select, textarea, input {
+    font-size: 16px !important;
+  }
+}
+
+/* Section fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
