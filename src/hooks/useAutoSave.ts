@@ -3,7 +3,7 @@ import type { InterviewState } from '../context/InterviewContext'
 import { saveToLocalStorage } from '../lib/storage'
 
 export function useAutoSave(state: InterviewState, dispatch: React.Dispatch<{ type: 'SET_LAST_SAVED'; timestamp: string }>) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   useEffect(() => {
     // Debounce: save 1 second after last change
