@@ -100,6 +100,7 @@ export const mockState: InterviewState = {
       policyNumberLocation: 'Policy documents in the fireproof safe, top shelf. Also a PDF in Google Drive under Insurance folder.',
       agentContact: 'Mike Torres, (415) 555-0299, mike.torres@nm.com',
       isEmployerProvided: 'No',
+      employerContact: '',
       notes: '$500,000 term policy, 20-year term started 2021. Premiums are auto-drafted from Chase checking.',
     },
     {
@@ -109,6 +110,7 @@ export const mockState: InterviewState = {
       policyNumberLocation: 'Card is in my wallet. Policy details on Blue Shield website — login in 1Password.',
       agentContact: 'Through employer benefits portal',
       isEmployerProvided: 'Yes',
+      employerContact: 'Acme Design Co — HR benefits: (415) 555-0300, benefits@acmedesign.co',
       notes: 'Family plan covering David and both kids. Dental and vision are separate through Guardian.',
     },
     {
@@ -118,6 +120,7 @@ export const mockState: InterviewState = {
       policyNumberLocation: 'Filing cabinet in home office, "Insurance" folder. Also in Google Drive.',
       agentContact: 'Janet Wu, (415) 555-0188, janet.wu@statefarm.com',
       isEmployerProvided: 'No',
+      employerContact: '',
       notes: 'Covers the house and personal property. Earthquake rider is separate. Annual premium ~$2,400.',
     },
   ],
@@ -187,6 +190,7 @@ export const mockState: InterviewState = {
   debts: [
     {
       id: crypto.randomUUID(),
+      direction: 'I owe',
       debtType: 'Mortgage',
       lender: 'Chase Home Lending',
       approxBalance: '$380,000',
@@ -195,11 +199,21 @@ export const mockState: InterviewState = {
     },
     {
       id: crypto.randomUUID(),
+      direction: 'I owe',
       debtType: 'Student Loan',
       lender: 'Federal (Dept. of Education / Nelnet)',
       approxBalance: '$12,000',
       isCosigned: 'No',
       payoffNotes: 'Remaining from grad school. $350/month. Federal loans are discharged upon death — David should NOT pay these off. Just notify Nelnet with a death certificate.',
+    },
+    {
+      id: crypto.randomUUID(),
+      direction: 'Owed to me',
+      debtType: 'Personal loan',
+      lender: 'Brother Mike',
+      approxBalance: '$5,000',
+      isCosigned: '',
+      payoffNotes: 'Lent Mike $5K in 2023 for his car repair. No formal agreement but he knows. David can bring it up with him whenever — no rush, no interest.',
     },
   ],
   business: {
@@ -221,6 +235,7 @@ export const mockState: InterviewState = {
     otherCareNotes: 'Emma is in soccer (Saturday mornings, Golden Gate Park) and piano (Tuesday after school with Mrs. Chen — not related to our attorney). Jack starts T-ball in spring. Their school emergency contacts are David, me, and Lisa, in that order.',
   },
   wishes: {
+    healthcareWishes: 'DNR — do not resuscitate if there\'s no reasonable chance of meaningful recovery. No long-term life support or feeding tubes. Dr. Patel (primary care, 415-555-0142) knows my wishes and has a copy of my advance directive. David is my healthcare proxy and knows I feel strongly about this. If the doctors say there\'s no coming back, let me go.',
     funeralPreferences: 'Cremation. No formal funeral — I\'d rather have a celebration of life at home or at Crissy Field (our favorite family spot). Keep it informal, outdoors if weather allows. Play the "Songs I Love" playlist from my Spotify. Wildflowers instead of formal arrangements. If people want to do something, ask them to donate to SF-Marin Food Bank instead of sending flowers.',
     organDonation: 'Yes — registered organ donor (it\'s on my driver\'s license). I\'m comfortable donating any organs or tissue that can help someone.',
     personalMessages: 'David: You\'ve been my person since we were 23. Thank you for building this life with me. The kids are lucky to have you. Don\'t rush through grief, but don\'t stay stuck in it either. You\'re going to be an amazing single parent — you already are an amazing dad.\n\nEmma and Jack: I am so proud of who you are. Be kind, be curious, take care of each other. I hope you know how much I loved being your mom. Every single day.\n\nLisa: Thank you for always being there. I trust you with the kids more than anyone. You know what I would have wanted for them — raise them to be brave and compassionate.\n\nMom: You showed me what strength looks like. I\'m sorry for the pain this causes you. Lean on Lisa and David. They\'ll take care of you.',

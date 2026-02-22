@@ -78,6 +78,7 @@ export function generateMarkdown(state: InterviewState): string {
       if (p.policyNumberLocation) lines.push(`- **Policy number location:** ${p.policyNumberLocation}`)
       if (p.agentContact) lines.push(`- **Agent:** ${p.agentContact}`)
       if (p.isEmployerProvided) lines.push(`- **Through employer:** ${p.isEmployerProvided}`)
+      if (p.employerContact) lines.push(`- **Employer/HR contact:** ${p.employerContact}`)
       if (p.notes) lines.push(`- **Notes:** ${p.notes}`)
       lines.push('')
     })
@@ -152,9 +153,11 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push(`## ${getSection('debts').letter}. ${getSection('debts').title}`)
     lines.push('')
     state.debts.filter(d => d.lender.trim()).forEach(d => {
-      lines.push(`### ${d.lender}${d.debtType ? ` — ${d.debtType}` : ''}`)
+      const isOwedToMe = d.direction === 'Owed to me'
+      const dirLabel = isOwedToMe ? ' *(owed to me)*' : ''
+      lines.push(`### ${d.lender}${d.debtType ? ` — ${d.debtType}` : ''}${dirLabel}`)
       if (d.approxBalance) lines.push(`- **Approximate balance:** ${d.approxBalance}`)
-      if (d.isCosigned) lines.push(`- **Co-signed:** ${d.isCosigned}`)
+      if (!isOwedToMe && d.isCosigned) lines.push(`- **Co-signed:** ${d.isCosigned}`)
       if (d.payoffNotes) lines.push(`- **Notes:** ${d.payoffNotes}`)
       lines.push('')
     })
@@ -219,6 +222,7 @@ export function generateMarkdown(state: InterviewState): string {
 
   // Section K: Wishes
   const wishFields = [
+    { key: 'healthcareWishes', label: 'Healthcare & End-of-Life Wishes' },
     { key: 'funeralPreferences', label: 'Funeral or Memorial Preferences' },
     { key: 'organDonation', label: 'Organ Donation' },
     { key: 'personalMessages', label: 'Personal Messages' },

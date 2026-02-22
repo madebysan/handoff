@@ -20,6 +20,15 @@ export default function WishesSection() {
       </div>
 
       <TextArea
+        label="Healthcare & end-of-life wishes"
+        value={state.wishes.healthcareWishes}
+        onChange={(v) => update('healthcareWishes', v)}
+        placeholder={"Do you have a DNR (Do Not Resuscitate) preference? What are your wishes about life support, ventilators, or feeding tubes? Any medical treatments you want or want to avoid?\n\ne.g., \"No life support if there's no reasonable chance of recovery. DNR is in my advance directive. Dr. Patel (my primary care) knows my wishes.\""}
+        helpText="Even if you have an advance directive, writing your wishes here in plain language helps your family understand your intent"
+        rows={4}
+      />
+
+      <TextArea
         label="Funeral or memorial preferences"
         value={state.wishes.funeralPreferences}
         onChange={(v) => update('funeralPreferences', v)}

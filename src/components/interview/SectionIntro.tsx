@@ -1,16 +1,31 @@
+import {
+  CircleUser, Users, Landmark, Shield, Home, Monitor, FileText,
+  CreditCard, Briefcase, Heart, PenLine, Fingerprint,
+  type LucideIcon,
+} from 'lucide-react'
+
+// Same icon map used in ProgressSidebar
+const ICON_MAP: Record<string, LucideIcon> = {
+  CircleUser, Users, Landmark, Shield, Home, Monitor, FileText,
+  CreditCard, Briefcase, Heart, PenLine, Fingerprint,
+}
+
 interface SectionIntroProps {
   title: string
   letter: string
   intro: string
   scenario: string
+  icon?: string
 }
 
-export default function SectionIntro({ title, letter, intro, scenario }: SectionIntroProps) {
+export default function SectionIntro({ title, letter, intro, scenario, icon }: SectionIntroProps) {
+  const IconComponent = icon ? ICON_MAP[icon] : null
+
   return (
     <div className="mb-10">
       <div className="flex items-center gap-3 mb-4">
         <span className="w-10 h-10 rounded-full bg-sage text-cream flex items-center justify-center font-semibold text-lg">
-          {letter}
+          {IconComponent ? <IconComponent className="w-5 h-5" /> : letter}
         </span>
         <h2 className="text-2xl font-bold text-charcoal">{title}</h2>
       </div>

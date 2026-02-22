@@ -271,7 +271,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-20 sm:pb-28">
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 pt-12 sm:pt-20 pb-14 sm:pb-20">
         <motion.div
           className="max-w-3xl"
           variants={stagger}
@@ -285,7 +285,7 @@ export default function LandingPage() {
             Get your life organized so your family never has to guess.
           </motion.h1>
           <motion.p
-            className="text-lg sm:text-xl text-charcoal-light leading-relaxed mb-10 max-w-2xl"
+            className="text-lg sm:text-xl text-charcoal-light/90 leading-relaxed mb-10 max-w-2xl"
             variants={item}
           >
             Handoff guides you through everything your family would need to know — accounts, documents, wishes, and more — and produces a single document you control entirely.
@@ -309,7 +309,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features — interactive two-column */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 pb-20 sm:pb-28">
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 pb-14 sm:pb-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-start">
           {/* Left column — heading + visual */}
           <div>
@@ -323,14 +323,16 @@ export default function LandingPage() {
               Most people never organize this information. When something happens, families are left scrambling — searching through drawers, guessing at passwords, calling banks. Handoff fixes that.
             </p>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={FEATURES[activeFeature].key}
-                {...fade}
-              >
-                <FeatureVisual featureKey={FEATURES[activeFeature].key} />
-              </motion.div>
-            </AnimatePresence>
+            <div className="min-h-[340px] sm:min-h-[360px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={FEATURES[activeFeature].key}
+                  {...fade}
+                >
+                  <FeatureVisual featureKey={FEATURES[activeFeature].key} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Right column — clickable feature items */}
@@ -364,7 +366,7 @@ export default function LandingPage() {
 
       {/* How it works */}
       <section className="bg-white border-y border-border">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-24">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
           <span className="inline-block text-xs font-medium text-charcoal-muted bg-cream border border-border px-3.5 py-1.5 rounded-full mb-5">
             How it works
           </span>
@@ -404,7 +406,7 @@ export default function LandingPage() {
       </section>
 
       {/* Privacy callout */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-24">
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
         <motion.div
           className="grid gap-8 lg:grid-cols-2 lg:gap-16 items-center"
           variants={scroll}
@@ -449,7 +451,7 @@ export default function LandingPage() {
       </section>
 
       {/* Do it together */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 pb-16 sm:pb-24">
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 pb-12 sm:pb-16">
         <motion.div
           className="bg-charcoal rounded-2xl p-8 sm:p-12 lg:p-16"
           variants={scroll}
@@ -467,7 +469,7 @@ export default function LandingPage() {
             <p className="text-cream/70 leading-relaxed mb-2">
               Thinking about suggesting this to a parent or partner? The easiest way to start the conversation is to do it yourself first, then share:
             </p>
-            <p className="text-cream/90 font-medium italic mb-8 text-lg">
+            <p className="text-cream font-medium italic mb-8 text-xl sm:text-2xl leading-snug">
               "I just organized all my information for the family. Took 30 minutes. Want to do yours?"
             </p>
             <Link

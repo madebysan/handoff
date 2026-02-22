@@ -58,6 +58,15 @@ export default function InsuranceSection() {
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'insurancePolicies', index, field: 'isEmployerProvided', value: v })}
               options={['Yes', 'No']}
             />
+            {state.insurancePolicies[index].isEmployerProvided === 'Yes' && (
+              <TextField
+                label="Employer & HR/benefits contact"
+                value={state.insurancePolicies[index].employerContact}
+                onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'insurancePolicies', index, field: 'employerContact', value: v })}
+                placeholder="e.g., Acme Corp — HR benefits line: (555) 123-4567"
+                helpText="Your family will need this to file a claim through your employer"
+              />
+            )}
             <TextArea
               label="Notes"
               value={state.insurancePolicies[index].notes}

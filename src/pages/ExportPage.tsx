@@ -66,7 +66,7 @@ export default function ExportPage() {
           <h1 className="text-3xl sm:text-4xl font-bold text-charcoal mb-4">
             You just created something invaluable.
           </h1>
-          <p className="text-base sm:text-lg text-charcoal-light leading-relaxed">
+          <p className="text-base sm:text-lg text-charcoal-light/90 leading-relaxed">
             Most people never organize this information. Your family will thank you for taking the time. Download your letter of instruction below and store it somewhere safe.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function ExportPage() {
           <button
             onClick={handleDownloadPDF}
             disabled={generatingPDF}
-            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border border-border hover:border-sage transition-colors text-left disabled:opacity-60 disabled:cursor-wait"
+            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border-2 border-border hover:border-sage hover:shadow-sm transition-all text-left disabled:opacity-60 disabled:cursor-wait"
           >
             <div className="w-12 h-12 bg-sage-bg rounded-lg flex items-center justify-center flex-shrink-0">
               {generatingPDF ? (
@@ -102,20 +102,20 @@ export default function ExportPage() {
               <div className="font-semibold text-charcoal">
                 {generatingPDF ? 'Generating...' : 'Download PDF'}
               </div>
-              <div className="text-sm text-charcoal-muted">Professional format, ready to print or share</div>
+              <div className="text-sm text-charcoal-light">Professional format, ready to print or share</div>
             </div>
           </button>
 
           <button
             onClick={handleDownloadMarkdown}
-            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border border-border hover:border-sage transition-colors text-left"
+            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border-2 border-border hover:border-sage hover:shadow-sm transition-all text-left"
           >
             <div className="w-12 h-12 bg-sage-bg rounded-lg flex items-center justify-center flex-shrink-0">
               <FileText className="w-6 h-6 text-sage-dark" />
             </div>
             <div>
               <div className="font-semibold text-charcoal">Download Markdown</div>
-              <div className="text-sm text-charcoal-muted">Portable, editable, future-proof format</div>
+              <div className="text-sm text-charcoal-light">Portable, editable, future-proof format</div>
             </div>
           </button>
         </div>
