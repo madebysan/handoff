@@ -21,10 +21,10 @@ export default function RadioGroup({ label, value, onChange, options, helpText }
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className={`px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors min-h-[44px] ${
+            className={`px-4 py-2.5 rounded-full text-sm font-medium border transition-colors min-h-[44px] ${
               value === opt
-                ? 'bg-sage text-cream border-sage'
-                : 'bg-white text-charcoal-light border-border hover:border-sage'
+                ? 'bg-charcoal text-cream border-charcoal'
+                : 'bg-white text-charcoal-light border-warm-gray hover:border-sage'
             }`}
           >
             {opt}

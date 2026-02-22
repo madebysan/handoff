@@ -3,6 +3,16 @@ import { mockState } from '../../lib/mock-data'
 import { initialState } from '../../context/InterviewContext'
 import { useInterview } from '../../hooks/useInterview'
 import { Link } from 'react-router-dom'
+import {
+  CircleUser, Users, Landmark, Shield, Home, Monitor, FileText,
+  CreditCard, Briefcase, Heart, PenLine, Fingerprint,
+  type LucideIcon,
+} from 'lucide-react'
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  CircleUser, Users, Landmark, Shield, Home, Monitor, FileText,
+  CreditCard, Briefcase, Heart, PenLine, Fingerprint,
+}
 
 interface ProgressBarProps {
   currentSectionId: string
@@ -27,9 +37,9 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
   return (
     <div className="sticky top-0 z-50 bg-white border-b border-border">
       <div className="px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-sm font-bold text-charcoal mr-3">Relay</Link>
+        <Link to="/" className="text-sm font-bold text-charcoal mr-3">Handoff</Link>
         <span className="text-sm font-medium text-charcoal flex-1 truncate">
-          {SECTIONS[currentIndex]?.letter}. {SECTIONS[currentIndex]?.title}
+          {SECTIONS[currentIndex]?.title}
         </span>
         <button
           onClick={handleToggleDemo}
@@ -49,22 +59,29 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
         />
       </div>
 
-      {/* Section dots for quick nav */}
+      {/* Section icons for quick nav */}
       <div className="px-3 py-2 flex gap-1 overflow-x-auto scrollbar-none">
-        {SECTIONS.map((section, i) => (
-          <button
-            key={section.id}
-            onClick={() => onNavigate(section.id)}
-            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs flex-shrink-0 transition-colors ${
-              i === currentIndex
-                ? 'bg-sage text-cream'
-                : 'bg-warm-gray text-charcoal-muted active:bg-warm-gray-light'
-            }`}
-            aria-label={section.title}
-          >
-            {section.letter}
-          </button>
-        ))}
+        {SECTIONS.map((section, i) => {
+          const IconComponent = ICON_MAP[section.icon]
+          return (
+            <button
+              key={section.id}
+              onClick={() => onNavigate(section.id)}
+              className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                i === currentIndex
+                  ? 'bg-sage text-cream'
+                  : 'bg-warm-gray text-charcoal-muted active:bg-warm-gray-light'
+              }`}
+              aria-label={section.title}
+            >
+              {IconComponent ? (
+                <IconComponent className="w-3.5 h-3.5" />
+              ) : (
+                section.letter
+              )}
+            </button>
+          )
+        })}
       </div>
     </div>
   )

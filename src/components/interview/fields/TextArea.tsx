@@ -21,7 +21,7 @@ export default function TextArea({ label, value, onChange, placeholder, helpText
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-base text-charcoal placeholder:text-charcoal-muted/50 focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage transition-colors resize-y"
+        className="w-full px-3 py-2.5 bg-white border border-warm-gray rounded-lg text-sm text-charcoal placeholder:text-charcoal-muted/50 focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/30 transition-colors resize-y"
       />
     </div>
   )

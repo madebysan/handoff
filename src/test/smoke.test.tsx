@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { InterviewProvider } from '../context/InterviewContext'
 import LandingPage from '../pages/LandingPage'
@@ -33,6 +33,19 @@ function renderWithProviders(ui: React.ReactElement, { route = '/' } = {}) {
   )
 }
 
+function renderInterviewPage({ route = '/interview' } = {}) {
+  return render(
+    <MemoryRouter initialEntries={[route]}>
+      <InterviewProvider>
+        <Routes>
+          <Route path="/interview" element={<InterviewPage />} />
+          <Route path="/interview/:sectionId" element={<InterviewPage />} />
+        </Routes>
+      </InterviewProvider>
+    </MemoryRouter>
+  )
+}
+
 beforeEach(() => {
   localStorageMock.clear()
   vi.clearAllMocks()
@@ -42,7 +55,7 @@ describe('Landing Page', () => {
   it('renders the hero section', () => {
     renderWithProviders(<LandingPage />)
     expect(screen.getByText(/Get your life organized/)).toBeInTheDocument()
-    expect(screen.getAllByText('Start Your Relay').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Get Started').length).toBeGreaterThan(0)
   })
 
   it('renders value propositions', () => {
@@ -69,26 +82,26 @@ describe('Landing Page', () => {
 })
 
 describe('Interview Page', () => {
-  it('renders the contacts section by default', () => {
-    renderWithProviders(<InterviewPage />, { route: '/interview' })
-    expect(screen.getByText('Key Contacts')).toBeInTheDocument()
+  it('renders the about me section by default', () => {
+    renderInterviewPage({ route: '/interview' })
+    expect(screen.getAllByText('About You').length).toBeGreaterThan(0)
     expect(screen.getByText('Continue')).toBeInTheDocument()
   })
 
   it('renders contacts section with the correct fields', () => {
-    renderWithProviders(<InterviewPage />, { route: '/interview/contacts' })
+    renderInterviewPage({ route: '/interview/contacts' })
     expect(screen.getByText('Full name')).toBeInTheDocument()
     expect(screen.getByText('Phone')).toBeInTheDocument()
     expect(screen.getByText('Email')).toBeInTheDocument()
   })
 
   it('renders the skip button', () => {
-    renderWithProviders(<InterviewPage />, { route: '/interview/contacts' })
+    renderInterviewPage({ route: '/interview/contacts' })
     expect(screen.getByText('Skip')).toBeInTheDocument()
   })
 
   it('does not show Previous on the first section', () => {
-    renderWithProviders(<InterviewPage />, { route: '/interview/contacts' })
+    renderInterviewPage({ route: '/interview/aboutMe' })
     expect(screen.queryByText('Previous')).not.toBeInTheDocument()
   })
 })
@@ -123,14 +136,14 @@ describe('Export Page', () => {
 
 describe('Interview State', () => {
   it('can type into text fields', () => {
-    renderWithProviders(<InterviewPage />, { route: '/interview/contacts' })
+    renderInterviewPage({ route: '/interview/contacts' })
     const nameInput = screen.getByPlaceholderText('Jane Doe')
     fireEvent.change(nameInput, { target: { value: 'John Smith' } })
     expect(nameInput).toHaveValue('John Smith')
   })
 
   it('can add another contact', () => {
-    renderWithProviders(<InterviewPage />, { route: '/interview/contacts' })
+    renderInterviewPage({ route: '/interview/contacts' })
     const addButton = screen.getByText('Add another contact')
     fireEvent.click(addButton)
     const nameInputs = screen.getAllByPlaceholderText('Jane Doe')

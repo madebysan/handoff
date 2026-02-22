@@ -1,11 +1,11 @@
 import { useInterview } from '../../hooks/useInterview'
-import { SECTIONS } from '../../lib/interview-data'
+import { getSection } from '../../lib/interview-data'
 import SectionIntro from '../interview/SectionIntro'
 import TextArea from '../interview/fields/TextArea'
 
 export default function DependentsSection() {
   const { state, dispatch } = useInterview()
-  const section = SECTIONS[8]
+  const section = getSection('dependents')
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'dependents', field, value })

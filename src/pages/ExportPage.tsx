@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useInterview } from '../hooks/useInterview'
 import { generateMarkdown } from '../lib/markdown-generator'
 import { generatePDF } from '../lib/pdf-generator'
-import { FileText, FileDown, ArrowLeft, Copy, Check, AlertCircle, Loader2 } from 'lucide-react'
+import { FileText, FileDown, ArrowLeft, Copy, Check, AlertCircle, Loader2, Scale } from 'lucide-react'
 import { useState, useMemo } from 'react'
 import GuidanceSection from '../components/export/GuidanceSection'
 import DoItTogetherInvite from '../components/export/DoItTogetherInvite'
@@ -33,7 +33,7 @@ export default function ExportPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `relay-letter-of-instruction-${new Date().toISOString().split('T')[0]}.md`
+    a.download = `handoff-letter-of-instruction-${new Date().toISOString().split('T')[0]}.md`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -57,7 +57,7 @@ export default function ExportPage() {
   return (
     <div className="min-h-screen bg-cream">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-16 animate-fade-in">
-        <Link to="/interview/wishes" className="inline-flex items-center gap-2 text-charcoal-muted hover:text-charcoal mb-6 sm:mb-8 transition-colors min-h-[44px]">
+        <Link to="/interview/verification" className="inline-flex items-center gap-2 text-charcoal-muted hover:text-charcoal mb-6 sm:mb-8 transition-colors min-h-[44px]">
           <ArrowLeft className="w-4 h-4" />
           Back to interview
         </Link>
@@ -120,6 +120,17 @@ export default function ExportPage() {
           </button>
         </div>
 
+        {/* Legal disclaimer */}
+        <div className="flex gap-3 bg-warm-gray-light rounded-xl p-4 sm:p-5 mb-10 border border-border">
+          <Scale className="w-5 h-5 text-charcoal-muted flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-charcoal mb-1">This is not a legal document.</p>
+            <p className="text-sm text-charcoal-light leading-relaxed">
+              Your letter of instruction is a practical guide for your family — it organizes what they need to know. To make any of your wishes legally binding, share this document with an estate attorney who can help you create or update a will, power of attorney, and other legal instruments.
+            </p>
+          </div>
+        </div>
+
         <div className="mb-4">
           <button
             onClick={handleCopyMarkdown}
@@ -139,7 +150,7 @@ export default function ExportPage() {
         <DoItTogetherInvite />
 
         <div className="mt-12 sm:mt-16 text-center text-sm text-charcoal-muted">
-          <p>Generated with Relay — free, private, yours to keep.</p>
+          <p>Generated with Handoff — free, private, yours to keep.</p>
         </div>
       </div>
     </div>

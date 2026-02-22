@@ -42,7 +42,7 @@ export default function GuidanceSection() {
           <div>
             <h3 className="font-semibold text-charcoal mb-2">Keep it current</h3>
             <p className="text-charcoal-light text-sm leading-relaxed">
-              Revisit and regenerate your document annually or after major life events: marriage, divorce, birth of a child, home purchase, new accounts, job change. Relay is always here when you need to update it.
+              Revisit and regenerate your document annually or after major life events: marriage, divorce, birth of a child, home purchase, new accounts, job change. Handoff is always here when you need to update it.
             </p>
           </div>
         </div>

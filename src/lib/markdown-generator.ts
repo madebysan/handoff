@@ -1,5 +1,5 @@
 import type { InterviewState } from '../context/InterviewContext'
-import { SECTIONS } from './interview-data'
+import { getSection } from './interview-data'
 
 export function generateMarkdown(state: InterviewState): string {
   const lines: string[] = []
@@ -16,9 +16,30 @@ export function generateMarkdown(state: InterviewState): string {
   lines.push('---')
   lines.push('')
 
-  // Section A: Contacts
+  // Section A: About You
+  const hasAboutMe = state.aboutMe?.fullName?.trim() || state.aboutMe?.reason?.trim() || state.aboutMe?.personalContext?.trim()
+  if (hasAboutMe) {
+    lines.push(`## ${getSection('aboutMe').letter}. ${getSection('aboutMe').title}`)
+    lines.push('')
+    if (state.aboutMe.fullName?.trim()) lines.push(`**Full Name:** ${state.aboutMe.fullName}`)
+    if (state.aboutMe.dateOfBirth?.trim()) lines.push(`**Date of Birth:** ${state.aboutMe.dateOfBirth}`)
+    if (state.aboutMe.location?.trim()) lines.push(`**Location:** ${state.aboutMe.location}`)
+    if (state.aboutMe.reason?.trim()) lines.push(`**Reason for Creating This:** ${state.aboutMe.reason}`)
+    if (state.aboutMe.intendedFor?.trim()) lines.push(`**Intended For:** ${state.aboutMe.intendedFor}`)
+    lines.push('')
+    if (state.aboutMe.personalContext?.trim()) {
+      lines.push('### Personal Context')
+      lines.push('')
+      lines.push(state.aboutMe.personalContext.trim())
+      lines.push('')
+    }
+    lines.push('---')
+    lines.push('')
+  }
+
+  // Section B: Contacts
   if (state.contacts.some(c => c.name.trim())) {
-    lines.push(`## ${SECTIONS[0].letter}. ${SECTIONS[0].title}`)
+    lines.push(`## ${getSection('contacts').letter}. ${getSection('contacts').title}`)
     lines.push('')
     state.contacts.filter(c => c.name.trim()).forEach(c => {
       lines.push(`### ${c.name}`)
@@ -33,9 +54,9 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section B: Financial
+  // Section C: Financial
   if (state.financialAccounts.some(a => a.institution.trim())) {
-    lines.push(`## ${SECTIONS[1].letter}. ${SECTIONS[1].title}`)
+    lines.push(`## ${getSection('financial').letter}. ${getSection('financial').title}`)
     lines.push('')
     state.financialAccounts.filter(a => a.institution.trim()).forEach(a => {
       lines.push(`### ${a.institution}${a.accountType ? ` (${a.accountType})` : ''}`)
@@ -48,9 +69,9 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section C: Insurance
+  // Section D: Insurance
   if (state.insurancePolicies.some(p => p.carrier.trim())) {
-    lines.push(`## ${SECTIONS[2].letter}. ${SECTIONS[2].title}`)
+    lines.push(`## ${getSection('insurance').letter}. ${getSection('insurance').title}`)
     lines.push('')
     state.insurancePolicies.filter(p => p.carrier.trim()).forEach(p => {
       lines.push(`### ${p.carrier}${p.insuranceType ? ` — ${p.insuranceType}` : ''}`)
@@ -64,9 +85,9 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section D: Property
+  // Section E: Property
   if (state.properties.some(p => p.propertyType.trim() || p.description.trim())) {
-    lines.push(`## ${SECTIONS[3].letter}. ${SECTIONS[3].title}`)
+    lines.push(`## ${getSection('property').letter}. ${getSection('property').title}`)
     lines.push('')
     state.properties.filter(p => p.propertyType.trim() || p.description.trim()).forEach(p => {
       const title = p.description || p.propertyType
@@ -82,7 +103,7 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section E: Digital Life
+  // Section F: Digital Life
   const digitalFields = [
     { key: 'emailAccounts', label: 'Email Accounts' },
     { key: 'passwordManager', label: 'Password Manager' },
@@ -90,14 +111,13 @@ export function generateMarkdown(state: InterviewState): string {
     { key: 'socialMediaWishes', label: 'Social Media' },
     { key: 'cloudStorage', label: 'Cloud Storage' },
     { key: 'subscriptions', label: 'Subscriptions & Recurring Payments' },
-    { key: 'crypto', label: 'Cryptocurrency' },
-    { key: 'domainNames', label: 'Domain Names & Websites' },
+{ key: 'domainNames', label: 'Domain Names & Websites' },
     { key: 'digitalPurchases', label: 'Digital Purchases & Loyalty Programs' },
     { key: 'otherDigital', label: 'Other Digital' },
   ]
   const hasDigital = digitalFields.some(f => (state.digital as Record<string, string>)[f.key]?.trim())
   if (hasDigital) {
-    lines.push(`## ${SECTIONS[4].letter}. ${SECTIONS[4].title}`)
+    lines.push(`## ${getSection('digital').letter}. ${getSection('digital').title}`)
     lines.push('')
     digitalFields.forEach(f => {
       const val = (state.digital as Record<string, string>)[f.key]
@@ -112,9 +132,9 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section F: Legal Documents
+  // Section G: Legal Documents
   if (state.legalDocuments.some(d => d.documentType.trim())) {
-    lines.push(`## ${SECTIONS[5].letter}. ${SECTIONS[5].title}`)
+    lines.push(`## ${getSection('legal').letter}. ${getSection('legal').title}`)
     lines.push('')
     state.legalDocuments.filter(d => d.documentType.trim()).forEach(d => {
       lines.push(`### ${d.documentType}`)
@@ -127,9 +147,9 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section G: Debts
+  // Section H: Debts
   if (state.debts.some(d => d.lender.trim())) {
-    lines.push(`## ${SECTIONS[6].letter}. ${SECTIONS[6].title}`)
+    lines.push(`## ${getSection('debts').letter}. ${getSection('debts').title}`)
     lines.push('')
     state.debts.filter(d => d.lender.trim()).forEach(d => {
       lines.push(`### ${d.lender}${d.debtType ? ` — ${d.debtType}` : ''}`)
@@ -142,11 +162,11 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section H: Business
+  // Section I: Business
   const hasBusiness = state.business.hasBusiness === 'Yes' &&
     Object.entries(state.business).some(([k, v]) => k !== 'hasBusiness' && v.trim())
   if (hasBusiness) {
-    lines.push(`## ${SECTIONS[7].letter}. ${SECTIONS[7].title}`)
+    lines.push(`## ${getSection('business').letter}. ${getSection('business').title}`)
     lines.push('')
     if (state.business.businessName) lines.push(`**Business:** ${state.business.businessName}`)
     if (state.business.entityType) lines.push(`**Entity type:** ${state.business.entityType}`)
@@ -171,7 +191,7 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section I: Dependents
+  // Section J: Dependents
   const depFields = [
     { key: 'minorChildren', label: 'Minor Children' },
     { key: 'guardianshipPreferences', label: 'Guardianship Preferences' },
@@ -182,7 +202,7 @@ export function generateMarkdown(state: InterviewState): string {
   ]
   const hasDependents = depFields.some(f => (state.dependents as Record<string, string>)[f.key]?.trim())
   if (hasDependents) {
-    lines.push(`## ${SECTIONS[8].letter}. ${SECTIONS[8].title}`)
+    lines.push(`## ${getSection('dependents').letter}. ${getSection('dependents').title}`)
     lines.push('')
     depFields.forEach(f => {
       const val = (state.dependents as Record<string, string>)[f.key]
@@ -197,7 +217,7 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section J: Wishes
+  // Section K: Wishes
   const wishFields = [
     { key: 'funeralPreferences', label: 'Funeral or Memorial Preferences' },
     { key: 'organDonation', label: 'Organ Donation' },
@@ -207,7 +227,7 @@ export function generateMarkdown(state: InterviewState): string {
   ]
   const hasWishes = wishFields.some(f => (state.wishes as Record<string, string>)[f.key]?.trim())
   if (hasWishes) {
-    lines.push(`## ${SECTIONS[9].letter}. ${SECTIONS[9].title}`)
+    lines.push(`## ${getSection('wishes').letter}. ${getSection('wishes').title}`)
     lines.push('')
     wishFields.forEach(f => {
       const val = (state.wishes as Record<string, string>)[f.key]
@@ -220,9 +240,30 @@ export function generateMarkdown(state: InterviewState): string {
     })
   }
 
-  lines.push('---')
-  lines.push('')
-  lines.push('*Generated with Relay — free, private, yours to keep.*')
+  // Section L: Verification
+  if (state.verification?.fullName?.trim() || state.verification?.familyPassphrase?.trim()) {
+    lines.push(`## ${getSection('verification').letter}. ${getSection('verification').title}`)
+    lines.push('')
+    if (state.verification.fullName) {
+      lines.push(`**Signed by:** ${state.verification.fullName}`)
+    }
+    if (state.verification.verificationDate) {
+      lines.push(`**Date:** ${state.verification.verificationDate}`)
+    }
+    lines.push('')
+    lines.push('I confirm that I created this document voluntarily, that the information is accurate to the best of my knowledge, and that it reflects my current wishes.')
+    lines.push('')
+    if (state.verification.familyPassphrase?.trim()) {
+      lines.push('### Family Passphrase')
+      lines.push('')
+      lines.push(state.verification.familyPassphrase.trim())
+      lines.push('')
+    }
+    lines.push('---')
+    lines.push('')
+  }
+
+  lines.push('*Generated with Handoff — free, private, yours to keep.*')
 
   return lines.join('\n')
 }

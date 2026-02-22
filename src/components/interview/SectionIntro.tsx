@@ -15,9 +15,10 @@ export default function SectionIntro({ title, letter, intro, scenario }: Section
         <h2 className="text-2xl font-bold text-charcoal">{title}</h2>
       </div>
       <p className="text-charcoal-light leading-relaxed mb-4">{intro}</p>
-      <div className="bg-sage-bg rounded-lg p-4 border-l-4 border-sage">
-        <p className="text-sm text-sage-dark italic">
-          <span className="font-medium not-italic">Why this matters: </span>
+      <div className="bg-sage-bg rounded-lg p-4 border-l-4 border-sage flex gap-3">
+        <span className="text-sage text-lg leading-none mt-0.5">&#8220;</span>
+        <p className="text-sm text-sage-dark leading-relaxed">
+          <span className="font-medium">Why this matters: </span>
           {scenario}
         </p>
       </div>

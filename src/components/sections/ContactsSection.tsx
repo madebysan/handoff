@@ -1,14 +1,15 @@
 import { useInterview } from '../../hooks/useInterview'
-import { SECTIONS, CONTACT_ROLES } from '../../lib/interview-data'
+import { getSection, CONTACT_ROLES } from '../../lib/interview-data'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import SelectField from '../interview/fields/SelectField'
 import RepeatableGroup from '../interview/fields/RepeatableGroup'
 import TextArea from '../interview/fields/TextArea'
+import { Phone, Mail, User, Users } from 'lucide-react'
 
 export default function ContactsSection() {
   const { state, dispatch } = useInterview()
-  const section = SECTIONS[0]
+  const section = getSection('contacts')
 
   return (
     <div>
@@ -28,6 +29,7 @@ export default function ContactsSection() {
               value={state.contacts[index].name}
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'name', value: v })}
               placeholder="Jane Doe"
+              icon={<User className="w-4 h-4" />}
             />
             <SelectField
               label="Role"
@@ -42,6 +44,7 @@ export default function ContactsSection() {
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'phone', value: v })}
               placeholder="(555) 123-4567"
               type="tel"
+              icon={<Phone className="w-4 h-4" />}
             />
             <TextField
               label="Email"
@@ -49,13 +52,17 @@ export default function ContactsSection() {
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'email', value: v })}
               placeholder="jane@example.com"
               type="email"
+              icon={<Mail className="w-4 h-4" />}
             />
-            <TextField
-              label="Relationship"
-              value={state.contacts[index].relationship}
-              onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'relationship', value: v })}
-              placeholder="Spouse, sibling, friend..."
-            />
+            <div className="sm:col-span-2">
+              <TextField
+                label="Relationship"
+                value={state.contacts[index].relationship}
+                onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'relationship', value: v })}
+                placeholder="Spouse, sibling, friend..."
+                icon={<Users className="w-4 h-4" />}
+              />
+            </div>
             <div className="sm:col-span-2">
               <TextArea
                 label="Notes"

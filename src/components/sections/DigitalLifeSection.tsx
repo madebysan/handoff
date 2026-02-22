@@ -1,11 +1,20 @@
 import { useInterview } from '../../hooks/useInterview'
-import { SECTIONS } from '../../lib/interview-data'
+import { getSection } from '../../lib/interview-data'
 import SectionIntro from '../interview/SectionIntro'
 import TextArea from '../interview/fields/TextArea'
 
+function GroupLabel({ children }: { children: string }) {
+  return (
+    <div className="mt-8 mb-3 first:mt-0">
+      <h3 className="text-xs font-medium text-charcoal-muted uppercase tracking-wider">{children}</h3>
+      <div className="mt-2 border-t border-border" />
+    </div>
+  )
+}
+
 export default function DigitalLifeSection() {
   const { state, dispatch } = useInterview()
-  const section = SECTIONS[4]
+  const section = getSection('digital')
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'digital', field, value })
@@ -14,6 +23,8 @@ export default function DigitalLifeSection() {
   return (
     <div>
       <SectionIntro {...section} />
+
+      <GroupLabel>Core access</GroupLabel>
 
       <TextArea
         label="Email accounts"
@@ -28,7 +39,7 @@ export default function DigitalLifeSection() {
         value={state.digital.passwordManager}
         onChange={(v) => update('passwordManager', v)}
         placeholder="Which password manager do you use? How can your family access the master vault? e.g., 1Password — master password is in the sealed envelope in the safe"
-        helpText="Don't write the actual master password here — just explain how to find it"
+        helpText="Some people prefer to note where the password is stored rather than writing it directly — but it's your document, include whatever your family will need"
       />
 
       <TextArea
@@ -39,6 +50,8 @@ export default function DigitalLifeSection() {
         helpText="Without 2FA access, your family may be locked out of important accounts"
       />
 
+      <GroupLabel>Online presence</GroupLabel>
+
       <TextArea
         label="Social media accounts"
         value={state.digital.socialMediaWishes}
@@ -48,6 +61,15 @@ export default function DigitalLifeSection() {
       />
 
       <TextArea
+        label="Domain names & websites"
+        value={state.digital.domainNames}
+        onChange={(v) => update('domainNames', v)}
+        placeholder="Any domain names you own? Websites you maintain? Where are they registered? e.g., mywebsite.com registered at Namecheap, auto-renews annually"
+      />
+
+      <GroupLabel>Digital assets</GroupLabel>
+
+      <TextArea
         label="Cloud storage"
         value={state.digital.cloudStorage}
         onChange={(v) => update('cloudStorage', v)}
@@ -55,32 +77,20 @@ export default function DigitalLifeSection() {
       />
 
       <TextArea
+        label="Digital purchases & loyalty programs"
+        value={state.digital.digitalPurchases}
+        onChange={(v) => update('digitalPurchases', v)}
+        placeholder="Kindle library, iTunes purchases, Steam games, airline miles, hotel points, credit card rewards — anything with significant value"
+      />
+
+      <GroupLabel>Services & subscriptions</GroupLabel>
+
+      <TextArea
         label="Subscriptions & recurring payments"
         value={state.digital.subscriptions}
         onChange={(v) => update('subscriptions', v)}
         placeholder="List active subscriptions that should be cancelled. e.g., Netflix ($15/mo), Spotify ($10/mo), NYT ($4/mo), gym membership at Planet Fitness ($25/mo)"
         helpText="These drain the account if nobody knows to cancel them"
-      />
-
-      <TextArea
-        label="Cryptocurrency"
-        value={state.digital.crypto}
-        onChange={(v) => update('crypto', v)}
-        placeholder="Do you hold any cryptocurrency? Which exchanges? Any hardware wallets? Where are seed phrases stored? This is critical — crypto without the seed phrase is gone forever"
-      />
-
-      <TextArea
-        label="Domain names & websites"
-        value={state.digital.domainNames}
-        onChange={(v) => update('domainNames', v)}
-        placeholder="Any domain names you own? Websites you maintain? Where are they registered? e.g., mywebsite.com registered at Namecheap, auto-renews annually"
-      />
-
-      <TextArea
-        label="Digital purchases & loyalty programs"
-        value={state.digital.digitalPurchases}
-        onChange={(v) => update('digitalPurchases', v)}
-        placeholder="Kindle library, iTunes purchases, Steam games, airline miles, hotel points, credit card rewards — anything with significant value"
       />
 
       <TextArea
