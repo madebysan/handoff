@@ -1,4 +1,6 @@
 import { SECTIONS } from '../../lib/interview-data'
+import { motion, useReducedMotion } from 'motion/react'
+import AboutMeSection from '../sections/AboutMeSection'
 import ContactsSection from '../sections/ContactsSection'
 import FinancialSection from '../sections/FinancialSection'
 import InsuranceSection from '../sections/InsuranceSection'
@@ -9,6 +11,7 @@ import DebtsSection from '../sections/DebtsSection'
 import BusinessSection from '../sections/BusinessSection'
 import DependentsSection from '../sections/DependentsSection'
 import WishesSection from '../sections/WishesSection'
+import VerificationSection from '../sections/VerificationSection'
 import { ArrowLeft, ArrowRight, SkipForward } from 'lucide-react'
 
 interface SectionRendererProps {
@@ -21,6 +24,7 @@ interface SectionRendererProps {
 }
 
 const SECTION_COMPONENTS: Record<string, React.ComponentType> = {
+  aboutMe: AboutMeSection,
   contacts: ContactsSection,
   financial: FinancialSection,
   insurance: InsuranceSection,
@@ -31,16 +35,25 @@ const SECTION_COMPONENTS: Record<string, React.ComponentType> = {
   business: BusinessSection,
   dependents: DependentsSection,
   wishes: WishesSection,
+  verification: VerificationSection,
 }
+
+const EASE = [0.25, 0.1, 0.25, 1] as const
 
 export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isFirst, isLast }: SectionRendererProps) {
   const SectionComponent = SECTION_COMPONENTS[sectionId]
   const currentSection = SECTIONS.find(s => s.id === sectionId)
+  const prefersReducedMotion = useReducedMotion()
 
   if (!SectionComponent || !currentSection) return null
 
   return (
-    <div key={sectionId} className="animate-fade-in">
+    <motion.div
+      initial={prefersReducedMotion ? undefined : { opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: EASE }}
+    >
       <SectionComponent />
 
       {/* Navigation */}
@@ -67,13 +80,13 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
           </button>
           <button
             onClick={onNext}
-            className="inline-flex items-center justify-center gap-2 bg-sage text-cream px-6 py-3 rounded-lg font-medium hover:bg-sage-dark transition-colors flex-1 sm:flex-initial min-h-[44px]"
+            className="inline-flex items-center justify-center gap-2 bg-charcoal text-cream px-6 py-3 rounded-full font-semibold hover:bg-charcoal-light transition-colors flex-1 sm:flex-initial min-h-[44px]"
           >
             {isLast ? 'Generate Document' : 'Continue'}
             {!isLast && <ArrowRight className="w-4 h-4" />}
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

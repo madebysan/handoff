@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Copy, Check, Users } from 'lucide-react'
 
-const INVITE_TEXT = `I just used Relay to organize all my important information for our family — accounts, documents, contacts, everything they'd need to know. It took about 30 minutes.
+const INVITE_TEXT = `I just used Handoff to organize all my important information for our family — accounts, documents, contacts, everything they'd need to know. It took about 30 minutes.
 
 You should do one too. It's free, nothing gets stored online, and you keep the document yourself.
 
-Here's the link: ${typeof window !== 'undefined' ? window.location.origin : 'https://relay.app'}`
+Here's the link: ${typeof window !== 'undefined' ? window.location.origin : 'https://handoff.app'}`
 
 export default function DoItTogetherInvite() {
   const [copied, setCopied] = useState(false)

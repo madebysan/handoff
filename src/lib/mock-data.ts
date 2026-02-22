@@ -4,6 +4,14 @@ import type { InterviewState } from '../context/InterviewContext'
 // Fictional person: Sarah Mitchell, 42, married, two kids, runs a small design studio
 
 export const mockState: InterviewState = {
+  aboutMe: {
+    fullName: 'Sarah Mitchell',
+    dateOfBirth: 'June 14, 1983',
+    location: 'San Francisco, CA',
+    reason: 'Just being proactive \u2014 everyone should do this',
+    intendedFor: 'My spouse David, my kids Emma and Jack, my sister Lisa',
+    personalContext: 'I\'m 42, married to David, and we have two kids (Emma, 8, and Jack, 5). I realized after my friend\'s sudden passing last year that our family had no idea where anything was \u2014 accounts, passwords, insurance policies, none of it. I don\'t want that for mine. This is me getting organized while everything is fine, so nobody has to scramble if it\'s not.',
+  },
   contacts: [
     {
       id: crypto.randomUUID(),
@@ -218,6 +226,12 @@ export const mockState: InterviewState = {
     personalMessages: 'David: You\'ve been my person since we were 23. Thank you for building this life with me. The kids are lucky to have you. Don\'t rush through grief, but don\'t stay stuck in it either. You\'re going to be an amazing single parent — you already are an amazing dad.\n\nEmma and Jack: I am so proud of who you are. Be kind, be curious, take care of each other. I hope you know how much I loved being your mom. Every single day.\n\nLisa: Thank you for always being there. I trust you with the kids more than anyone. You know what I would have wanted for them — raise them to be brave and compassionate.\n\nMom: You showed me what strength looks like. I\'m sorry for the pain this causes you. Lean on Lisa and David. They\'ll take care of you.',
     valuesStatement: 'I believe in leaving things better than you found them. I tried to live that way — in my work, in our community, in how we raise the kids. I value honesty over comfort, kindness over being right, and experiences over things. I hope our family keeps the Friday pizza night tradition, keeps exploring new places together, and keeps the house full of music and laughter.',
     otherWishes: 'I\'d love for the kids to have access to my photo library when they\'re older — there are thousands of photos organized by year in Google Drive and iCloud. The "Family" folder has the best ones.\n\nIf the house feels too big for David alone, it\'s okay to sell it. No guilt. The neighborhood is great but the house is just walls — the family is what made it home.',
+  },
+  verification: {
+    fullName: 'Sarah Mitchell',
+    verificationDate: 'February 21, 2026',
+    familyPassphrase: 'When Emma was born, the first song I sang to her was "Blackbird" by The Beatles. David was crying so hard he couldn\'t sing along. And the nurse said "well, at least one of you can carry a tune."',
+    signatureData: '',
   },
   lastSaved: null,
   currentSection: 'contacts',

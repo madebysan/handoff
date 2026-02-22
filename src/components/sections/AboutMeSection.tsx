@@ -1,0 +1,77 @@
+import { useInterview } from '../../hooks/useInterview'
+import { getSection, DOCUMENT_REASONS } from '../../lib/interview-data'
+import SectionIntro from '../interview/SectionIntro'
+import TextField from '../interview/fields/TextField'
+import SelectField from '../interview/fields/SelectField'
+import TextArea from '../interview/fields/TextArea'
+import { Phone } from 'lucide-react'
+
+export default function AboutMeSection() {
+  const { state, dispatch } = useInterview()
+  const section = getSection('aboutMe')
+
+  const update = (field: string, value: string) => {
+    dispatch({ type: 'SET_NESTED_FIELD', section: 'aboutMe', field, value })
+  }
+
+  return (
+    <div>
+      <SectionIntro {...section} />
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <TextField
+          label="Your full name"
+          value={state.aboutMe.fullName}
+          onChange={(v) => update('fullName', v)}
+          placeholder="As you'd like it on the document"
+        />
+        <TextField
+          label="Date of birth"
+          value={state.aboutMe.dateOfBirth}
+          onChange={(v) => update('dateOfBirth', v)}
+          placeholder="e.g., March 15, 1982"
+        />
+      </div>
+
+      <TextField
+        label="Where do you live?"
+        value={state.aboutMe.location}
+        onChange={(v) => update('location', v)}
+        placeholder="City, State — e.g., San Francisco, CA"
+        helpText="This helps with state-specific legal considerations"
+      />
+
+      <SelectField
+        label="Why are you creating this?"
+        value={state.aboutMe.reason}
+        onChange={(v) => update('reason', v)}
+        options={DOCUMENT_REASONS}
+        placeholder="Select a reason..."
+      />
+
+      <TextField
+        label="Who is this document for?"
+        value={state.aboutMe.intendedFor}
+        onChange={(v) => update('intendedFor', v)}
+        placeholder="e.g., My spouse David, my kids Emma and Jack, my sister Lisa"
+        helpText="The people who will need this information"
+      />
+
+      <TextArea
+        label="Anything else you want to say upfront?"
+        value={state.aboutMe.personalContext}
+        onChange={(v) => update('personalContext', v)}
+        placeholder={"This is optional. You might want to share why now, what prompted this, or just a few words about yourself.\n\ne.g., \"I'm 42, married to David, and we have two kids. I realized after my friend's sudden passing that our family had no idea where anything was. I don't want that for mine.\""}
+        rows={4}
+      />
+
+      {/* Crisis resources — always visible, not conditional */}
+      <div className="mt-6 flex items-start gap-3 px-4 py-3 rounded-lg bg-cream-dark border border-warm-gray">
+        <Phone className="w-4 h-4 text-charcoal-muted flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-charcoal-muted leading-relaxed">
+          If you or someone you know is in crisis, call or text <strong className="text-charcoal">988</strong> (Suicide & Crisis Lifeline) or text <strong className="text-charcoal">HOME</strong> to <strong className="text-charcoal">741741</strong> (Crisis Text Line). You are not alone.
+        </p>
+      </div>
+    </div>
+  )
+}

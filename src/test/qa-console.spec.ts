@@ -72,16 +72,16 @@ test.describe('QA Console - Navigation Flow', () => {
     await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' })
     await expect(page.getByText('Get your life organized')).toBeVisible()
 
-    // Click "Start Your Relay" CTA
-    await page.getByText('Start Your Relay').first().click()
+    // Click "Get Started" CTA
+    await page.getByText('Get Started').first().click()
     await page.waitForURL('**/interview')
 
-    // Should be on contacts section
-    await expect(page.getByText('Key Contacts')).toBeVisible()
+    // Should be on About You section
+    await expect(page.getByText('About You')).toBeVisible()
 
     // Click Continue to go to next section
     await page.getByText('Continue').click()
-    await page.waitForURL('**/interview/financial')
+    await page.waitForURL('**/interview/contacts')
 
     // Click Skip to go to insurance
     await page.getByText('Skip').click()

@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { AnimatePresence } from 'motion/react'
 import { useInterview } from '../hooks/useInterview'
 import { SECTIONS } from '../lib/interview-data'
 import InterviewLayout from '../components/interview/InterviewLayout'
@@ -11,7 +12,7 @@ export default function InterviewPage() {
   const { state, dispatch } = useInterview()
 
   // Default to first section if none specified
-  const currentSectionId = sectionId || state.currentSection || 'contacts'
+  const currentSectionId = sectionId || state.currentSection || 'aboutMe'
   const currentIndex = SECTIONS.findIndex(s => s.id === currentSectionId)
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function InterviewPage() {
   // Redirect to valid section if invalid
   useEffect(() => {
     if (currentIndex === -1) {
-      navigate('/interview/contacts', { replace: true })
+      navigate('/interview/aboutMe', { replace: true })
     }
   }, [currentIndex, navigate])
 
@@ -54,14 +55,17 @@ export default function InterviewPage() {
       currentSectionId={currentSectionId}
       onNavigate={(id) => navigate(`/interview/${id}`)}
     >
-      <SectionRenderer
-        sectionId={currentSectionId}
-        onNext={handleNext}
-        onPrev={currentIndex > 0 ? handlePrev : undefined}
-        onSkip={handleSkip}
-        isFirst={currentIndex === 0}
-        isLast={currentIndex === SECTIONS.length - 1}
-      />
+      <AnimatePresence mode="wait">
+        <SectionRenderer
+          key={currentSectionId}
+          sectionId={currentSectionId}
+          onNext={handleNext}
+          onPrev={currentIndex > 0 ? handlePrev : undefined}
+          onSkip={handleSkip}
+          isFirst={currentIndex === 0}
+          isLast={currentIndex === SECTIONS.length - 1}
+        />
+      </AnimatePresence>
     </InterviewLayout>
   )
 }

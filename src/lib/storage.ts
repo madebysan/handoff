@@ -1,7 +1,7 @@
 import type { InterviewState } from '../context/InterviewContext'
 
-const STORAGE_KEY = 'relay-interview-data'
-const WARNING_SHOWN_KEY = 'relay-security-warning-shown'
+const STORAGE_KEY = 'handoff-interview-data'
+const WARNING_SHOWN_KEY = 'handoff-security-warning-shown'
 
 export function saveToLocalStorage(state: InterviewState): void {
   try {

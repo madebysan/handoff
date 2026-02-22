@@ -24,7 +24,7 @@ export default function InterviewLayout({ children, currentSectionId, onNavigate
 
         {/* Main content */}
         <main className="flex-1 min-h-screen">
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 lg:py-16">
+          <div className="max-w-[640px] mx-auto px-4 sm:px-6 py-8 lg:py-16">
             {children}
           </div>
         </main>

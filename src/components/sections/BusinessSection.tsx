@@ -1,5 +1,5 @@
 import { useInterview } from '../../hooks/useInterview'
-import { SECTIONS } from '../../lib/interview-data'
+import { getSection } from '../../lib/interview-data'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import RadioGroup from '../interview/fields/RadioGroup'
@@ -7,7 +7,7 @@ import TextArea from '../interview/fields/TextArea'
 
 export default function BusinessSection() {
   const { state, dispatch } = useInterview()
-  const section = SECTIONS[7]
+  const section = getSection('business')
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'business', field, value })

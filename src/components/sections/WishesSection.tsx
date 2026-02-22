@@ -1,11 +1,11 @@
 import { useInterview } from '../../hooks/useInterview'
-import { SECTIONS } from '../../lib/interview-data'
+import { getSection } from '../../lib/interview-data'
 import SectionIntro from '../interview/SectionIntro'
 import TextArea from '../interview/fields/TextArea'
 
 export default function WishesSection() {
   const { state, dispatch } = useInterview()
-  const section = SECTIONS[9]
+  const section = getSection('wishes')
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'wishes', field, value })

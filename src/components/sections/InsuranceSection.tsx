@@ -1,5 +1,5 @@
 import { useInterview } from '../../hooks/useInterview'
-import { SECTIONS, INSURANCE_TYPES } from '../../lib/interview-data'
+import { getSection, INSURANCE_TYPES } from '../../lib/interview-data'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import SelectField from '../interview/fields/SelectField'
@@ -9,7 +9,7 @@ import RepeatableGroup from '../interview/fields/RepeatableGroup'
 
 export default function InsuranceSection() {
   const { state, dispatch } = useInterview()
-  const section = SECTIONS[2]
+  const section = getSection('insurance')
 
   return (
     <div>

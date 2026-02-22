@@ -61,7 +61,16 @@ export interface Debt {
 }
 
 export interface InterviewState {
-  // Section A: Contacts
+  // Section A: About You
+  aboutMe: {
+    fullName: string
+    dateOfBirth: string
+    location: string
+    reason: string
+    intendedFor: string
+    personalContext: string
+  }
+  // Section B: Contacts
   contacts: Contact[]
   // Section B: Financial
   financialAccounts: FinancialAccount[]
@@ -115,6 +124,13 @@ export interface InterviewState {
     valuesStatement: string
     otherWishes: string
   }
+  // Section K: Verification
+  verification: {
+    fullName: string
+    verificationDate: string
+    familyPassphrase: string
+    signatureData: string
+  }
   // Meta
   lastSaved: string | null
   currentSection: string
@@ -147,6 +163,14 @@ export function createEmptyDebt(): Debt {
 }
 
 export const initialState: InterviewState = {
+  aboutMe: {
+    fullName: '',
+    dateOfBirth: '',
+    location: '',
+    reason: '',
+    intendedFor: '',
+    personalContext: '',
+  },
   contacts: [createEmptyContact()],
   financialAccounts: [createEmptyAccount()],
   insurancePolicies: [createEmptyPolicy()],
@@ -191,8 +215,14 @@ export const initialState: InterviewState = {
     valuesStatement: '',
     otherWishes: '',
   },
+  verification: {
+    fullName: '',
+    verificationDate: '',
+    familyPassphrase: '',
+    signatureData: '',
+  },
   lastSaved: null,
-  currentSection: 'contacts',
+  currentSection: 'aboutMe',
 }
 
 // --- Actions ---
@@ -347,13 +377,13 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
             <div className="flex gap-3">
               <button
                 onClick={handleResume}
-                className="flex-1 bg-sage text-cream px-4 py-2.5 rounded-lg font-medium hover:bg-sage-dark transition-colors"
+                className="flex-1 bg-charcoal text-cream px-4 py-2.5 rounded-full font-semibold hover:bg-charcoal-light transition-colors"
               >
                 Continue
               </button>
               <button
                 onClick={handleStartFresh}
-                className="flex-1 border border-border text-charcoal-light px-4 py-2.5 rounded-lg font-medium hover:bg-warm-gray-light transition-colors"
+                className="flex-1 border border-border text-charcoal-light px-4 py-2.5 rounded-full font-medium hover:bg-warm-gray-light transition-colors"
               >
                 Start fresh
               </button>
@@ -375,7 +405,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
             </p>
             <button
               onClick={handleDismissWarning}
-              className="w-full bg-sage text-cream px-4 py-2.5 rounded-lg font-medium hover:bg-sage-dark transition-colors"
+              className="w-full bg-charcoal text-cream px-4 py-2.5 rounded-full font-semibold hover:bg-charcoal-light transition-colors"
             >
               Got it
             </button>
