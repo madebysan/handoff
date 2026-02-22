@@ -63,3 +63,12 @@ html {
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Ensure whileInView animated sections are visible when JS animations are unavailable.
+   motion/react already handles prefers-reduced-motion via the useReducedMotion hook. */
+@media (prefers-reduced-motion: reduce) {
+  [style*="opacity"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

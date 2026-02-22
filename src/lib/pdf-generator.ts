@@ -31,6 +31,11 @@ export function generatePDF(state: InterviewState) {
 
   // ─── Helpers ───────────────────────────────────────────────
 
+  function truncate(text: string, max: number): string {
+    if (!text) return '—'
+    return text.length > max ? text.substring(0, max - 1) + '…' : text
+  }
+
   function addPageBackground() {
     doc.setFillColor(...COLORS.cream)
     doc.rect(0, 0, pageWidth, pageHeight, 'F')
@@ -89,7 +94,7 @@ export function generatePDF(state: InterviewState) {
     y += 20
   }
 
-  // A single label: value pair within a card
+  // A single label: value pair within a card (no page break — card must fit on page)
   function addFieldInCard(label: string, value: string, cardX: number, fieldWidth: number) {
     if (!value?.trim()) return
     doc.setFont('helvetica', 'bold')
@@ -102,7 +107,6 @@ export function generatePDF(state: InterviewState) {
     doc.setTextColor(...COLORS.charcoal)
     const lines = doc.splitTextToSize(value, fieldWidth)
     lines.forEach((line: string) => {
-      checkPageBreak(5)
       doc.text(line, cardX, y)
       y += 4.5
     })
@@ -150,11 +154,26 @@ export function generatePDF(state: InterviewState) {
     const cardPadding = 6
     const innerX = cardX + cardPadding
     const innerWidth = contentWidth - cardPadding * 2
+    const maxCardHeight = pageHeight - 40 // max space for a card on a fresh page
 
     // Measure
     const titleHeight = title ? 10 : 0
     const fieldsHeight = measureFields(fields, innerWidth)
     const totalHeight = titleHeight + fieldsHeight
+
+    // If the card is too tall for any single page, render as individual fields (no card bg)
+    if (totalHeight > maxCardHeight) {
+      if (title) {
+        checkPageBreak(14)
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(11)
+        doc.setTextColor(...COLORS.charcoal)
+        doc.text(title, margin + 2, y)
+        y += 8
+      }
+      fields.forEach(f => addField(f.label, f.value))
+      return
+    }
 
     checkPageBreak(totalHeight + 4)
 
@@ -186,6 +205,7 @@ export function generatePDF(state: InterviewState) {
     const colWidth = (contentWidth - 5) / 2
     const cardPadding = 5
     const innerWidth = colWidth - cardPadding * 2
+    const maxCardHeight = pageHeight - 40
 
     for (let i = 0; i < items.length; i += 2) {
       const left = items[i]
@@ -194,6 +214,13 @@ export function generatePDF(state: InterviewState) {
       const leftHeight = 10 + measureFields(left.fields, innerWidth)
       const rightHeight = right ? 10 + measureFields(right.fields, innerWidth) : 0
       const rowHeight = Math.max(leftHeight, rightHeight)
+
+      // If row is too tall, fall back to single-column cards
+      if (rowHeight > maxCardHeight) {
+        addCard(left.title, left.fields)
+        if (right) addCard(right.title, right.fields)
+        continue
+      }
 
       checkPageBreak(rowHeight + 6)
 
@@ -209,7 +236,7 @@ export function generatePDF(state: InterviewState) {
       y += 6
       left.fields.forEach(f => addFieldInCard(f.label, f.value, margin + cardPadding, innerWidth))
 
-      // Right card
+      // Right card — reset y to same row start
       if (right) {
         const rightX = margin + colWidth + 5
         drawCard(rightX, rowY, colWidth, rowHeight)
@@ -239,7 +266,7 @@ export function generatePDF(state: InterviewState) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(11)
   doc.setTextColor(...COLORS.sage)
-  doc.text('RELAY', pageWidth / 2, y, { align: 'center' })
+  doc.text('HANDOFF', pageWidth / 2, y, { align: 'center' })
 
   y += 18
   doc.setFont('helvetica', 'bold')
@@ -273,7 +300,9 @@ export function generatePDF(state: InterviewState) {
     return sectionHasData(state, SECTIONS[i].id)
   })
 
+  const tocMaxY = pageHeight - 55 // stop before disclaimer
   tocSections.forEach(section => {
+    if (y > tocMaxY) return // prevent overlap with disclaimer
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.setTextColor(...COLORS.charcoalLight)
@@ -377,14 +406,14 @@ export function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8.5)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text(a.institution.substring(0, 25), cols[0] + 3, y + 5)
-      doc.text(a.accountType.substring(0, 15), cols[1] + 3, y + 5)
+      doc.text(truncate(a.institution, 25), cols[0] + 3, y + 5)
+      doc.text(truncate(a.accountType, 15), cols[1] + 3, y + 5)
       doc.setFont('helvetica', 'bold')
       doc.text(a.approxValue || '—', cols[2] + 3, y + 5)
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8)
       doc.setTextColor(...COLORS.charcoalLight)
-      doc.text((a.hasBeneficiary || '—').substring(0, 30), cols[3] + 3, y + 5)
+      doc.text(truncate(a.hasBeneficiary, 30), cols[3] + 3, y + 5)
       y += 7
     })
     y += 6
@@ -417,6 +446,7 @@ export function generatePDF(state: InterviewState) {
         { label: 'Policy number / location', value: p.policyNumberLocation },
         { label: 'Agent contact', value: p.agentContact },
         { label: 'Through employer', value: p.isEmployerProvided },
+        { label: 'Employer/HR contact', value: p.employerContact },
         { label: 'Notes', value: p.notes },
       ])
     })
@@ -494,11 +524,11 @@ export function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(8.5)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text(d.documentType.substring(0, 28), colX[0] + 3, y + 5)
+      doc.text(truncate(d.documentType, 28), colX[0] + 3, y + 5)
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8)
       doc.setTextColor(...COLORS.charcoalLight)
-      doc.text((d.location || '—').substring(0, 50), colX[1] + 3, y + 5)
+      doc.text(truncate(d.location, 50), colX[1] + 3, y + 5)
       doc.text(d.lastUpdated || '—', colX[2] + 3, y + 5)
       y += 7
     })
@@ -522,10 +552,12 @@ export function generatePDF(state: InterviewState) {
     addSectionHeader(getSection('debts').letter, getSection('debts').title)
 
     filledDebts.forEach(d => {
-      addCard(`${d.lender}${d.debtType ? ` — ${d.debtType}` : ''}`, [
+      const isOwedToMe = d.direction === 'Owed to me'
+      const dirLabel = isOwedToMe ? ' (owed to me)' : ''
+      addCard(`${d.lender}${d.debtType ? ` — ${d.debtType}` : ''}${dirLabel}`, [
         { label: 'Approximate balance', value: d.approxBalance },
-        { label: 'Co-signed', value: d.isCosigned },
-        { label: 'Payoff notes', value: d.payoffNotes },
+        ...(!isOwedToMe ? [{ label: 'Co-signed', value: d.isCosigned }] : []),
+        { label: isOwedToMe ? 'Details' : 'Payoff notes', value: d.payoffNotes },
       ])
     })
   }
@@ -578,6 +610,7 @@ export function generatePDF(state: InterviewState) {
 
   // Section K: Wishes
   const wishEntries = [
+    { key: 'healthcareWishes', label: 'Healthcare & End-of-Life Wishes' },
     { key: 'funeralPreferences', label: 'Funeral or Memorial Preferences' },
     { key: 'organDonation', label: 'Organ Donation' },
     { key: 'personalMessages', label: 'Personal Messages' },
@@ -602,18 +635,19 @@ export function generatePDF(state: InterviewState) {
     addSectionHeader(getSection('verification').letter, getSection('verification').title)
 
     // Verification statement card
-    checkPageBreak(40)
-    doc.setFillColor(...COLORS.sageBg)
-    doc.roundedRect(margin, y, contentWidth, 20, 2, 2, 'F')
     doc.setFont('helvetica', 'italic')
     doc.setFontSize(9)
-    doc.setTextColor(...COLORS.charcoalLight)
     const statementLines = doc.splitTextToSize(
       'I confirm that I created this document voluntarily, that the information is accurate to the best of my knowledge, and that it reflects my current wishes.',
       contentWidth - 10
     )
+    const statementBoxH = statementLines.length * 4.5 + 10
+    checkPageBreak(statementBoxH + 20)
+    doc.setFillColor(...COLORS.sageBg)
+    doc.roundedRect(margin, y, contentWidth, statementBoxH, 2, 2, 'F')
+    doc.setTextColor(...COLORS.charcoalLight)
     doc.text(statementLines, margin + 5, y + 7)
-    y += 24
+    y += statementBoxH + 4
 
     // Name and date
     if (state.verification.fullName) addField('Signed by', state.verification.fullName)

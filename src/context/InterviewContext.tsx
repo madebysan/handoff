@@ -30,6 +30,7 @@ export interface InsurancePolicy {
   policyNumberLocation: string
   agentContact: string
   isEmployerProvided: string
+  employerContact: string
   notes: string
 }
 
@@ -53,6 +54,7 @@ export interface LegalDocument {
 
 export interface Debt {
   id: string
+  direction: string
   debtType: string
   lender: string
   approxBalance: string
@@ -118,6 +120,7 @@ export interface InterviewState {
   }
   // Section J: Wishes
   wishes: {
+    healthcareWishes: string
     funeralPreferences: string
     organDonation: string
     personalMessages: string
@@ -147,7 +150,7 @@ export function createEmptyAccount(): FinancialAccount {
 }
 
 export function createEmptyPolicy(): InsurancePolicy {
-  return { id: crypto.randomUUID(), carrier: '', insuranceType: '', policyNumberLocation: '', agentContact: '', isEmployerProvided: '', notes: '' }
+  return { id: crypto.randomUUID(), carrier: '', insuranceType: '', policyNumberLocation: '', agentContact: '', isEmployerProvided: '', employerContact: '', notes: '' }
 }
 
 export function createEmptyProperty(): Property {
@@ -159,7 +162,7 @@ export function createEmptyLegalDoc(): LegalDocument {
 }
 
 export function createEmptyDebt(): Debt {
-  return { id: crypto.randomUUID(), debtType: '', lender: '', approxBalance: '', isCosigned: '', payoffNotes: '' }
+  return { id: crypto.randomUUID(), direction: 'I owe', debtType: '', lender: '', approxBalance: '', isCosigned: '', payoffNotes: '' }
 }
 
 export const initialState: InterviewState = {
@@ -209,6 +212,7 @@ export const initialState: InterviewState = {
     otherCareNotes: '',
   },
   wishes: {
+    healthcareWishes: '',
     funeralPreferences: '',
     organDonation: '',
     personalMessages: '',

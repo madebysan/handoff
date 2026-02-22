@@ -7,7 +7,7 @@ interface TextAreaProps {
   rows?: number
 }
 
-export default function TextArea({ label, value, onChange, placeholder, helpText, rows = 4 }: TextAreaProps) {
+export default function TextArea({ label, value, onChange, placeholder, helpText, rows = 6 }: TextAreaProps) {
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium text-charcoal mb-1.5">
