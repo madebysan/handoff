@@ -6,7 +6,7 @@ import TextArea from '../interview/fields/TextArea'
 function GroupLabel({ children }: { children: string }) {
   return (
     <div className="mt-8 mb-3 first:mt-0">
-      <h3 className="text-xs font-medium text-charcoal-muted uppercase tracking-wider">{children}</h3>
+      <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{children}</h3>
       <div className="mt-2 border-t border-border" />
     </div>
   )

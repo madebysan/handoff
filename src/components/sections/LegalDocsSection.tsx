@@ -5,7 +5,7 @@ import TextField from '../interview/fields/TextField'
 import SelectField from '../interview/fields/SelectField'
 import TextArea from '../interview/fields/TextArea'
 import RepeatableGroup from '../interview/fields/RepeatableGroup'
-import { Info, ExternalLink } from 'lucide-react'
+import { Info } from 'lucide-react'
 
 function getLocationPlaceholder(docType: string): string {
   switch (docType) {
@@ -48,7 +48,7 @@ export default function LegalDocsSection() {
     <div>
       <SectionIntro {...section} />
 
-      <p className="text-sm text-charcoal-muted mb-6 -mt-4">
+      <p className="text-sm text-muted-foreground mb-6 -mt-4">
         You don't need to create any legal documents here — just record where they are so your family can find them. If you don't have some of these yet, that's okay — noting what's missing is just as valuable.
       </p>
 
@@ -79,7 +79,7 @@ export default function LegalDocsSection() {
                 />
               </div>
               {helpText && (
-                <p className="text-xs text-charcoal-muted -mt-1">{helpText}</p>
+                <p className="text-xs text-muted-foreground -mt-1">{helpText}</p>
               )}
               <TextField
                 label="Where is it?"
@@ -100,24 +100,24 @@ export default function LegalDocsSection() {
       </RepeatableGroup>
 
       {/* Guidance callout */}
-      <div className="mt-8 bg-cream/50 rounded-lg p-5 border border-warm-gray">
+      <div className="mt-8 bg-card/50 rounded-md p-5 border border-input">
         <div className="flex gap-3">
-          <Info className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
+          <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-semibold text-charcoal mb-2">Don't have a will or other key documents?</h4>
-            <p className="text-sm text-charcoal-light leading-relaxed mb-3">
+            <h4 className="text-sm font-semibold text-foreground mb-2">Don't have a will or other key documents?</h4>
+            <p className="text-sm text-secondary-foreground leading-relaxed mb-3">
               You're not alone — over half of American adults don't have a will. While Handoff can't create legal documents for you (each state has specific requirements for witnesses, notarization, etc.), documenting what you <em>do</em> and <em>don't</em> have is a critical first step.
             </p>
-            <p className="text-sm text-charcoal-light leading-relaxed mb-3">
+            <p className="text-sm text-secondary-foreground leading-relaxed mb-3">
               The four documents that matter most:
             </p>
-            <ul className="text-sm text-charcoal-light space-y-1.5 mb-3">
-              <li className="flex gap-2"><span className="text-sage font-medium">1.</span> <span><strong>Will</strong> — who gets what, and who's in charge of making it happen</span></li>
-              <li className="flex gap-2"><span className="text-sage font-medium">2.</span> <span><strong>Financial power of attorney</strong> — who manages your money if you can't</span></li>
-              <li className="flex gap-2"><span className="text-sage font-medium">3.</span> <span><strong>Healthcare power of attorney</strong> — who makes medical decisions for you</span></li>
-              <li className="flex gap-2"><span className="text-sage font-medium">4.</span> <span><strong>Advance directive</strong> — your wishes for end-of-life care</span></li>
+            <ul className="text-sm text-secondary-foreground space-y-1.5 mb-3">
+              <li className="flex gap-2"><span className="text-primary font-medium">1.</span> <span><strong>Will</strong> — who gets what, and who's in charge of making it happen</span></li>
+              <li className="flex gap-2"><span className="text-primary font-medium">2.</span> <span><strong>Financial power of attorney</strong> — who manages your money if you can't</span></li>
+              <li className="flex gap-2"><span className="text-primary font-medium">3.</span> <span><strong>Healthcare power of attorney</strong> — who makes medical decisions for you</span></li>
+              <li className="flex gap-2"><span className="text-primary font-medium">4.</span> <span><strong>Advance directive</strong> — your wishes for end-of-life care</span></li>
             </ul>
-            <p className="text-xs text-charcoal-muted leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               An estate attorney can create all four in a single session. Many offer flat-fee packages. You can also use online services like Trust & Will, FreeWill, or LegalZoom as a starting point.
             </p>
           </div>

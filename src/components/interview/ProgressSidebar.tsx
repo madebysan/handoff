@@ -105,19 +105,19 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
   return (
     <aside className="w-72 h-screen sticky top-0 border-r border-border bg-white p-6 overflow-y-auto">
       <Link to="/" className="block mb-6">
-        <h2 className="text-lg font-bold text-charcoal">Handoff</h2>
-        <p className="text-xs text-charcoal-muted">Your letter of instruction</p>
+        <h2 className="text-lg font-bold text-foreground">Handoff</h2>
+        <p className="text-xs text-muted-foreground">Your letter of instruction</p>
       </Link>
 
       {/* Demo mode toggle */}
       <button
         onClick={handleToggleDemo}
-        className="w-full flex items-center justify-between mb-6 px-3 py-2 rounded-lg border border-border bg-warm-gray-light hover:bg-warm-gray transition-colors"
+        className="w-full flex items-center justify-between mb-6 px-3 py-2 rounded-md border border-border bg-secondary hover:bg-muted transition-colors"
       >
-        <span className="text-xs font-medium text-charcoal-light">
+        <span className="text-xs font-medium text-secondary-foreground">
           {isDemoMode ? 'Prefilled demo' : 'Empty state'}
         </span>
-        <div className={`relative w-9 h-5 rounded-full transition-colors ${isDemoMode ? 'bg-sage' : 'bg-charcoal-muted/30'}`}>
+        <div className={`relative w-9 h-5 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
           <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[18px]' : 'left-0.5'}`} />
         </div>
       </button>
@@ -132,14 +132,14 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
             <button
               key={section.id}
               onClick={() => onNavigate(section.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-colors ${
                 isActive
-                  ? 'bg-sage-bg text-sage-dark font-medium'
-                  : 'text-charcoal-light hover:bg-warm-gray-light hover:text-charcoal'
+                  ? 'bg-accent text-accent-foreground font-medium'
+                  : 'text-secondary-foreground hover:bg-secondary hover:text-foreground'
               }`}
             >
               <span className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
-                isActive ? 'bg-sage text-cream' : hasData ? 'bg-sage-light text-cream' : 'bg-warm-gray text-charcoal-muted'
+                isActive ? 'bg-primary text-primary-foreground' : hasData ? 'bg-ring text-primary-foreground' : 'bg-muted text-muted-foreground'
               }`}>
                 {hasData && !isActive ? (
                   <CheckCircle2 className="w-4 h-4" />
@@ -158,7 +158,7 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
       <div className="mt-8 pt-6 border-t border-border">
         <Link
           to="/export"
-          className="block w-full text-center bg-charcoal text-cream px-4 py-2.5 rounded-full text-sm font-semibold hover:bg-charcoal-light transition-colors"
+          className="block w-full text-center bg-primary text-primary-foreground px-4 py-2.5 rounded-button text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
           Generate Document
         </Link>
@@ -167,14 +167,14 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
         <div className="mt-3 flex gap-2">
           <button
             onClick={handleExport}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs text-charcoal-muted hover:text-charcoal py-2 rounded-full border border-border hover:bg-warm-gray-light transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-foreground py-2 rounded-button border border-border hover:bg-secondary transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             Save draft
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs text-charcoal-muted hover:text-charcoal py-2 rounded-full border border-border hover:bg-warm-gray-light transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-foreground py-2 rounded-button border border-border hover:bg-secondary transition-colors"
           >
             <Upload className="w-3.5 h-3.5" />
             Load draft
@@ -190,14 +190,14 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
       </div>
 
       {state.lastSaved && (
-        <p className="mt-4 text-xs text-charcoal-muted text-center">
+        <p className="mt-4 text-xs text-muted-foreground text-center">
           Saved {new Date(state.lastSaved).toLocaleTimeString()}
         </p>
       )}
 
       <div className="mt-6 flex items-start gap-2 px-2">
-        <ShieldCheck className="w-4 h-4 text-sage flex-shrink-0 mt-0.5" />
-        <p className="text-[11px] text-charcoal-muted leading-relaxed">
+        <ShieldCheck className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
           Your data never leaves your device. Everything is stored locally in your browser — nothing is sent to any server.
         </p>
       </div>

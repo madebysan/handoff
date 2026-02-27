@@ -62,7 +62,7 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
           {!isFirst && onPrev && (
             <button
               onClick={onPrev}
-              className="inline-flex items-center justify-center gap-2 text-charcoal-muted hover:text-charcoal transition-colors min-h-[44px]"
+              className="inline-flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
             >
               <ArrowLeft className="w-4 h-4" />
               Previous
@@ -73,14 +73,14 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
         <div className="flex items-center gap-3">
           <button
             onClick={onSkip}
-            className="inline-flex items-center justify-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors min-h-[44px] px-3"
+            className="inline-flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] px-3"
           >
             <SkipForward className="w-3.5 h-3.5" />
             Skip
           </button>
           <button
             onClick={onNext}
-            className="inline-flex items-center justify-center gap-2 bg-charcoal text-cream px-6 py-3 rounded-full font-semibold hover:bg-charcoal-light transition-colors flex-1 sm:flex-initial min-h-[44px]"
+            className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-button font-semibold hover:bg-primary/90 transition-colors flex-1 sm:flex-initial min-h-[44px]"
           >
             {isLast ? 'Generate Document' : 'Continue'}
             {!isLast && <ArrowRight className="w-4 h-4" />}

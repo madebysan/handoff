@@ -67,10 +67,10 @@ export default function AboutMeSection() {
       {/* Crisis resources — shown when a sensitive reason is selected */}
       {(state.aboutMe.reason === 'Recent health diagnosis' ||
         state.aboutMe.reason === 'Major life change (marriage, baby, divorce)') && (
-        <div className="mt-6 flex items-start gap-3 px-4 py-3 rounded-lg bg-cream-dark border border-warm-gray">
-          <Phone className="w-4 h-4 text-charcoal-muted flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-charcoal-muted leading-relaxed">
-            If you or someone you know is in crisis, call or text <strong className="text-charcoal">988</strong> (Suicide & Crisis Lifeline) or text <strong className="text-charcoal">HOME</strong> to <strong className="text-charcoal">741741</strong> (Crisis Text Line). You are not alone.
+        <div className="mt-6 flex items-start gap-3 px-4 py-3 rounded-md bg-card border border-input">
+          <Phone className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            If you or someone you know is in crisis, call or text <strong className="text-foreground">988</strong> (Suicide & Crisis Lifeline) or text <strong className="text-foreground">HOME</strong> to <strong className="text-foreground">741741</strong> (Crisis Text Line). You are not alone.
           </p>
         </div>
       )}

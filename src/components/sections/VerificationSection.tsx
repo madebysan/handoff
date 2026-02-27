@@ -112,11 +112,11 @@ function SignaturePad({ value, onChange }: SignaturePadProps) {
 
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-charcoal mb-1.5">Your signature</label>
-      <p className="text-xs text-charcoal-muted mb-2">
+      <label className="block text-sm font-medium text-foreground mb-1.5">Your signature</label>
+      <p className="text-xs text-muted-foreground mb-2">
         Draw your signature using your mouse, trackpad, or finger
       </p>
-      <div className="relative border border-warm-gray rounded-lg bg-white overflow-hidden">
+      <div className="relative border border-input rounded-md bg-white overflow-hidden">
         <canvas
           ref={canvasRef}
           className="w-full cursor-crosshair touch-none"
@@ -130,14 +130,14 @@ function SignaturePad({ value, onChange }: SignaturePadProps) {
           onTouchEnd={stopDrawing}
         />
         {/* Signature line */}
-        <div className="absolute bottom-8 left-6 right-6 border-b border-charcoal-muted/20" />
-        <div className="absolute bottom-3 left-6 text-[10px] text-charcoal-muted/40">sign here</div>
+        <div className="absolute bottom-8 left-6 right-6 border-b border-muted-foreground/20" />
+        <div className="absolute bottom-3 left-6 text-[10px] text-muted-foreground/40">sign here</div>
 
         {/* Clear button */}
         {hasDrawn && (
           <button
             onClick={clearSignature}
-            className="absolute top-2 right-2 p-1.5 rounded-md bg-white/80 hover:bg-warm-gray text-charcoal-muted hover:text-charcoal transition-colors"
+            className="absolute top-2 right-2 p-1.5 rounded-md bg-white/80 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Clear signature"
           >
             <Eraser className="w-4 h-4" />
@@ -173,8 +173,8 @@ export default function VerificationSection() {
       <SectionIntro {...section} />
 
       {/* Verification statement */}
-      <div className="bg-cream-dark rounded-lg p-5 mb-6 border border-warm-gray">
-        <p className="text-sm text-charcoal leading-relaxed">
+      <div className="bg-card rounded-md p-5 mb-6 border border-input">
+        <p className="text-sm text-foreground leading-relaxed">
           By signing below, I confirm that I created this document voluntarily, that the information is accurate to the best of my knowledge, and that it reflects my current wishes.
         </p>
       </div>
@@ -202,7 +202,7 @@ export default function VerificationSection() {
       {/* Family passphrase */}
       <div className="mt-8">
         <div className="mb-3">
-          <h3 className="text-xs font-medium text-charcoal-muted uppercase tracking-wider">Family passphrase</h3>
+          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Family passphrase</h3>
           <div className="mt-2 border-t border-border" />
         </div>
 

@@ -1,32 +1,161 @@
 @import "tailwindcss";
 
-@theme {
-  --color-cream: #FAF8F4;
-  --color-cream-dark: #F0EDE6;
-  --color-charcoal: #1C1917;
-  --color-charcoal-light: #44403C;
-  --color-charcoal-muted: #78716C;
-  --color-sage: #7C6E54;
-  --color-sage-light: #A89B80;
-  --color-sage-dark: #5C5240;
-  --color-sage-bg: #F0EDE6;
-  --color-warm-gray: #E8E5D9;
-  --color-warm-gray-light: #F5F3EE;
-  --color-border: #DBD8CE;
-  --color-error: #B54839;
-  --color-error-bg: #FDF0EE;
+/* ---- shadcn/ui-compatible token definitions ---- */
 
+:root {
+  /* Spacing (Tailwind v4 built-in, customizable via theme editor) */
+  --spacing: 0.25rem;
+
+  /* Radius — base value for cards/inputs, sm/md/lg/xl derived in @theme inline */
+  --radius: 0.625rem;
+  --radius-button: 2rem;
+
+  /* Shadow — applied to cards/containers */
+  --shadow: none;
+
+  /* Input border width */
+  --input-border-width: 1px;
+
+  /* Typography */
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Core colors */
+  --background: #FAF8F4;
+  --foreground: #1C1917;
+  --card: #F0EDE6;
+  --card-foreground: #1C1917;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1917;
+  --primary: #7C6E54;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F3EE;
+  --secondary-foreground: #44403C;
+  --muted: #E8E5D9;
+  --muted-foreground: #78716C;
+  --accent: #F0EDE6;
+  --accent-foreground: #5C5240;
+  --destructive: #B54839;
+  --destructive-foreground: #FFFFFF;
+  --border: #DBD8CE;
+  --input: #DBD8CE;
+  --ring: #A89B80;
+
+  /* Custom extension — shadcn doesn't have a destructive-bg token */
+  --destructive-bg: #FDF0EE;
+
+  /* Chart colors */
+  --chart-1: #7C6E54;
+  --chart-2: #A89B80;
+  --chart-3: #5C5240;
+  --chart-4: #C2703A;
+  --chart-5: #B54839;
+
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1C1917;
+  --sidebar-primary: #7C6E54;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F0EDE6;
+  --sidebar-accent-foreground: #5C5240;
+  --sidebar-border: #DBD8CE;
+  --sidebar-ring: #A89B80;
 }
 
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  background-color: var(--color-cream);
-  color: var(--color-charcoal);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme inline {
+  /* Radius scale */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-button: var(--radius-button);
+
+  /* Shadow */
+  --shadow-theme: var(--shadow);
+
+  /* Color tokens — Tailwind classes like bg-primary resolve to var(--primary) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive-bg: var(--destructive-bg);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Font tokens */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Reset all theme tokens to defaults inside the theme editor so it stays
+   readable regardless of the active theme. */
+.theme-editor-reset {
+  --spacing: 0.25rem;
+  --radius: 0.625rem;
+  --radius-button: 2rem;
+  --shadow: none;
+  --input-border-width: 1px;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --background: #FAF8F4;
+  --foreground: #1C1917;
+  --card: #F0EDE6;
+  --card-foreground: #1C1917;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1917;
+  --primary: #7C6E54;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F3EE;
+  --secondary-foreground: #44403C;
+  --muted: #E8E5D9;
+  --muted-foreground: #78716C;
+  --accent: #F0EDE6;
+  --accent-foreground: #5C5240;
+  --destructive: #B54839;
+  --destructive-foreground: #FFFFFF;
+  --border: #DBD8CE;
+  --input: #DBD8CE;
+  --ring: #A89B80;
+  --destructive-bg: #FDF0EE;
 }
 
 html {
@@ -34,7 +163,7 @@ html {
 }
 
 *:focus-visible {
-  outline: 2px solid var(--color-sage);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 

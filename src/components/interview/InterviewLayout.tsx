@@ -10,7 +10,7 @@ interface InterviewLayoutProps {
 
 export default function InterviewLayout({ children, currentSectionId, onNavigate }: InterviewLayoutProps) {
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-background">
       {/* Mobile progress bar */}
       <div className="lg:hidden">
         <ProgressBar currentSectionId={currentSectionId} onNavigate={onNavigate} />

@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage'
 import InterviewPage from './pages/InterviewPage'
 import ExportPage from './pages/ExportPage'
 import { Agentation } from 'agentation'
+import ThemeDrawer from './components/theme-editor/ThemeDrawer'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       {import.meta.env.DEV && <Agentation endpoint="http://localhost:4747" />}
+      {import.meta.env.DEV && <ThemeDrawer />}
     </InterviewProvider>
   )
 }
