@@ -69,7 +69,6 @@ export default function ContactsSection() {
                 value={state.contacts[index].notes}
                 onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'notes', value: v })}
                 placeholder="Any additional context about this person's role..."
-                rows={2}
               />
             </div>
           </div>

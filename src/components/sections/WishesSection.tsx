@@ -25,7 +25,6 @@ export default function WishesSection() {
         onChange={(v) => update('healthcareWishes', v)}
         placeholder={"Do you have a DNR (Do Not Resuscitate) preference? What are your wishes about life support, ventilators, or feeding tubes? Any medical treatments you want or want to avoid?\n\ne.g., \"No life support if there's no reasonable chance of recovery. DNR is in my advance directive. Dr. Patel (my primary care) knows my wishes.\""}
         helpText="Even if you have an advance directive, writing your wishes here in plain language helps your family understand your intent"
-        rows={4}
       />
 
       <TextArea
@@ -33,7 +32,6 @@ export default function WishesSection() {
         value={state.wishes.funeralPreferences}
         onChange={(v) => update('funeralPreferences', v)}
         placeholder="Burial or cremation? Any specific wishes for a service? Music, readings, location? Do you want a celebration of life, a traditional service, or something else entirely?"
-        rows={4}
       />
 
       <TextArea
@@ -41,7 +39,6 @@ export default function WishesSection() {
         value={state.wishes.organDonation}
         onChange={(v) => update('organDonation', v)}
         placeholder="Are you registered as an organ donor? Any specific wishes about organ or tissue donation? e.g., Yes, registered through the DMV. I'm comfortable with any organ donation."
-        rows={3}
       />
 
       <TextArea
@@ -50,7 +47,6 @@ export default function WishesSection() {
         onChange={(v) => update('personalMessages', v)}
         placeholder="Is there anything you want specific people to know? This could be as simple as 'Tell my kids I was proud of them' or as detailed as individual letters. Write whatever feels right."
         helpText="This is entirely optional, but many people find it the most meaningful part"
-        rows={6}
       />
 
       <TextArea
@@ -59,7 +55,6 @@ export default function WishesSection() {
         onChange={(v) => update('valuesStatement', v)}
         placeholder="What do you want your family to remember about what mattered to you? What principles guided your life? This is your chance to say it in your own words."
         helpText="Sometimes called an 'ethical will' — a statement of values rather than valuables"
-        rows={6}
       />
 
       <TextArea
@@ -67,7 +62,6 @@ export default function WishesSection() {
         value={state.wishes.otherWishes}
         onChange={(v) => update('otherWishes', v)}
         placeholder="Charitable giving wishes, specific instructions, or anything else your family should know about your preferences"
-        rows={3}
       />
     </div>
   )

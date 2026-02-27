@@ -212,7 +212,6 @@ export default function VerificationSection() {
           onChange={(v) => update('familyPassphrase', v)}
           placeholder={"Write something personal that only you and your closest family would know. This helps confirm the document is authentic.\n\ne.g., \"When Emma was born, the first song I sang to her was 'Blackbird' by The Beatles. David was crying so hard he couldn't sing along.\""}
           helpText="This isn't a security password — it's a personal detail that proves you wrote this"
-          rows={4}
         />
       </div>
     </div>
