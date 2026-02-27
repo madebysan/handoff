@@ -7,6 +7,10 @@ Accounts, documents, wishes, and more — into a single document you control ent
 <p align="center">React · Tailwind CSS · 100% client-side · No accounts · No servers</p>
 <p align="center"><a href="https://handoff-one.vercel.app"><strong>Try it live →</strong></a></p>
 
+<p align="center">
+  <img src="assets/social-preview.png" width="720" alt="Handoff screenshot">
+</p>
+
 ## What it does
 
 Handoff walks you through twelve sections modeled on what estate attorneys cover with clients:

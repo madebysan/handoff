@@ -26,3 +26,8 @@ dist-ssr
 # Test artifacts
 test-results/
 .vercel
+
+# Local dev artifacts
+checkpoint.json
+plan.md
+BUILD_REPORT.md
