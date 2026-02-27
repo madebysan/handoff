@@ -7,11 +7,11 @@ export function generateMarkdown(state: InterviewState): string {
     year: 'numeric', month: 'long', day: 'numeric',
   })
 
-  lines.push('# Letter of Instruction')
+  lines.push('# Handoff Document')
   lines.push('')
   lines.push(`**Generated:** ${timestamp}`)
   lines.push('')
-  lines.push('> **Important:** This is not a legal document. It is a personal letter of instruction intended to help your family locate important information and understand your wishes. Consult an attorney for legal estate planning documents.')
+  lines.push('> **Important:** This is not a legal document. It is a practical guide intended to help your family locate important information and understand your wishes. Consult an attorney for legal estate planning documents.')
   lines.push('')
   lines.push('---')
   lines.push('')
@@ -106,6 +106,7 @@ export function generateMarkdown(state: InterviewState): string {
 
   // Section F: Digital Life
   const digitalFields = [
+    { key: 'deviceAccess', label: 'Device Access' },
     { key: 'emailAccounts', label: 'Email Accounts' },
     { key: 'passwordManager', label: 'Password Manager' },
     { key: 'twoFactorAuth', label: 'Two-Factor Authentication' },
@@ -258,7 +259,7 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('I confirm that I created this document voluntarily, that the information is accurate to the best of my knowledge, and that it reflects my current wishes.')
     lines.push('')
     if (state.verification.familyPassphrase?.trim()) {
-      lines.push('### Family Passphrase')
+      lines.push('### Personal Proof')
       lines.push('')
       lines.push(state.verification.familyPassphrase.trim())
       lines.push('')

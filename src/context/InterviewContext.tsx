@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useReducer, useEffect, useState, useCallback, type ReactNode } from 'react'
 import { loadFromLocalStorage, hasSavedData, hasSecurityWarningBeenShown, markSecurityWarningShown, clearLocalStorage } from '../lib/storage'
 import { useAutoSave } from '../hooks/useAutoSave'
 
@@ -82,6 +82,7 @@ export interface InterviewState {
   properties: Property[]
   // Section E: Digital Life
   digital: {
+    deviceAccess: string
     emailAccounts: string
     passwordManager: string
     socialMediaWishes: string
@@ -179,6 +180,7 @@ export const initialState: InterviewState = {
   insurancePolicies: [createEmptyPolicy()],
   properties: [createEmptyProperty()],
   digital: {
+    deviceAccess: '',
     emailAccounts: '',
     passwordManager: '',
     socialMediaWishes: '',
@@ -355,11 +357,18 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     setShowResume(false)
   }
 
-  const handleStartFresh = () => {
+  const [confirmingFresh, setConfirmingFresh] = useState(false)
+
+  const handleStartFresh = useCallback(() => {
+    if (!confirmingFresh) {
+      setConfirmingFresh(true)
+      return
+    }
     clearLocalStorage()
     dispatch({ type: 'RESET_STATE' })
     setShowResume(false)
-  }
+    setConfirmingFresh(false)
+  }, [confirmingFresh])
 
   const handleDismissWarning = () => {
     markSecurityWarningShown()
@@ -387,9 +396,13 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
               </button>
               <button
                 onClick={handleStartFresh}
-                className="flex-1 border border-border text-secondary-foreground px-4 py-2.5 rounded-button font-medium hover:bg-secondary transition-colors"
+                className={`flex-1 px-4 py-2.5 rounded-button font-medium transition-colors ${
+                  confirmingFresh
+                    ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                    : 'border border-border text-secondary-foreground hover:bg-secondary'
+                }`}
               >
-                Start fresh
+                {confirmingFresh ? 'Delete and start over?' : 'Start fresh'}
               </button>
             </div>
           </div>

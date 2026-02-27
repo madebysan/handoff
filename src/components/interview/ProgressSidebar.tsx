@@ -106,21 +106,23 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
     <aside className="w-72 h-screen sticky top-0 border-r border-border bg-white p-6 overflow-y-auto">
       <Link to="/" className="block mb-6">
         <h2 className="text-lg font-bold text-foreground">Handoff</h2>
-        <p className="text-xs text-muted-foreground">Your letter of instruction</p>
+        <p className="text-xs text-muted-foreground">Your Handoff document</p>
       </Link>
 
-      {/* Demo mode toggle */}
-      <button
-        onClick={handleToggleDemo}
-        className="w-full flex items-center justify-between mb-6 px-3 py-2 rounded-md border border-border bg-secondary hover:bg-muted transition-colors"
-      >
-        <span className="text-xs font-medium text-secondary-foreground">
-          {isDemoMode ? 'Prefilled demo' : 'Empty state'}
-        </span>
-        <div className={`relative w-9 h-5 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
-          <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[18px]' : 'left-0.5'}`} />
-        </div>
-      </button>
+      {/* Demo mode toggle — dev only */}
+      {import.meta.env.DEV && (
+        <button
+          onClick={handleToggleDemo}
+          className="w-full flex items-center justify-between mb-6 px-3 py-2 rounded-md border border-border bg-secondary hover:bg-muted transition-colors"
+        >
+          <span className="text-xs font-medium text-secondary-foreground">
+            {isDemoMode ? 'Prefilled demo' : 'Empty state'}
+          </span>
+          <div className={`relative w-9 h-5 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
+            <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[18px]' : 'left-0.5'}`} />
+          </div>
+        </button>
+      )}
 
       <nav className="space-y-1">
         {SECTIONS.map((section) => {
@@ -157,10 +159,10 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
 
       <div className="mt-8 pt-6 border-t border-border">
         <Link
-          to="/export"
+          to="/review"
           className="block w-full text-center bg-primary text-primary-foreground px-4 py-2.5 rounded-button text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
-          Generate Document
+          Review & Finish
         </Link>
 
         {/* Export/Import */}

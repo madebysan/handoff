@@ -61,7 +61,8 @@ export default function AboutMeSection() {
         label="Anything else you want to say upfront?"
         value={state.aboutMe.personalContext}
         onChange={(v) => update('personalContext', v)}
-        placeholder={"Optional. Share why now, what prompted this, or a few words about yourself.\n\ne.g., \"I'm 42, married to David, and we have two kids. After a friend's sudden passing, I realized our family had no idea where anything was.\""}
+        placeholder="Share why now, what prompted this, or a few words about yourself..."
+        helpText="Optional — this helps give your family context about who you are and why you created this"
       />
 
       {/* Crisis resources — shown when a sensitive reason is selected */}

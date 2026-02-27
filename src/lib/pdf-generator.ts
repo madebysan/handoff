@@ -1,4 +1,3 @@
-import jsPDF from 'jspdf'
 import type { InterviewState } from '../context/InterviewContext'
 import { SECTIONS, getSection } from './interview-data'
 
@@ -16,7 +15,8 @@ const COLORS = {
   warmGray: [232, 229, 217] as [number, number, number],
 }
 
-export function generatePDF(state: InterviewState) {
+export async function generatePDF(state: InterviewState) {
+  const { default: jsPDF } = await import('jspdf')
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
@@ -45,7 +45,7 @@ export function generatePDF(state: InterviewState) {
     pageNum++
     doc.setFontSize(7)
     doc.setTextColor(...COLORS.charcoalMuted)
-    doc.text('Handoff — Letter of Instruction', margin, pageHeight - 10)
+    doc.text('Handoff', margin, pageHeight - 10)
     doc.text(`${pageNum}`, pageWidth - margin, pageHeight - 10, { align: 'right' })
   }
 
@@ -272,9 +272,9 @@ export function generatePDF(state: InterviewState) {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(36)
   doc.setTextColor(...COLORS.charcoal)
-  doc.text('Letter of', pageWidth / 2, y, { align: 'center' })
+  doc.text('Handoff', pageWidth / 2, y, { align: 'center' })
   y += 14
-  doc.text('Instruction', pageWidth / 2, y, { align: 'center' })
+  doc.text('Document', pageWidth / 2, y, { align: 'center' })
 
   y += 15
   doc.setDrawColor(...COLORS.sage)
@@ -320,7 +320,7 @@ export function generatePDF(state: InterviewState) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7.5)
   doc.setTextColor(...COLORS.charcoalMuted)
-  const disclaimer = 'This is not a legal document. It is a personal letter of instruction intended to help your family locate important information and understand your wishes. Consult an attorney for legal estate planning.'
+  const disclaimer = 'This is not a legal document. It is a practical guide intended to help your family locate important information and understand your wishes. Consult an attorney for legal estate planning.'
   const disclaimerLines = doc.splitTextToSize(disclaimer, contentWidth - 40)
   doc.text(disclaimerLines, pageWidth / 2, y + 8, { align: 'center' })
 
@@ -328,6 +328,161 @@ export function generatePDF(state: InterviewState) {
   doc.setFontSize(7)
   doc.setTextColor(...COLORS.charcoalMuted)
   doc.text('Generated with Handoff', pageWidth / 2, pageHeight - 12, { align: 'center' })
+
+  // ─── Emergency Quick-Reference Page ────────────────────────
+
+  const hasEmergencyData = (() => {
+    const hasContacts = state.contacts.some(c => c.name.trim())
+    const hasWill = state.legalDocuments.some(d => d.documentType === 'Will' && d.location?.trim())
+    const hasBank = state.financialAccounts.some(a => a.institution.trim())
+    const hasInsurance = state.insurancePolicies.some(p => p.carrier.trim())
+    const hasPassphrase = !!state.verification?.familyPassphrase?.trim()
+    return hasContacts || hasWill || hasBank || hasInsurance || hasPassphrase
+  })()
+
+  if (hasEmergencyData) {
+    newPage()
+
+    const iceCardPadding = 6
+    const iceInnerWidth = contentWidth - iceCardPadding * 2
+
+    // Page title — styled like a section header
+    doc.setFillColor(...COLORS.sage)
+    doc.roundedRect(margin, y, contentWidth, 14, 2, 2, 'F')
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(13)
+    doc.setTextColor(...COLORS.white)
+    doc.text('In Case of Emergency', margin + 6, y + 8.8)
+    y += 20
+
+    // Subtitle
+    doc.setFont('helvetica', 'italic')
+    doc.setFontSize(9.5)
+    doc.setTextColor(...COLORS.charcoalMuted)
+    doc.text('The most important information at a glance', margin + 2, y)
+    y += 10
+
+    // 1. Who to call first
+    const emergencyContacts = state.contacts.filter(c => c.name.trim()).slice(0, 3)
+    if (emergencyContacts.length > 0) {
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(10)
+      doc.setTextColor(...COLORS.charcoal)
+      doc.text('Who to call first', margin + 2, y)
+      y += 5
+
+      emergencyContacts.forEach(c => {
+        const fields: { label: string; value: string }[] = [
+          { label: 'Role', value: c.role },
+          { label: 'Phone', value: c.phone },
+        ]
+        const cardH = 10 + measureFields(fields, iceInnerWidth)
+        checkPageBreak(cardH + 4)
+        const cardY = y
+        drawCard(margin, cardY, contentWidth, cardH)
+        y = cardY + 7
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(10)
+        doc.setTextColor(...COLORS.charcoal)
+        doc.text(c.name, margin + iceCardPadding, y)
+        y += 6
+        fields.forEach(f => addFieldInCard(f.label, f.value, margin + iceCardPadding, iceInnerWidth))
+        y = cardY + cardH + 4
+      })
+      y += 2
+    }
+
+    // 2. Where the will is
+    const willDoc = state.legalDocuments.find(d => d.documentType === 'Will' && d.location?.trim())
+    if (willDoc) {
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(10)
+      doc.setTextColor(...COLORS.charcoal)
+      doc.text('Where the will is', margin + 2, y)
+      y += 5
+
+      const fields = [{ label: 'Location', value: willDoc.location }]
+      const cardH = 8 + measureFields(fields, iceInnerWidth)
+      checkPageBreak(cardH + 4)
+      const cardY = y
+      drawCard(margin, cardY, contentWidth, cardH)
+      y = cardY + 6
+      fields.forEach(f => addFieldInCard(f.label, f.value, margin + iceCardPadding, iceInnerWidth))
+      y = cardY + cardH + 6
+    }
+
+    // 3. Primary bank access
+    const primaryAccount = state.financialAccounts.find(a => a.institution.trim())
+    if (primaryAccount) {
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(10)
+      doc.setTextColor(...COLORS.charcoal)
+      doc.text('Primary bank access', margin + 2, y)
+      y += 5
+
+      const fields: { label: string; value: string }[] = [
+        { label: 'Institution', value: primaryAccount.institution },
+        { label: 'Type', value: primaryAccount.accountType },
+      ]
+      if (primaryAccount.accessNotes?.trim()) {
+        fields.push({ label: 'Access notes', value: primaryAccount.accessNotes })
+      }
+      const cardH = 8 + measureFields(fields, iceInnerWidth)
+      checkPageBreak(cardH + 4)
+      const cardY = y
+      drawCard(margin, cardY, contentWidth, cardH)
+      y = cardY + 6
+      fields.forEach(f => addFieldInCard(f.label, f.value, margin + iceCardPadding, iceInnerWidth))
+      y = cardY + cardH + 6
+    }
+
+    // 4. Insurance
+    const primaryPolicy = state.insurancePolicies.find(p => p.carrier.trim())
+    if (primaryPolicy) {
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(10)
+      doc.setTextColor(...COLORS.charcoal)
+      doc.text('Insurance', margin + 2, y)
+      y += 5
+
+      const fields = [
+        { label: 'Carrier', value: primaryPolicy.carrier },
+        { label: 'Type', value: primaryPolicy.insuranceType },
+      ]
+      const cardH = 8 + measureFields(fields, iceInnerWidth)
+      checkPageBreak(cardH + 4)
+      const cardY = y
+      drawCard(margin, cardY, contentWidth, cardH)
+      y = cardY + 6
+      fields.forEach(f => addFieldInCard(f.label, f.value, margin + iceCardPadding, iceInnerWidth))
+      y = cardY + cardH + 6
+    }
+
+    // 5. Family passphrase / Personal proof
+    if (state.verification?.familyPassphrase?.trim()) {
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(10)
+      doc.setTextColor(...COLORS.charcoal)
+      doc.text('Family passphrase / Personal proof', margin + 2, y)
+      y += 5
+
+      const fields = [{ label: 'Passphrase', value: state.verification.familyPassphrase }]
+      const cardH = 8 + measureFields(fields, iceInnerWidth)
+      checkPageBreak(cardH + 4)
+      const cardY = y
+      drawCard(margin, cardY, contentWidth, cardH)
+      y = cardY + 6
+      fields.forEach(f => addFieldInCard(f.label, f.value, margin + iceCardPadding, iceInnerWidth))
+      y = cardY + cardH + 6
+    }
+
+    // Footer note
+    checkPageBreak(10)
+    doc.setFont('helvetica', 'italic')
+    doc.setFontSize(8)
+    doc.setTextColor(...COLORS.charcoalMuted)
+    doc.text('See the full document for complete details.', pageWidth / 2, y + 4, { align: 'center' })
+  }
 
   // ─── Content Pages ─────────────────────────────────────────
 
@@ -653,7 +808,7 @@ export function generatePDF(state: InterviewState) {
     if (state.verification.fullName) addField('Signed by', state.verification.fullName)
     if (state.verification.verificationDate) addField('Date', state.verification.verificationDate)
 
-    // Signature image
+    // Signature
     if (state.verification.signatureData) {
       checkPageBreak(40)
       doc.setFont('helvetica', 'bold')
@@ -662,12 +817,26 @@ export function generatePDF(state: InterviewState) {
       doc.text('SIGNATURE', margin + 2, y)
       y += 4
 
-      try {
-        doc.addImage(state.verification.signatureData, 'PNG', margin, y, 70, 28)
-      } catch {
-        // Signature data might be invalid
+      if (state.verification.signatureData.startsWith('typed:')) {
+        // Typed signature — render as italic text
+        const typedName = state.verification.signatureData.slice(6)
+        if (typedName.trim()) {
+          y += 8
+          doc.setFont('helvetica', 'bolditalic')
+          doc.setFontSize(22)
+          doc.setTextColor(...COLORS.charcoal)
+          doc.text(typedName, margin + 2, y)
+          y += 12
+        }
+      } else {
+        // Drawn signature — embed as image
+        try {
+          doc.addImage(state.verification.signatureData, 'PNG', margin, y, 70, 28)
+        } catch {
+          // Signature data might be invalid
+        }
+        y += 32
       }
-      y += 32
 
       // Signature line
       doc.setDrawColor(...COLORS.border)
@@ -678,12 +847,12 @@ export function generatePDF(state: InterviewState) {
 
     // Family passphrase
     if (state.verification.familyPassphrase?.trim()) {
-      addField('Family Passphrase', state.verification.familyPassphrase)
+      addField('Personal Proof', state.verification.familyPassphrase)
     }
   }
 
   // Download
-  doc.save(`handoff-letter-of-instruction-${new Date().toISOString().split('T')[0]}.pdf`)
+  doc.save(`handoff-${new Date().toISOString().split('T')[0]}.pdf`)
 }
 
 // Helper to check if a section has data (used for TOC)

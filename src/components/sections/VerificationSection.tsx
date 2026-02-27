@@ -112,10 +112,6 @@ function SignaturePad({ value, onChange }: SignaturePadProps) {
 
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-foreground mb-1.5">Your signature</label>
-      <p className="text-xs text-muted-foreground mb-2">
-        Draw your signature using your mouse, trackpad, or finger
-      </p>
       <div className="relative border border-input rounded-md bg-white overflow-hidden">
         <canvas
           ref={canvasRef}
@@ -153,6 +149,9 @@ function SignaturePad({ value, onChange }: SignaturePadProps) {
 export default function VerificationSection() {
   const { state, dispatch } = useInterview()
   const section = getSection('verification')
+  const [signatureMode, setSignatureMode] = useState<'draw' | 'type'>(
+    () => state.verification.signatureData?.startsWith('typed:') ? 'type' : 'draw'
+  )
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'verification', field, value })
@@ -166,7 +165,14 @@ export default function VerificationSection() {
       })
       update('verificationDate', today)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleModeSwitch = (mode: 'draw' | 'type') => {
+    if (mode !== signatureMode) {
+      update('signatureData', '')
+      setSignatureMode(mode)
+    }
+  }
 
   return (
     <div>
@@ -194,15 +200,67 @@ export default function VerificationSection() {
         />
       </div>
 
-      <SignaturePad
-        value={state.verification.signatureData}
-        onChange={(v) => update('signatureData', v)}
-      />
+      {/* Signature */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-foreground mb-1.5">Your signature</label>
+        <div className="flex flex-wrap gap-3 mb-3">
+          <button
+            type="button"
+            onClick={() => handleModeSwitch('draw')}
+            className={`px-4 py-2.5 rounded-button text-sm font-medium border transition-colors min-h-[44px] ${
+              signatureMode === 'draw'
+                ? 'bg-primary text-primary-foreground border-primary'
+                : 'bg-white text-secondary-foreground border-input hover:border-primary'
+            }`}
+          >
+            Draw
+          </button>
+          <button
+            type="button"
+            onClick={() => handleModeSwitch('type')}
+            className={`px-4 py-2.5 rounded-button text-sm font-medium border transition-colors min-h-[44px] ${
+              signatureMode === 'type'
+                ? 'bg-primary text-primary-foreground border-primary'
+                : 'bg-white text-secondary-foreground border-input hover:border-primary'
+            }`}
+          >
+            Type
+          </button>
+        </div>
+
+        {signatureMode === 'draw' ? (
+          <>
+            <p className="text-xs text-muted-foreground mb-2">
+              Draw your signature using your mouse, trackpad, or finger
+            </p>
+            <SignaturePad
+              value={state.verification.signatureData}
+              onChange={(v) => update('signatureData', v)}
+            />
+          </>
+        ) : (
+          <div className="relative border border-input rounded-md bg-white overflow-hidden" style={{ height: '160px' }}>
+            <div className="h-full flex items-end px-6 pb-10">
+              <input
+                type="text"
+                value={state.verification.signatureData.startsWith('typed:') ? state.verification.signatureData.slice(6) : ''}
+                onChange={(e) => update('signatureData', `typed:${e.target.value}`)}
+                placeholder="Type your full name"
+                className="w-full text-2xl border-none outline-none bg-transparent text-foreground"
+                style={{ fontFamily: "'Caveat', 'Segoe Script', 'Bradley Hand', cursive" }}
+              />
+            </div>
+            {/* Signature line */}
+            <div className="absolute bottom-8 left-6 right-6 border-b border-muted-foreground/20" />
+            <div className="absolute bottom-3 left-6 text-[10px] text-muted-foreground/40">sign here</div>
+          </div>
+        )}
+      </div>
 
       {/* Family passphrase */}
       <div className="mt-8">
         <div className="mb-3">
-          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Family passphrase</h3>
+          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Personal proof</h3>
           <div className="mt-2 border-t border-border" />
         </div>
 
@@ -210,7 +268,7 @@ export default function VerificationSection() {
           label="Something only you would know"
           value={state.verification.familyPassphrase}
           onChange={(v) => update('familyPassphrase', v)}
-          placeholder={"Write something personal that only you and your closest family would know. This helps confirm the document is authentic.\n\ne.g., \"When Emma was born, the first song I sang to her was 'Blackbird' by The Beatles. David was crying so hard he couldn't sing along.\""}
+          placeholder="A personal detail or memory that only you and your closest family would know..."
           helpText="This isn't a security password — it's a personal detail that proves you wrote this"
         />
       </div>

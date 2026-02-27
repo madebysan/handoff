@@ -1,4 +1,4 @@
-import { FolderOpen, Share2, Calendar } from 'lucide-react'
+import { MessageCircle, FolderOpen, Share2, Calendar } from 'lucide-react'
 
 export default function GuidanceSection() {
   return (
@@ -6,6 +6,20 @@ export default function GuidanceSection() {
       <h2 className="text-2xl font-bold text-foreground mb-6">What to do with your document</h2>
 
       <div className="space-y-8">
+        <div className="flex gap-4">
+          <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center flex-shrink-0 mt-0.5">
+            <MessageCircle className="w-5 h-5 text-accent-foreground" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">Tell someone it exists</h3>
+            <ul className="text-secondary-foreground space-y-1.5 text-sm leading-relaxed">
+              <li>The most important step: tell at least one trusted person that this document exists and where to find it</li>
+              <li>If nobody knows it's there, it can't help your family when they need it</li>
+              <li>Consider telling your executor, spouse/partner, or closest family member</li>
+            </ul>
+          </div>
+        </div>
+
         <div className="flex gap-4">
           <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center flex-shrink-0 mt-0.5">
             <FolderOpen className="w-5 h-5 text-accent-foreground" />

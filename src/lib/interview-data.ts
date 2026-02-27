@@ -13,8 +13,8 @@ export const SECTIONS: SectionDef[] = [
   {
     id: 'aboutMe',
     letter: 'A',
-    title: 'About You',
-    intro: 'Before we dive in, let\'s start with who you are and why you\'re doing this. It gives context to everything that follows and makes the document more personal.',
+    title: 'The Basics',
+    intro: 'Let\'s start with the basics — who you are and why you\'re creating this. It gives context to everything that follows.',
     scenario: 'Your family finds a list of accounts and passwords, but there\'s no context \u2014 who wrote this? When? Was it current? A brief introduction makes all the difference.',
     icon: 'CircleUser',
   },
@@ -101,8 +101,8 @@ export const SECTIONS: SectionDef[] = [
   {
     id: 'verification',
     letter: 'L',
-    title: 'Sign & Verify',
-    intro: 'The final step. Your signature and a personal passphrase confirm that this document was created by you, with intention and care.',
+    title: 'Sign & Finish',
+    intro: 'The final step. Your signature and a personal detail confirm this document was created by you, with intention and care.',
     scenario: 'Your family finds a document but isn\'t sure when it was written, whether it\'s current, or if someone else filled it out.',
     icon: 'Fingerprint',
   },

@@ -91,7 +91,8 @@ export default function LegalDocsSection() {
                 label="Notes"
                 value={state.legalDocuments[index].notes}
                 onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'legalDocuments', index, field: 'notes', value: v })}
-                placeholder={"Where your family can access it — a physical location, a link to a Google Drive folder, a Dropbox URL, or the name of who holds a copy.\n\ne.g., \"Scanned copy in Google Drive: drive.google.com/... — original with attorney Jane Smith\""}
+                placeholder="Any additional details about this document..."
+                helpText="Include where your family can access it — physical location, Google Drive link, Dropbox URL, or who holds a copy"
               />
             </div>
           )

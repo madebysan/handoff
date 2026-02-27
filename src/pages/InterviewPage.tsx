@@ -33,7 +33,7 @@ export default function InterviewPage() {
       const nextSection = SECTIONS[currentIndex + 1]
       navigate(`/interview/${nextSection.id}`)
     } else {
-      navigate('/export')
+      navigate('/review')
     }
   }
 

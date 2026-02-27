@@ -82,7 +82,7 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
             onClick={onNext}
             className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-button font-semibold hover:bg-primary/90 transition-colors flex-1 sm:flex-initial min-h-[44px]"
           >
-            {isLast ? 'Generate Document' : 'Continue'}
+            {isLast ? 'Review & Finish' : 'Continue'}
             {!isLast && <ArrowRight className="w-4 h-4" />}
           </button>
         </div>

@@ -1,3 +1,4 @@
+import { Info } from 'lucide-react'
 import { useInterview } from '../../hooks/useInterview'
 import { getSection } from '../../lib/interview-data'
 import SectionIntro from '../interview/SectionIntro'
@@ -25,6 +26,14 @@ export default function DigitalLifeSection() {
       <SectionIntro {...section} />
 
       <GroupLabel>Core access</GroupLabel>
+
+      <TextArea
+        label="Device access"
+        value={state.digital.deviceAccess}
+        onChange={(v) => update('deviceAccess', v)}
+        placeholder="Phone PIN, laptop password, tablet passcode — how to unlock the devices you use daily"
+        helpText="Your phone or laptop is often the first thing your family needs to access"
+      />
 
       <TextArea
         label="Email accounts"
@@ -99,6 +108,27 @@ export default function DigitalLifeSection() {
         onChange={(v) => update('otherDigital', v)}
         placeholder="Any other digital accounts, services, or information your family should know about"
       />
+
+      <div className="mt-8 bg-card/50 rounded-md p-5 border border-input">
+        <div className="flex gap-3">
+          <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-2">Set up digital legacy contacts now</h4>
+            <p className="text-sm text-secondary-foreground leading-relaxed mb-3">
+              Most major platforms let you designate someone to access or manage your account. These take just a few minutes to configure:
+            </p>
+            <ul className="text-sm text-secondary-foreground space-y-1.5">
+              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Google</strong> — Inactive Account Manager (sends data to your contact after inactivity)</span></li>
+              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Apple</strong> — Legacy Contact (gives access to your Apple ID data)</span></li>
+              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Facebook</strong> — Memorialization Contact (manages your profile)</span></li>
+              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Instagram</strong> — Memorialization request through Facebook settings</span></li>
+            </ul>
+            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+              Search "[platform name] legacy contact" or "inactive account" in your account settings to find these options.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
