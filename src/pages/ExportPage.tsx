@@ -55,30 +55,30 @@ export default function ExportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-16 animate-fade-in">
-        <Link to="/interview/verification" className="inline-flex items-center gap-2 text-charcoal-muted hover:text-charcoal mb-6 sm:mb-8 transition-colors min-h-[44px]">
+        <Link to="/interview/verification" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 sm:mb-8 transition-colors min-h-[44px]">
           <ArrowLeft className="w-4 h-4" />
           Back to interview
         </Link>
 
         <div className="mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold text-charcoal mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             You just created something invaluable.
           </h1>
-          <p className="text-base sm:text-lg text-charcoal-light/90 leading-relaxed">
+          <p className="text-base sm:text-lg text-secondary-foreground/90 leading-relaxed">
             Most people never organize this information. Your family will thank you for taking the time. Download your letter of instruction below and store it somewhere safe.
           </p>
         </div>
 
         {/* Empty state warning */}
         {!dataExists && (
-          <div className="flex gap-3 bg-warm-gray-light rounded-xl p-4 mb-8 border border-border">
-            <AlertCircle className="w-5 h-5 text-charcoal-muted flex-shrink-0 mt-0.5" />
+          <div className="flex gap-3 bg-secondary rounded-xl p-4 mb-8 border border-border">
+            <AlertCircle className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-charcoal mb-1">No information entered yet</p>
-              <p className="text-sm text-charcoal-light">
-                Your document will be mostly empty. <Link to="/interview/contacts" className="text-sage-dark hover:text-sage underline">Go back to the interview</Link> to fill in your information first.
+              <p className="text-sm font-medium text-foreground mb-1">No information entered yet</p>
+              <p className="text-sm text-secondary-foreground">
+                Your document will be mostly empty. <Link to="/interview/contacts" className="text-accent-foreground hover:text-primary underline">Go back to the interview</Link> to fill in your information first.
               </p>
             </div>
           </div>
@@ -89,43 +89,43 @@ export default function ExportPage() {
           <button
             onClick={handleDownloadPDF}
             disabled={generatingPDF}
-            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border-2 border-border hover:border-sage hover:shadow-sm transition-all text-left disabled:opacity-60 disabled:cursor-wait"
+            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border-2 border-border hover:border-primary hover:shadow-sm transition-all text-left disabled:opacity-60 disabled:cursor-wait shadow-theme"
           >
-            <div className="w-12 h-12 bg-sage-bg rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 bg-accent rounded-md flex items-center justify-center flex-shrink-0">
               {generatingPDF ? (
-                <Loader2 className="w-6 h-6 text-sage-dark animate-spin" />
+                <Loader2 className="w-6 h-6 text-accent-foreground animate-spin" />
               ) : (
-                <FileDown className="w-6 h-6 text-sage-dark" />
+                <FileDown className="w-6 h-6 text-accent-foreground" />
               )}
             </div>
             <div>
-              <div className="font-semibold text-charcoal">
+              <div className="font-semibold text-foreground">
                 {generatingPDF ? 'Generating...' : 'Download PDF'}
               </div>
-              <div className="text-sm text-charcoal-light">Professional format, ready to print or share</div>
+              <div className="text-sm text-secondary-foreground">Professional format, ready to print or share</div>
             </div>
           </button>
 
           <button
             onClick={handleDownloadMarkdown}
-            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border-2 border-border hover:border-sage hover:shadow-sm transition-all text-left"
+            className="flex items-center gap-4 p-5 sm:p-6 bg-white rounded-xl border-2 border-border hover:border-primary hover:shadow-sm transition-all text-left shadow-theme"
           >
-            <div className="w-12 h-12 bg-sage-bg rounded-lg flex items-center justify-center flex-shrink-0">
-              <FileText className="w-6 h-6 text-sage-dark" />
+            <div className="w-12 h-12 bg-accent rounded-md flex items-center justify-center flex-shrink-0">
+              <FileText className="w-6 h-6 text-accent-foreground" />
             </div>
             <div>
-              <div className="font-semibold text-charcoal">Download Markdown</div>
-              <div className="text-sm text-charcoal-light">Portable, editable, future-proof format</div>
+              <div className="font-semibold text-foreground">Download Markdown</div>
+              <div className="text-sm text-secondary-foreground">Portable, editable, future-proof format</div>
             </div>
           </button>
         </div>
 
         {/* Legal disclaimer */}
-        <div className="flex gap-3 bg-warm-gray-light rounded-xl p-4 sm:p-5 mb-10 border border-border">
-          <Scale className="w-5 h-5 text-charcoal-muted flex-shrink-0 mt-0.5" />
+        <div className="flex gap-3 bg-secondary rounded-xl p-4 sm:p-5 mb-10 border border-border">
+          <Scale className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-charcoal mb-1">This is not a legal document.</p>
-            <p className="text-sm text-charcoal-light leading-relaxed">
+            <p className="text-sm font-medium text-foreground mb-1">This is not a legal document.</p>
+            <p className="text-sm text-secondary-foreground leading-relaxed">
               Your letter of instruction is a practical guide for your family — it organizes what they need to know. To make any of your wishes legally binding, share this document with an estate attorney who can help you create or update a will, power of attorney, and other legal instruments.
             </p>
           </div>
@@ -134,9 +134,9 @@ export default function ExportPage() {
         <div className="mb-4">
           <button
             onClick={handleCopyMarkdown}
-            className="inline-flex items-center gap-2 text-sm text-charcoal-muted hover:text-charcoal transition-colors min-h-[44px]"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
           >
-            {copied ? <Check className="w-4 h-4 text-sage" /> : <Copy className="w-4 h-4" />}
+            {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
             {copied ? 'Copied to clipboard' : 'Copy as text'}
           </button>
         </div>
@@ -149,7 +149,7 @@ export default function ExportPage() {
 
         <DoItTogetherInvite />
 
-        <div className="mt-12 sm:mt-16 text-center text-sm text-charcoal-muted">
+        <div className="mt-12 sm:mt-16 text-center text-sm text-muted-foreground">
           <p>Generated with Handoff — free, private, yours to keep.</p>
         </div>
       </div>

@@ -78,7 +78,7 @@ export default function BusinessSection() {
       )}
 
       {state.business.hasBusiness === 'No' && (
-        <p className="mt-4 text-sm text-charcoal-muted">
+        <p className="mt-4 text-sm text-muted-foreground">
           No worries — you can skip this section entirely or come back if anything changes.
         </p>
       )}

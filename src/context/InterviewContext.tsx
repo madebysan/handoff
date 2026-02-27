@@ -372,22 +372,22 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     <InterviewContext.Provider value={{ state, dispatch }}>
       {/* Resume prompt */}
       {showResume && (
-        <div className="fixed inset-0 z-50 bg-charcoal/50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-foreground/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
-            <h3 className="text-lg font-bold text-charcoal mb-2">Welcome back</h3>
-            <p className="text-charcoal-light text-sm mb-6">
+            <h3 className="text-lg font-bold text-foreground mb-2">Welcome back</h3>
+            <p className="text-secondary-foreground text-sm mb-6">
               You have a saved session{state.lastSaved ? ` from ${new Date(state.lastSaved).toLocaleDateString()}` : ''}. Would you like to continue where you left off?
             </p>
             <div className="flex gap-3">
               <button
                 onClick={handleResume}
-                className="flex-1 bg-charcoal text-cream px-4 py-2.5 rounded-full font-semibold hover:bg-charcoal-light transition-colors"
+                className="flex-1 bg-primary text-primary-foreground px-4 py-2.5 rounded-button font-semibold hover:bg-primary/90 transition-colors"
               >
                 Continue
               </button>
               <button
                 onClick={handleStartFresh}
-                className="flex-1 border border-border text-charcoal-light px-4 py-2.5 rounded-full font-medium hover:bg-warm-gray-light transition-colors"
+                className="flex-1 border border-border text-secondary-foreground px-4 py-2.5 rounded-button font-medium hover:bg-secondary transition-colors"
               >
                 Start fresh
               </button>
@@ -398,18 +398,18 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
 
       {/* Security warning */}
       {showSecurityWarning && (
-        <div className="fixed inset-0 z-50 bg-charcoal/50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-foreground/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
-            <h3 className="text-lg font-bold text-charcoal mb-2">A note about privacy</h3>
-            <p className="text-charcoal-light text-sm mb-4">
+            <h3 className="text-lg font-bold text-foreground mb-2">A note about privacy</h3>
+            <p className="text-secondary-foreground text-sm mb-4">
               Your responses are saved locally in this browser only. They are not encrypted and could be read by anyone with access to this device.
             </p>
-            <p className="text-charcoal-light text-sm mb-6">
+            <p className="text-secondary-foreground text-sm mb-6">
               When you're done, you can clear your data from the sidebar. Nothing is ever sent to any server.
             </p>
             <button
               onClick={handleDismissWarning}
-              className="w-full bg-charcoal text-cream px-4 py-2.5 rounded-full font-semibold hover:bg-charcoal-light transition-colors"
+              className="w-full bg-primary text-primary-foreground px-4 py-2.5 rounded-button font-semibold hover:bg-primary/90 transition-colors"
             >
               Got it
             </button>

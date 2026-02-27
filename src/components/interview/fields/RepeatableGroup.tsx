@@ -13,10 +13,10 @@ interface RepeatableGroupProps {
 export default function RepeatableGroup({ label, items, onAdd, onRemove, children, addLabel }: RepeatableGroupProps) {
   return (
     <div className="mb-6">
-      <h3 className="text-sm font-medium text-charcoal mb-4">{label}</h3>
+      <h3 className="text-sm font-medium text-foreground mb-4">{label}</h3>
       <div className="space-y-4">
         {items.map((_, index) => (
-          <div key={index} className="relative bg-white rounded-xl border border-warm-gray shadow-sm p-4 sm:p-5">
+          <div key={index} className="relative bg-white rounded-xl border border-input shadow-theme p-4 sm:p-5">
             {items.length > 1 && (
               <button
                 onClick={() => {
@@ -24,7 +24,7 @@ export default function RepeatableGroup({ label, items, onAdd, onRemove, childre
                     onRemove(index)
                   }
                 }}
-                className="absolute top-2 right-2 p-2.5 text-charcoal-muted hover:text-error rounded-lg hover:bg-error-bg transition-colors"
+                className="absolute top-2 right-2 p-2.5 text-muted-foreground hover:text-destructive rounded-md hover:bg-destructive-bg transition-colors"
                 title="Remove"
                 aria-label="Remove item"
               >
@@ -37,7 +37,7 @@ export default function RepeatableGroup({ label, items, onAdd, onRemove, childre
       </div>
       <button
         onClick={onAdd}
-        className="mt-4 w-full inline-flex items-center justify-center gap-2 text-sm text-sage-dark hover:text-sage hover:border-sage font-medium transition-colors border-2 border-dashed border-warm-gray rounded-xl py-3 min-h-[44px]"
+        className="mt-4 w-full inline-flex items-center justify-center gap-2 text-sm text-accent-foreground hover:text-primary hover:border-primary font-medium transition-colors border-2 border-dashed border-input rounded-xl py-3 min-h-[44px]"
       >
         <Plus className="w-4 h-4" />
         {addLabel || 'Add another'}

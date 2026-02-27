@@ -9,11 +9,11 @@ interface RadioGroupProps {
 export default function RadioGroup({ label, value, onChange, options, helpText }: RadioGroupProps) {
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-charcoal mb-1.5">
+      <label className="block text-sm font-medium text-foreground mb-1.5">
         {label}
       </label>
       {helpText && (
-        <p className="text-xs text-charcoal-muted mb-1.5">{helpText}</p>
+        <p className="text-xs text-muted-foreground mb-1.5">{helpText}</p>
       )}
       <div className="flex flex-wrap gap-3">
         {options.map((opt) => (
@@ -21,10 +21,10 @@ export default function RadioGroup({ label, value, onChange, options, helpText }
             key={opt}
             type="button"
             onClick={() => onChange(opt)}
-            className={`px-4 py-2.5 rounded-full text-sm font-medium border transition-colors min-h-[44px] ${
+            className={`px-4 py-2.5 rounded-button text-sm font-medium border transition-colors min-h-[44px] ${
               value === opt
-                ? 'bg-charcoal text-cream border-charcoal'
-                : 'bg-white text-charcoal-light border-warm-gray hover:border-sage'
+                ? 'bg-primary text-primary-foreground border-primary'
+                : 'bg-white text-secondary-foreground border-input hover:border-primary'
             }`}
           >
             {opt}

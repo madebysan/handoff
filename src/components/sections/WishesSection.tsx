@@ -15,7 +15,7 @@ export default function WishesSection() {
     <div>
       <SectionIntro {...section} />
 
-      <div className="bg-sage-bg/50 rounded-lg p-4 mb-8 text-sm text-charcoal-light">
+      <div className="bg-accent/50 rounded-md p-4 mb-8 text-sm text-secondary-foreground">
         Take a moment with this section. There are no right or wrong answers — just what matters to you. Many people find this section unexpectedly meaningful.
       </div>
 

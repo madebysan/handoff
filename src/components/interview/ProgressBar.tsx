@@ -37,8 +37,8 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
   return (
     <div className="sticky top-0 z-50 bg-white border-b border-border">
       <div className="px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-sm font-bold text-charcoal mr-3">Handoff</Link>
-        <span className="text-sm font-medium text-charcoal flex-1 truncate">
+        <Link to="/" className="text-sm font-bold text-foreground mr-3">Handoff</Link>
+        <span className="text-sm font-medium text-foreground flex-1 truncate">
           {SECTIONS[currentIndex]?.title}
         </span>
         <button
@@ -46,15 +46,15 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
           className="flex items-center gap-1.5 ml-2 flex-shrink-0"
           aria-label={isDemoMode ? 'Switch to empty state' : 'Switch to demo data'}
         >
-          <span className="text-[10px] text-charcoal-muted">{isDemoMode ? 'Demo' : 'Empty'}</span>
-          <div className={`relative w-7 h-4 rounded-full transition-colors ${isDemoMode ? 'bg-sage' : 'bg-charcoal-muted/30'}`}>
+          <span className="text-[10px] text-muted-foreground">{isDemoMode ? 'Demo' : 'Empty'}</span>
+          <div className={`relative w-7 h-4 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
             <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[14px]' : 'left-0.5'}`} />
           </div>
         </button>
       </div>
-      <div className="h-1 bg-warm-gray">
+      <div className="h-1 bg-muted">
         <div
-          className="h-full bg-sage transition-all duration-300"
+          className="h-full bg-primary transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -69,8 +69,8 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
               onClick={() => onNavigate(section.id)}
               className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
                 i === currentIndex
-                  ? 'bg-sage text-cream'
-                  : 'bg-warm-gray text-charcoal-muted active:bg-warm-gray-light'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground active:bg-secondary'
               }`}
               aria-label={section.title}
             >
