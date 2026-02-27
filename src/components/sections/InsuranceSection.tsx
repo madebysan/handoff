@@ -72,7 +72,6 @@ export default function InsuranceSection() {
               value={state.insurancePolicies[index].notes}
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'insurancePolicies', index, field: 'notes', value: v })}
               placeholder="Any additional details about this policy..."
-              rows={2}
             />
           </div>
         )}

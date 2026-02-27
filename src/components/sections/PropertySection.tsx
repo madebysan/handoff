@@ -63,7 +63,6 @@ export default function PropertySection() {
               value={state.properties[index].notes}
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'properties', index, field: 'notes', value: v })}
               placeholder="Any other details — lender info, key location, combination to safe..."
-              rows={2}
             />
           </div>
         )}

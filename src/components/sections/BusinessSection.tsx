@@ -45,7 +45,6 @@ export default function BusinessSection() {
             value={state.business.keyContacts}
             onChange={(v) => update('keyContacts', v)}
             placeholder="Business partner, accountant, attorney — names and contact info for anyone involved in running the business"
-            rows={3}
           />
           <TextField
             label="Where is the operating agreement?"
@@ -58,21 +57,18 @@ export default function BusinessSection() {
             value={state.business.bankAccountAccess}
             onChange={(v) => update('bankAccountAccess', v)}
             placeholder="How can your family or business partner access business bank accounts?"
-            rows={2}
           />
           <TextArea
             label="Succession or wind-down plan"
             value={state.business.successionPlan}
             onChange={(v) => update('successionPlan', v)}
             placeholder="What should happen to the business? Who takes over? Should it be sold, wound down, or continued?"
-            rows={3}
           />
           <TextArea
             label="Other business notes"
             value={state.business.otherBusinessNotes}
             onChange={(v) => update('otherBusinessNotes', v)}
             placeholder="Anything else about your business your family should know"
-            rows={2}
           />
         </div>
       )}

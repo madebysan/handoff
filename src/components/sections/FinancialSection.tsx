@@ -86,7 +86,6 @@ export default function FinancialSection() {
                 value={state.financialAccounts[index].accessNotes}
                 onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'financialAccounts', index, field: 'accessNotes', value: v })}
                 placeholder={placeholders.access}
-                rows={2}
               />
             </div>
           )

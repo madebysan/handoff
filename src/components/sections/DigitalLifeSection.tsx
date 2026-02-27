@@ -98,7 +98,6 @@ export default function DigitalLifeSection() {
         value={state.digital.otherDigital}
         onChange={(v) => update('otherDigital', v)}
         placeholder="Any other digital accounts, services, or information your family should know about"
-        rows={3}
       />
     </div>
   )

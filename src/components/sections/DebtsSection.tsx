@@ -69,7 +69,6 @@ export default function DebtsSection() {
                 placeholder={isOwedToMe
                   ? 'Any agreement in writing? When is it due? How should your family handle collecting it?'
                   : 'Is there a payoff clause, life insurance tied to this debt, or anything else your family should know?'}
-                rows={2}
               />
             </div>
           )
