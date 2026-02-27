@@ -41,16 +41,18 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
         <span className="text-sm font-medium text-foreground flex-1 truncate">
           {SECTIONS[currentIndex]?.title}
         </span>
-        <button
-          onClick={handleToggleDemo}
-          className="flex items-center gap-1.5 ml-2 flex-shrink-0"
-          aria-label={isDemoMode ? 'Switch to empty state' : 'Switch to demo data'}
-        >
-          <span className="text-[10px] text-muted-foreground">{isDemoMode ? 'Demo' : 'Empty'}</span>
-          <div className={`relative w-7 h-4 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
-            <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[14px]' : 'left-0.5'}`} />
-          </div>
-        </button>
+        {import.meta.env.DEV && (
+          <button
+            onClick={handleToggleDemo}
+            className="flex items-center gap-1.5 ml-2 flex-shrink-0"
+            aria-label={isDemoMode ? 'Switch to empty state' : 'Switch to demo data'}
+          >
+            <span className="text-[10px] text-muted-foreground">{isDemoMode ? 'Demo' : 'Empty'}</span>
+            <div className={`relative w-7 h-4 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
+              <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[14px]' : 'left-0.5'}`} />
+            </div>
+          </button>
+        )}
       </div>
       <div className="h-1 bg-muted">
         <div

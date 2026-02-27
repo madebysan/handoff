@@ -31,7 +31,7 @@ const FEATURES = [
 ]
 
 const SECTIONS_PREVIEW = [
-  'About You',
+  'The Basics',
   'Key Contacts',
   'Financial Accounts',
   'Insurance Policies',
@@ -42,7 +42,7 @@ const SECTIONS_PREVIEW = [
   'Business Interests',
   'Dependents & Pets',
   'Personal Wishes',
-  'Sign & Verify',
+  'Sign & Finish',
 ]
 
 // Animation constants
@@ -391,7 +391,7 @@ export default function LandingPage() {
               <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted text-foreground font-semibold text-sm mb-4">2</span>
               <h3 className="font-semibold text-foreground mb-2 text-lg">Download your document</h3>
               <p className="text-sm text-secondary-foreground leading-relaxed">
-                Get a professionally formatted PDF or Markdown file — your personal letter of instruction. Everything your family needs, organized and clear.
+                Get a professionally formatted PDF or Markdown file — your Handoff document. Everything your family needs, organized and clear.
               </p>
             </div>
             <div>
@@ -493,6 +493,12 @@ export default function LandingPage() {
             <a href="https://github.com/madebysan/handoff" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               GitHub
             </a>
+            <span>
+              Made by{' '}
+              <a href="https://santiagoalonso.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline underline-offset-2">
+                santiagoalonso.com
+              </a>
+            </span>
           </div>
         </div>
       </footer>
@@ -500,7 +506,7 @@ export default function LandingPage() {
       {/* Footer illustration — last element */}
       <div className="w-full overflow-hidden">
         <img
-          src="/footer-trees.avif"
+          src="/footer-trees.png"
           alt=""
           className="w-full h-auto"
           loading="lazy"

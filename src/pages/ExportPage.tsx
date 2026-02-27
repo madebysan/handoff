@@ -33,18 +33,15 @@ export default function ExportPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `handoff-letter-of-instruction-${new Date().toISOString().split('T')[0]}.md`
+    a.download = `handoff-${new Date().toISOString().split('T')[0]}.md`
     a.click()
     URL.revokeObjectURL(url)
   }
 
   const handleDownloadPDF = async () => {
     setGeneratingPDF(true)
-    // Use setTimeout to let the UI update before blocking with PDF generation
-    setTimeout(() => {
-      generatePDF(state)
-      setGeneratingPDF(false)
-    }, 50)
+    await generatePDF(state)
+    setGeneratingPDF(false)
   }
 
   const handleCopyMarkdown = () => {
@@ -57,9 +54,9 @@ export default function ExportPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-16 animate-fade-in">
-        <Link to="/interview/verification" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 sm:mb-8 transition-colors min-h-[44px]">
+        <Link to="/review" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 sm:mb-8 transition-colors min-h-[44px]">
           <ArrowLeft className="w-4 h-4" />
-          Back to interview
+          Back to review
         </Link>
 
         <div className="mb-8 sm:mb-12">
@@ -67,7 +64,7 @@ export default function ExportPage() {
             You just created something invaluable.
           </h1>
           <p className="text-base sm:text-lg text-secondary-foreground/90 leading-relaxed">
-            Most people never organize this information. Your family will thank you for taking the time. Download your letter of instruction below and store it somewhere safe.
+            Most people never organize this information. Your family will thank you for taking the time. Download your Handoff document below and store it somewhere safe.
           </p>
         </div>
 
@@ -126,7 +123,7 @@ export default function ExportPage() {
           <div>
             <p className="text-sm font-medium text-foreground mb-1">This is not a legal document.</p>
             <p className="text-sm text-secondary-foreground leading-relaxed">
-              Your letter of instruction is a practical guide for your family — it organizes what they need to know. To make any of your wishes legally binding, share this document with an estate attorney who can help you create or update a will, power of attorney, and other legal instruments.
+              Your Handoff document is a practical guide for your family — it organizes what they need to know. To make any of your wishes legally binding, share this document with an estate attorney who can help you create or update a will, power of attorney, and other legal instruments.
             </p>
           </div>
         </div>

@@ -145,6 +145,7 @@ export const mockState: InterviewState = {
     },
   ],
   digital: {
+    deviceAccess: 'iPhone 15 Pro: Face ID + PIN 2847. MacBook Pro: password is in 1Password vault under "MacBook Login". iPad: same PIN as iPhone.',
     emailAccounts: 'Personal: sarah.mitchell@gmail.com (primary email for everything). Work: sarah@studiomitchell.com (Google Workspace, admin). Old Hotmail: smitchell92@hotmail.com (rarely used but linked to some old accounts).',
     passwordManager: '1Password — the master password is written on a card in the sealed envelope in the fireproof safe (labeled "Digital Access"). David knows about the envelope but not the password. Our family vault has shared logins for streaming, utilities, etc.',
     twoFactorAuth: 'Google Authenticator on my iPhone for most accounts. Backup codes for critical accounts (Google, bank) are saved in a note in 1Password called "2FA Recovery Codes." If my phone is lost, use these codes.',
