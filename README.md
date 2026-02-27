@@ -57,6 +57,10 @@ npm run dev
 - Vite 7
 - Vitest + Playwright (testing)
 
+## Feedback
+
+Found a bug or have a feature idea? [Open an issue](https://github.com/madebysan/handoff/issues).
+
 ## License
 
 MIT
