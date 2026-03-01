@@ -67,4 +67,4 @@ MIT
 
 ---
 
-<p align="center">Made by <a href="https://santiagoalonso.com">santiagoalonso.com</a></p>
+<p align="center">Made by <a href="https://santiagoalonso.com">santiagoalonso.com</a> · <a href="https://github.com/madebysan">GitHub</a></p>
