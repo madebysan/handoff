@@ -282,7 +282,7 @@ export default function LandingPage() {
             className="text-4xl sm:text-6xl font-bold text-foreground tracking-tight leading-[1.1] mb-6"
             variants={item}
           >
-            Get your life organized so your family never has to guess.
+            One document so your family never has to guess.
           </motion.h1>
           <motion.p
             className="text-lg sm:text-xl text-secondary-foreground/90 leading-relaxed mb-10 max-w-2xl"
@@ -453,32 +453,44 @@ export default function LandingPage() {
       {/* Do it together */}
       <section className="max-w-6xl mx-auto px-5 sm:px-8 pb-12 sm:pb-16">
         <motion.div
-          className="bg-foreground rounded-xl p-8 sm:p-12 lg:p-16"
+          className="relative rounded-xl overflow-hidden"
           variants={scroll}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          <div className="max-w-2xl">
-            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6">
-              <Users className="w-6 h-6 text-background" />
+          <img
+            src="/footer-painting.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-black/70" />
+          <div className="relative p-8 sm:p-12 lg:p-16">
+            <div className="max-w-2xl">
+              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                <Users className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-tight mb-4">
+                Do it together
+              </h2>
+              <p className="text-white/70 leading-relaxed mb-8">
+                Thinking about suggesting this to a parent or partner? The easiest way to start the conversation is to do it yourself first, then share yours.
+              </p>
+              <Link
+                to="/interview"
+                className="inline-flex items-center gap-2 bg-background text-foreground px-7 py-3.5 rounded-button text-base font-semibold hover:bg-white transition-colors"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-background tracking-tight leading-tight mb-4">
-              Do it together
-            </h2>
-            <p className="text-background/70 leading-relaxed mb-2">
-              Thinking about suggesting this to a parent or partner? The easiest way to start the conversation is to do it yourself first, then share:
+            <p className="mt-8 text-[10px] text-white/40">
+              Auguste Allongé, <em>Autumn Landscape in the Forest of Fontainebleau</em>, c. 1860.{' '}
+              <a href="https://www.nga.gov/artworks/219032-autumn-landscape-forest-fontainebleau" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/60 transition-colors">
+                National Gallery of Art
+              </a>, Washington.
             </p>
-            <p className="text-background font-medium italic mb-8 text-xl sm:text-2xl leading-snug">
-              "I just organized all my information for the family. Took 30 minutes. Want to do yours?"
-            </p>
-            <Link
-              to="/interview"
-              className="inline-flex items-center gap-2 bg-background text-foreground px-7 py-3.5 rounded-button text-base font-semibold hover:bg-white transition-colors"
-            >
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
         </motion.div>
       </section>
@@ -503,15 +515,6 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* Footer illustration — last element */}
-      <div className="w-full overflow-hidden">
-        <img
-          src="/footer-trees.png"
-          alt=""
-          className="w-full h-auto"
-          loading="lazy"
-        />
-      </div>
     </div>
   )
 }

@@ -2,8 +2,8 @@
   <img src="assets/app-icon.png" width="128" height="128" alt="Handoff app icon">
 </p>
 <h1 align="center">Handoff</h1>
-<p align="center">Everything your family would need to know — organized in one place.<br>
-Accounts, documents, wishes, and more — into a single document you control entirely.</p>
+<p align="center">One document. Complete peace of mind.<br>
+Everything your family would need to know — accounts, documents, wishes — organized into a single document you control entirely.</p>
 <p align="center">React · Tailwind CSS · 100% client-side · No accounts · No servers</p>
 <p align="center"><a href="https://handoff-one.vercel.app"><strong>Try it live →</strong></a></p>
 
