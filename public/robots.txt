@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /interview
+Disallow: /review
+Disallow: /export
+
+Sitemap: https://handoff-one.vercel.app/sitemap.xml
