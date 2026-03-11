@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { InterviewProvider } from './context/InterviewContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import LandingPage from './pages/LandingPage'
@@ -20,6 +22,8 @@ function App() {
           </Routes>
         </BrowserRouter>
       </InterviewProvider>
+      <Analytics />
+      <SpeedInsights />
     </ErrorBoundary>
   )
 }
