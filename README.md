@@ -55,7 +55,9 @@ npm run dev
 - Motion (animations)
 - jsPDF (lazy-loaded PDF generation)
 - Vite 7
-- Vitest + Playwright (testing)## Feedback
+- Vitest + Playwright (testing)
+
+## Feedback
 
 Found a bug or have a feature idea? [Open an issue](https://github.com/madebysan/handoff/issues).
 
