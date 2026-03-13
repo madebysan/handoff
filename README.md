@@ -55,16 +55,14 @@ npm run dev
 - Motion (animations)
 - jsPDF (lazy-loaded PDF generation)
 - Vite 7
-- Vitest + Playwright (testing)
-
-## Feedback
+- Vitest + Playwright (testing)## Feedback
 
 Found a bug or have a feature idea? [Open an issue](https://github.com/madebysan/handoff/issues).
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ---
 
-<p align="center">Made by <a href="https://santiagoalonso.com">santiagoalonso.com</a> · <a href="https://github.com/madebysan">GitHub</a></p>
+Made by [santiagoalonso.com](https://santiagoalonso.com)
