@@ -13,7 +13,7 @@ Everything your family would need to know – accounts, documents, wishes – or
 
 ## What it does
 
-Handoff walks you through twelve sections modeled on what estate attorneys cover with clients:
+Handoff walks you through twelve sections based on what estate attorneys typically cover with clients:
 
 1. **The Basics** – who you are and why you're creating this
 2. **Key Contacts** – family, attorneys, financial advisors
