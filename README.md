@@ -1,5 +1,3 @@
-<p><img src="assets/app-icon.png" width="128" height="128" alt="Handoff app icon"></p>
-
 <h1>Handoff</h1>
 
 <p>One document. Complete peace of mind.<br>
