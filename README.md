@@ -1,15 +1,20 @@
-<p align="center">
-  <img src="assets/app-icon.png" width="128" height="128" alt="Handoff app icon">
-</p>
-<h1 align="center">Handoff</h1>
-<p align="center">One document. Complete peace of mind.<br>
-Everything your family would need to know – accounts, documents, wishes – organized into a single document you control entirely.</p>
-<p align="center">React · Tailwind CSS · 100% client-side · No accounts · No servers</p>
-<p align="center"><a href="https://handoff-one.vercel.app"><strong>Try it live →</strong></a></p>
+<p><img src="assets/app-icon.png" width="128" height="128" alt="Handoff app icon"></p>
 
-<p align="center">
-  <img src="assets/social-preview.png" width="720" alt="Handoff screenshot">
+<h1>Handoff</h1>
+
+<p>One document. Complete peace of mind.<br>
+Everything your family would need to know – accounts, documents, wishes – organized into a single document you control entirely.</p>
+
+<p>
+  <img src="https://img.shields.io/badge/React-61dafb" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-3178c6" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind-38bdf8" alt="Tailwind">
+  <img src="https://img.shields.io/badge/Vite-646cff" alt="Vite">
 </p>
+
+<p><a href="https://handoff-one.vercel.app">Try it live</a></p>
+
+![Handoff screenshot](assets/social-preview.png)
 
 ## What it does
 
