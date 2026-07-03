@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { useInterview } from '../../hooks/useInterview'
 import { getSection } from '../../lib/interview-data'
+import { useI18n } from '../../i18n'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import TextArea from '../interview/fields/TextArea'
@@ -11,10 +12,13 @@ import { Eraser } from 'lucide-react'
 interface SignaturePadProps {
   value: string
   onChange: (dataUrl: string) => void
+  signHereLabel: string
+  clearLabel: string
 }
 
-function SignaturePad({ value, onChange }: SignaturePadProps) {
+function SignaturePad({ value, onChange, signHereLabel, clearLabel }: SignaturePadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const initialValueRef = useRef(value)
   const [isDrawing, setIsDrawing] = useState(false)
   const [hasDrawn, setHasDrawn] = useState(false)
 
@@ -38,13 +42,13 @@ function SignaturePad({ value, onChange }: SignaturePadProps) {
     ctx.lineJoin = 'round'
 
     // Load existing signature if any
-    if (value) {
+    if (initialValueRef.current) {
       const img = new Image()
       img.onload = () => {
         ctx.drawImage(img, 0, 0, rect.width, rect.height)
         setHasDrawn(true)
       }
-      img.src = value
+      img.src = initialValueRef.current
     }
   }, []) // Only run once on mount
 
@@ -127,14 +131,14 @@ function SignaturePad({ value, onChange }: SignaturePadProps) {
         />
         {/* Signature line */}
         <div className="absolute bottom-8 left-6 right-6 border-b border-muted-foreground/20" />
-        <div className="absolute bottom-3 left-6 text-[10px] text-muted-foreground/40">sign here</div>
+        <div className="absolute bottom-3 left-6 text-[10px] text-muted-foreground/40">{signHereLabel}</div>
 
         {/* Clear button */}
         {hasDrawn && (
           <button
             onClick={clearSignature}
             className="absolute top-2 right-2 p-1.5 rounded-md bg-white/80 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Clear signature"
+            aria-label={clearLabel}
           >
             <Eraser className="w-4 h-4" />
           </button>
@@ -148,7 +152,9 @@ function SignaturePad({ value, onChange }: SignaturePadProps) {
 
 export default function VerificationSection() {
   const { state, dispatch } = useInterview()
-  const section = getSection('verification')
+  const { locale, t } = useI18n()
+  const section = getSection('verification', t)
+  const copy = t.forms.verification
   const [signatureMode, setSignatureMode] = useState<'draw' | 'type'>(
     () => state.verification.signatureData?.startsWith('typed:') ? 'type' : 'draw'
   )
@@ -160,7 +166,7 @@ export default function VerificationSection() {
   // Auto-fill today's date if empty
   useEffect(() => {
     if (!state.verification.verificationDate) {
-      const today = new Date().toLocaleDateString('en-US', {
+      const today = new Date().toLocaleDateString(locale, {
         year: 'numeric', month: 'long', day: 'numeric',
       })
       update('verificationDate', today)
@@ -181,28 +187,28 @@ export default function VerificationSection() {
       {/* Verification statement */}
       <div className="bg-card rounded-md p-5 mb-6 border border-input">
         <p className="text-sm text-foreground leading-relaxed">
-          By signing below, I confirm that I created this document voluntarily, that the information is accurate to the best of my knowledge, and that it reflects my current wishes.
+          {copy.statement}
         </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <TextField
-          label="Full legal name"
+          label={copy.fullLegalName}
           value={state.verification.fullName}
           onChange={(v) => update('fullName', v)}
-          placeholder="As it appears on your ID"
+          placeholder={copy.fullLegalNamePlaceholder}
         />
         <TextField
-          label="Date"
+          label={copy.date}
           value={state.verification.verificationDate}
           onChange={(v) => update('verificationDate', v)}
-          placeholder="Today's date"
+          placeholder={copy.datePlaceholder}
         />
       </div>
 
       {/* Signature */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-foreground mb-1.5">Your signature</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">{copy.signature}</label>
         <div className="flex flex-wrap gap-3 mb-3">
           <button
             type="button"
@@ -213,7 +219,7 @@ export default function VerificationSection() {
                 : 'bg-white text-secondary-foreground border-input hover:border-primary'
             }`}
           >
-            Draw
+            {copy.draw}
           </button>
           <button
             type="button"
@@ -224,18 +230,20 @@ export default function VerificationSection() {
                 : 'bg-white text-secondary-foreground border-input hover:border-primary'
             }`}
           >
-            Type
+            {copy.type}
           </button>
         </div>
 
         {signatureMode === 'draw' ? (
           <>
             <p className="text-xs text-muted-foreground mb-2">
-              Draw your signature using your mouse, trackpad, or finger
+              {copy.drawHelp}
             </p>
             <SignaturePad
               value={state.verification.signatureData}
               onChange={(v) => update('signatureData', v)}
+              signHereLabel={t.common.signHere}
+              clearLabel={t.common.clearSignature}
             />
           </>
         ) : (
@@ -245,14 +253,14 @@ export default function VerificationSection() {
                 type="text"
                 value={state.verification.signatureData.startsWith('typed:') ? state.verification.signatureData.slice(6) : ''}
                 onChange={(e) => update('signatureData', `typed:${e.target.value}`)}
-                placeholder="Type your full name"
+                placeholder={copy.typePlaceholder}
                 className="w-full text-2xl border-none outline-none bg-transparent text-foreground"
                 style={{ fontFamily: "'Caveat', 'Segoe Script', 'Bradley Hand', cursive" }}
               />
             </div>
             {/* Signature line */}
             <div className="absolute bottom-8 left-6 right-6 border-b border-muted-foreground/20" />
-            <div className="absolute bottom-3 left-6 text-[10px] text-muted-foreground/40">sign here</div>
+            <div className="absolute bottom-3 left-6 text-[10px] text-muted-foreground/40">{t.common.signHere}</div>
           </div>
         )}
       </div>
@@ -260,16 +268,16 @@ export default function VerificationSection() {
       {/* Family passphrase */}
       <div className="mt-8">
         <div className="mb-3">
-          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Personal proof</h3>
+          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{copy.personalProof}</h3>
           <div className="mt-2 border-t border-border" />
         </div>
 
         <TextArea
-          label="Something only you would know"
+          label={copy.proofLabel}
           value={state.verification.familyPassphrase}
           onChange={(v) => update('familyPassphrase', v)}
-          placeholder="A personal detail or memory that only you and your closest family would know..."
-          helpText="This isn't a security password — it's a personal detail that proves you wrote this"
+          placeholder={copy.proofPlaceholder}
+          helpText={copy.proofHelp}
         />
       </div>
     </div>

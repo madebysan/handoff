@@ -1,5 +1,7 @@
 import { useInterview } from '../../hooks/useInterview'
 import { getSection, ACCOUNT_TYPES } from '../../lib/interview-data'
+import { localizeOptions, useI18n } from '../../i18n'
+import type { Translation } from '../../i18n/translations'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import SelectField from '../interview/fields/SelectField'
@@ -8,59 +10,66 @@ import TextArea from '../interview/fields/TextArea'
 import RepeatableGroup from '../interview/fields/RepeatableGroup'
 
 // Dynamic placeholders based on account type
-function getPlaceholders(accountType: string) {
+function getPlaceholders(accountType: string, copy: Translation['forms']['financial']) {
   switch (accountType) {
     case 'Cryptocurrency':
       return {
-        institution: 'Coinbase, Ledger wallet, MetaMask...',
-        access: 'Where is the seed phrase / recovery phrase stored? Which exchanges hold funds? What wallets are used? e.g., Seed phrase is on a metal plate in the fireproof safe',
-        value: 'e.g., ~2 BTC + various altcoins',
+        institution: copy.placeholders.cryptoInstitution,
+        access: copy.placeholders.cryptoAccess,
+        value: copy.placeholders.cryptoValue,
       }
     case 'Physical (cash, gold, etc.)':
       return {
-        institution: 'Home safe, safe deposit box, buried...',
-        access: 'Where is it physically stored? Who else knows? How to access it? e.g., $5,000 cash in the safe behind the painting in the office. Combination is...',
-        value: 'e.g., $5,000 cash + gold coins',
+        institution: copy.placeholders.physicalInstitution,
+        access: copy.placeholders.physicalAccess,
+        value: copy.placeholders.physicalValue,
       }
     default:
       return {
-        institution: 'Chase, Fidelity, Vanguard, Coinbase...',
-        access: 'e.g., Login is in 1Password, or statements are in the filing cabinet in the office',
-        value: 'e.g., $10,000 - $50,000',
+        institution: copy.placeholders.defaultInstitution,
+        access: copy.placeholders.defaultAccess,
+        value: copy.placeholders.defaultValue,
       }
   }
 }
 
 export default function FinancialSection() {
   const { state, dispatch } = useInterview()
-  const section = getSection('financial')
+  const { t } = useI18n()
+  const section = getSection('financial', t)
+  const copy = t.forms.financial
+  const yesNoUnsureOptions = [
+    { value: 'Yes', label: t.common.yes },
+    { value: 'No', label: t.common.no },
+    { value: 'Not sure', label: t.common.notSure },
+  ]
 
   return (
     <div>
       <SectionIntro {...section} />
 
       <RepeatableGroup
-        label="Financial Accounts & Assets"
+        label={copy.groupLabel}
         items={state.financialAccounts}
         onAdd={() => dispatch({ type: 'ADD_REPEATABLE_ITEM', section: 'financialAccounts' })}
         onRemove={(i) => dispatch({ type: 'REMOVE_REPEATABLE_ITEM', section: 'financialAccounts', index: i })}
-        addLabel="Add another account or asset"
+        addLabel={copy.addLabel}
       >
         {(index) => {
           const accountType = state.financialAccounts[index].accountType
-          const placeholders = getPlaceholders(accountType)
+          const placeholders = getPlaceholders(accountType, copy)
 
           return (
             <div className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <SelectField
-                  label="Account type"
+                  label={copy.accountType}
                   value={accountType}
                   onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'financialAccounts', index, field: 'accountType', value: v })}
-                  options={ACCOUNT_TYPES}
+                  options={localizeOptions(ACCOUNT_TYPES, t.options.accountTypes)}
                 />
                 <TextField
-                  label={accountType === 'Physical (cash, gold, etc.)' ? 'Where is it stored?' : 'Institution or platform'}
+                  label={accountType === 'Physical (cash, gold, etc.)' ? copy.physicalLocation : copy.institution}
                   value={state.financialAccounts[index].institution}
                   onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'financialAccounts', index, field: 'institution', value: v })}
                   placeholder={placeholders.institution}
@@ -68,21 +77,21 @@ export default function FinancialSection() {
               </div>
               <div className="grid gap-3 sm:grid-cols-2 items-end">
                 <TextField
-                  label="Approximate value"
+                  label={copy.approximateValue}
                   value={state.financialAccounts[index].approxValue}
                   onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'financialAccounts', index, field: 'approxValue', value: v })}
                   placeholder={placeholders.value}
-                  helpText="A rough range is fine"
+                  helpText={copy.approximateValueHelp}
                 />
                 <RadioGroup
-                  label="Named beneficiary?"
+                  label={copy.namedBeneficiary}
                   value={state.financialAccounts[index].hasBeneficiary}
                   onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'financialAccounts', index, field: 'hasBeneficiary', value: v })}
-                  options={['Yes', 'No', 'Not sure']}
+                  options={yesNoUnsureOptions}
                 />
               </div>
               <TextArea
-                label="How to access"
+                label={copy.access}
                 value={state.financialAccounts[index].accessNotes}
                 onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'financialAccounts', index, field: 'accessNotes', value: v })}
                 placeholder={placeholders.access}

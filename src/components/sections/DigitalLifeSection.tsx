@@ -1,6 +1,7 @@
 import { Info } from 'lucide-react'
 import { useInterview } from '../../hooks/useInterview'
 import { getSection } from '../../lib/interview-data'
+import { useI18n } from '../../i18n'
 import SectionIntro from '../interview/SectionIntro'
 import TextArea from '../interview/fields/TextArea'
 
@@ -15,7 +16,9 @@ function GroupLabel({ children }: { children: string }) {
 
 export default function DigitalLifeSection() {
   const { state, dispatch } = useInterview()
-  const section = getSection('digital')
+  const { t } = useI18n()
+  const section = getSection('digital', t)
+  const copy = t.forms.digital
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'digital', field, value })
@@ -25,106 +28,108 @@ export default function DigitalLifeSection() {
     <div>
       <SectionIntro {...section} />
 
-      <GroupLabel>Core access</GroupLabel>
+      <GroupLabel>{copy.coreAccess}</GroupLabel>
 
       <TextArea
-        label="Device access"
+        label={copy.deviceAccess}
         value={state.digital.deviceAccess}
         onChange={(v) => update('deviceAccess', v)}
-        placeholder="Phone PIN, laptop password, tablet passcode — how to unlock the devices you use daily"
-        helpText="Your phone or laptop is often the first thing your family needs to access"
+        placeholder={copy.deviceAccessPlaceholder}
+        helpText={copy.deviceAccessHelp}
       />
 
       <TextArea
-        label="Email accounts"
+        label={copy.emailAccounts}
         value={state.digital.emailAccounts}
         onChange={(v) => update('emailAccounts', v)}
-        placeholder="List your email accounts and how to access them. e.g., Personal: john@gmail.com (password in 1Password). Work: john@company.com (contact IT department)"
-        helpText="Your email is the master key to most of your digital life"
+        placeholder={copy.emailAccountsPlaceholder}
+        helpText={copy.emailAccountsHelp}
       />
 
       <TextArea
-        label="Password manager"
+        label={copy.passwordManager}
         value={state.digital.passwordManager}
         onChange={(v) => update('passwordManager', v)}
-        placeholder="Which password manager do you use? How can your family access the master vault? e.g., 1Password — master password is in the sealed envelope in the safe"
-        helpText="Some people prefer to note where the password is stored rather than writing it directly — but it's your document, include whatever your family will need"
+        placeholder={copy.passwordManagerPlaceholder}
+        helpText={copy.passwordManagerHelp}
       />
 
       <TextArea
-        label="Two-factor authentication"
+        label={copy.twoFactorAuth}
         value={state.digital.twoFactorAuth}
         onChange={(v) => update('twoFactorAuth', v)}
-        placeholder="Which authenticator app do you use? Where are the backup/recovery codes stored? e.g., Google Authenticator on my iPhone. Recovery codes are in 1Password"
-        helpText="Without 2FA access, your family may be locked out of important accounts"
+        placeholder={copy.twoFactorAuthPlaceholder}
+        helpText={copy.twoFactorAuthHelp}
       />
 
-      <GroupLabel>Online presence</GroupLabel>
+      <GroupLabel>{copy.onlinePresence}</GroupLabel>
 
       <TextArea
-        label="Social media accounts"
+        label={copy.socialMedia}
         value={state.digital.socialMediaWishes}
         onChange={(v) => update('socialMediaWishes', v)}
-        placeholder="List your social media accounts and what you'd like done with them. e.g., Facebook — memorialize. Twitter — delete. LinkedIn — leave active for 6 months then delete"
-        helpText="What would you like done with each account? Delete, memorialize, or archive?"
+        placeholder={copy.socialMediaPlaceholder}
+        helpText={copy.socialMediaHelp}
       />
 
       <TextArea
-        label="Domain names & websites"
+        label={copy.domains}
         value={state.digital.domainNames}
         onChange={(v) => update('domainNames', v)}
-        placeholder="Any domain names you own? Websites you maintain? Where are they registered? e.g., mywebsite.com registered at Namecheap, auto-renews annually"
+        placeholder={copy.domainsPlaceholder}
       />
 
-      <GroupLabel>Digital assets</GroupLabel>
+      <GroupLabel>{copy.digitalAssets}</GroupLabel>
 
       <TextArea
-        label="Cloud storage"
+        label={copy.cloudStorage}
         value={state.digital.cloudStorage}
         onChange={(v) => update('cloudStorage', v)}
-        placeholder="Google Drive, Dropbox, iCloud — what's important in each? e.g., Google Drive has all tax documents in a folder called 'Taxes'. iCloud has family photos"
+        placeholder={copy.cloudStoragePlaceholder}
       />
 
       <TextArea
-        label="Digital purchases & loyalty programs"
+        label={copy.digitalPurchases}
         value={state.digital.digitalPurchases}
         onChange={(v) => update('digitalPurchases', v)}
-        placeholder="Kindle library, iTunes purchases, Steam games, airline miles, hotel points, credit card rewards — anything with significant value"
+        placeholder={copy.digitalPurchasesPlaceholder}
       />
 
-      <GroupLabel>Services & subscriptions</GroupLabel>
+      <GroupLabel>{copy.services}</GroupLabel>
 
       <TextArea
-        label="Subscriptions & recurring payments"
+        label={copy.subscriptions}
         value={state.digital.subscriptions}
         onChange={(v) => update('subscriptions', v)}
-        placeholder="List active subscriptions that should be cancelled. e.g., Netflix ($15/mo), Spotify ($10/mo), NYT ($4/mo), gym membership at Planet Fitness ($25/mo)"
-        helpText="These drain the account if nobody knows to cancel them"
+        placeholder={copy.subscriptionsPlaceholder}
+        helpText={copy.subscriptionsHelp}
       />
 
       <TextArea
-        label="Anything else digital"
+        label={copy.otherDigital}
         value={state.digital.otherDigital}
         onChange={(v) => update('otherDigital', v)}
-        placeholder="Any other digital accounts, services, or information your family should know about"
+        placeholder={copy.otherDigitalPlaceholder}
       />
 
       <div className="mt-8 bg-card/50 rounded-md p-5 border border-input">
         <div className="flex gap-3">
           <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-2">Set up digital legacy contacts now</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-2">{copy.legacyTitle}</h4>
             <p className="text-sm text-secondary-foreground leading-relaxed mb-3">
-              Most major platforms let you designate someone to access or manage your account. These take just a few minutes to configure:
+              {copy.legacyBody}
             </p>
             <ul className="text-sm text-secondary-foreground space-y-1.5">
-              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Google</strong> — Inactive Account Manager (sends data to your contact after inactivity)</span></li>
-              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Apple</strong> — Legacy Contact (gives access to your Apple ID data)</span></li>
-              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Facebook</strong> — Memorialization Contact (manages your profile)</span></li>
-              <li className="flex gap-2"><span className="text-primary font-medium">•</span> <span><strong>Instagram</strong> — Memorialization request through Facebook settings</span></li>
+              {copy.legacyItems.map(item => (
+                <li key={item.label} className="flex gap-2">
+                  <span className="text-primary font-medium">•</span>
+                  <span><strong>{item.label}</strong>: {item.body}</span>
+                </li>
+              ))}
             </ul>
             <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
-              Search "[platform name] legacy contact" or "inactive account" in your account settings to find these options.
+              {copy.legacyFooter}
             </p>
           </div>
         </div>

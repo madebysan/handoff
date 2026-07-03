@@ -4,6 +4,7 @@ import { generateMarkdown } from '../lib/markdown-generator'
 import { generatePDF } from '../lib/pdf-generator'
 import { FileText, FileDown, ArrowLeft, Copy, Check, AlertCircle, Loader2, Scale } from 'lucide-react'
 import { useState, useMemo } from 'react'
+import { useI18n } from '../i18n'
 import GuidanceSection from '../components/export/GuidanceSection'
 import DoItTogetherInvite from '../components/export/DoItTogetherInvite'
 
@@ -23,12 +24,13 @@ function hasAnyData(state: ReturnType<typeof useInterview>['state']): boolean {
 
 export default function ExportPage() {
   const { state } = useInterview()
+  const { t } = useI18n()
   const [copied, setCopied] = useState(false)
   const [generatingPDF, setGeneratingPDF] = useState(false)
   const dataExists = useMemo(() => hasAnyData(state), [state])
 
   const handleDownloadMarkdown = () => {
-    const md = generateMarkdown(state)
+    const md = generateMarkdown(state, t)
     const blob = new Blob([md], { type: 'text/markdown' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -40,12 +42,12 @@ export default function ExportPage() {
 
   const handleDownloadPDF = async () => {
     setGeneratingPDF(true)
-    await generatePDF(state)
+    await generatePDF(state, t)
     setGeneratingPDF(false)
   }
 
   const handleCopyMarkdown = () => {
-    const md = generateMarkdown(state)
+    const md = generateMarkdown(state, t)
     navigator.clipboard.writeText(md)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -56,15 +58,15 @@ export default function ExportPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-16 animate-fade-in">
         <Link to="/review" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 sm:mb-8 transition-colors min-h-[44px]">
           <ArrowLeft className="w-4 h-4" />
-          Back to review
+          {t.export.backToReview}
         </Link>
 
         <div className="mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            You just created something invaluable.
+            {t.export.title}
           </h1>
           <p className="text-base sm:text-lg text-secondary-foreground/90 leading-relaxed">
-            Most people never organize this information. Your family will thank you for taking the time. Download your Handoff document below and store it somewhere safe.
+            {t.export.body}
           </p>
         </div>
 
@@ -73,9 +75,9 @@ export default function ExportPage() {
           <div className="flex gap-3 bg-secondary rounded-xl p-4 mb-8 border border-border">
             <AlertCircle className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-foreground mb-1">No information entered yet</p>
+              <p className="text-sm font-medium text-foreground mb-1">{t.export.emptyTitle}</p>
               <p className="text-sm text-secondary-foreground">
-                Your document will be mostly empty. <Link to="/interview/contacts" className="text-accent-foreground hover:text-primary underline">Go back to the interview</Link> to fill in your information first.
+                {t.export.emptyBodyPrefix} <Link to="/interview/contacts" className="text-accent-foreground hover:text-primary underline">{t.export.emptyLink}</Link> {t.export.emptyBodySuffix}
               </p>
             </div>
           </div>
@@ -97,9 +99,9 @@ export default function ExportPage() {
             </div>
             <div>
               <div className="font-semibold text-foreground">
-                {generatingPDF ? 'Generating...' : 'Download PDF'}
+                {generatingPDF ? t.export.generating : t.export.downloadPdf}
               </div>
-              <div className="text-sm text-secondary-foreground">Professional format, ready to print or share</div>
+              <div className="text-sm text-secondary-foreground">{t.export.pdfBody}</div>
             </div>
           </button>
 
@@ -111,8 +113,8 @@ export default function ExportPage() {
               <FileText className="w-6 h-6 text-accent-foreground" />
             </div>
             <div>
-              <div className="font-semibold text-foreground">Download Markdown</div>
-              <div className="text-sm text-secondary-foreground">Portable, editable, future-proof format</div>
+              <div className="font-semibold text-foreground">{t.export.downloadMarkdown}</div>
+              <div className="text-sm text-secondary-foreground">{t.export.markdownBody}</div>
             </div>
           </button>
         </div>
@@ -121,9 +123,9 @@ export default function ExportPage() {
         <div className="flex gap-3 bg-secondary rounded-xl p-4 sm:p-5 mb-10 border border-border">
           <Scale className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-foreground mb-1">This is not a legal document.</p>
+            <p className="text-sm font-medium text-foreground mb-1">{t.export.legalTitle}</p>
             <p className="text-sm text-secondary-foreground leading-relaxed">
-              Your Handoff document is a practical guide for your family — it organizes what they need to know. To make any of your wishes legally binding, share this document with an estate attorney who can help you create or update a will, power of attorney, and other legal instruments.
+              {t.export.legalBody}
             </p>
           </div>
         </div>
@@ -134,7 +136,7 @@ export default function ExportPage() {
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
           >
             {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
-            {copied ? 'Copied to clipboard' : 'Copy as text'}
+            {copied ? t.common.copiedToClipboard : t.export.copyAsText}
           </button>
         </div>
 
@@ -147,7 +149,7 @@ export default function ExportPage() {
         <DoItTogetherInvite />
 
         <div className="mt-12 sm:mt-16 text-center text-sm text-muted-foreground">
-          <p>Generated with Handoff — free, private, yours to keep.</p>
+          <p>{t.export.footer}</p>
         </div>
       </div>
     </div>

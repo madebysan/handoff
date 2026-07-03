@@ -1,4 +1,4 @@
-import { SECTIONS } from '../../lib/interview-data'
+import { getSections } from '../../lib/interview-data'
 import { motion, useReducedMotion } from 'motion/react'
 import AboutMeSection from '../sections/AboutMeSection'
 import ContactsSection from '../sections/ContactsSection'
@@ -13,6 +13,7 @@ import DependentsSection from '../sections/DependentsSection'
 import WishesSection from '../sections/WishesSection'
 import VerificationSection from '../sections/VerificationSection'
 import { ArrowLeft, ArrowRight, SkipForward } from 'lucide-react'
+import { useI18n } from '../../i18n'
 
 interface SectionRendererProps {
   sectionId: string
@@ -42,7 +43,8 @@ const EASE = [0.25, 0.1, 0.25, 1] as const
 
 export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isFirst, isLast }: SectionRendererProps) {
   const SectionComponent = SECTION_COMPONENTS[sectionId]
-  const currentSection = SECTIONS.find(s => s.id === sectionId)
+  const { t } = useI18n()
+  const currentSection = getSections(t).find(s => s.id === sectionId)
   const prefersReducedMotion = useReducedMotion()
 
   if (!SectionComponent || !currentSection) return null
@@ -65,7 +67,7 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
               className="inline-flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
             >
               <ArrowLeft className="w-4 h-4" />
-              Previous
+              {t.common.previous}
             </button>
           )}
         </div>
@@ -76,13 +78,13 @@ export default function SectionRenderer({ sectionId, onNext, onPrev, onSkip, isF
             className="inline-flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] px-3"
           >
             <SkipForward className="w-3.5 h-3.5" />
-            Skip
+            {t.common.skip}
           </button>
           <button
             onClick={onNext}
             className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-button font-semibold hover:bg-primary/90 transition-colors flex-1 sm:flex-initial min-h-[44px]"
           >
-            {isLast ? 'Review & Finish' : 'Continue'}
+            {isLast ? t.common.reviewAndFinish : t.common.continue}
             {!isLast && <ArrowRight className="w-4 h-4" />}
           </button>
         </div>

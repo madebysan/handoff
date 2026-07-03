@@ -7,6 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test src/test/qa-console.spec.ts",
+    "qa:i18n": "playwright test src/test/i18n-layout.spec.ts",
+    "qa:i18n:review": "node scripts/generate-localization-review.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

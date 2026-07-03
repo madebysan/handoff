@@ -1,5 +1,6 @@
 import { useInterview } from '../../hooks/useInterview'
 import { getSection, CONTACT_ROLES } from '../../lib/interview-data'
+import { localizeOptions, useI18n } from '../../i18n'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import SelectField from '../interview/fields/SelectField'
@@ -9,66 +10,68 @@ import { Phone, Mail, User, Users } from 'lucide-react'
 
 export default function ContactsSection() {
   const { state, dispatch } = useInterview()
-  const section = getSection('contacts')
+  const { t } = useI18n()
+  const section = getSection('contacts', t)
+  const copy = t.forms.contacts
 
   return (
     <div>
       <SectionIntro {...section} />
 
       <RepeatableGroup
-        label="Key Contacts"
+        label={copy.groupLabel}
         items={state.contacts}
         onAdd={() => dispatch({ type: 'ADD_REPEATABLE_ITEM', section: 'contacts' })}
         onRemove={(i) => dispatch({ type: 'REMOVE_REPEATABLE_ITEM', section: 'contacts', index: i })}
-        addLabel="Add another contact"
+        addLabel={copy.addLabel}
       >
         {(index) => (
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField
-              label="Full name"
+              label={copy.fullName}
               value={state.contacts[index].name}
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'name', value: v })}
-              placeholder="Jane Doe"
+              placeholder={copy.fullNamePlaceholder}
               icon={<User className="w-4 h-4" />}
             />
             <SelectField
-              label="Role"
+              label={copy.role}
               value={state.contacts[index].role}
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'role', value: v })}
-              options={CONTACT_ROLES}
-              placeholder="Select role..."
+              options={localizeOptions(CONTACT_ROLES, t.options.contactRoles)}
+              placeholder={copy.rolePlaceholder}
             />
             <TextField
-              label="Phone"
+              label={copy.phone}
               value={state.contacts[index].phone}
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'phone', value: v })}
-              placeholder="(555) 123-4567"
+              placeholder={copy.phonePlaceholder}
               type="tel"
               icon={<Phone className="w-4 h-4" />}
             />
             <TextField
-              label="Email"
+              label={copy.email}
               value={state.contacts[index].email}
               onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'email', value: v })}
-              placeholder="jane@example.com"
+              placeholder={copy.emailPlaceholder}
               type="email"
               icon={<Mail className="w-4 h-4" />}
             />
             <div className="sm:col-span-2">
               <TextField
-                label="Relationship"
+                label={copy.relationship}
                 value={state.contacts[index].relationship}
                 onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'relationship', value: v })}
-                placeholder="Spouse, sibling, friend..."
+                placeholder={copy.relationshipPlaceholder}
                 icon={<Users className="w-4 h-4" />}
               />
             </div>
             <div className="sm:col-span-2">
               <TextArea
-                label="Notes"
+                label={copy.notes}
                 value={state.contacts[index].notes}
                 onChange={(v) => dispatch({ type: 'UPDATE_REPEATABLE_ITEM', section: 'contacts', index, field: 'notes', value: v })}
-                placeholder="Any additional context about this person's role..."
+                placeholder={copy.notesPlaceholder}
               />
             </div>
           </div>

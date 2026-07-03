@@ -12,6 +12,8 @@ Everything your family would need to know – accounts, documents, wishes – or
 
 <p><a href="https://handoff-one.vercel.app">Try it live</a></p>
 
+Available in English and Spanish. The app UI, review step, and generated exports follow the selected language.
+
 ![Handoff screenshot](assets/social-preview.png)
 
 ## What it does
@@ -59,6 +61,7 @@ npm run dev
 - jsPDF (lazy-loaded PDF generation)
 - Vite 7
 - Vitest + Playwright (testing)
+- English and Spanish UI with pseudo-locale layout QA
 
 ## Feedback
 

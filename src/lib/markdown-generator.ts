@@ -1,34 +1,53 @@
 import type { InterviewState } from '../context/InterviewContext'
+import { translations, type Translation } from '../i18n/translations'
 import { getSection } from './interview-data'
 
-export function generateMarkdown(state: InterviewState): string {
+function translateStoredValue(value: string, t: Translation): string {
+  const optionGroups = Object.values(t.options) as Record<string, string>[]
+  const optionLabel = optionGroups.find(group => group[value])?.[value]
+  if (optionLabel) return optionLabel
+  if (value === 'Yes') return t.common.yes
+  if (value === 'No') return t.common.no
+  if (value === 'Not sure') return t.common.notSure
+  return value
+}
+
+function sectionHeading(id: string, t: Translation): string {
+  const section = getSection(id, t)
+  return `## ${section.letter}. ${section.title}`
+}
+
+export function generateMarkdown(
+  state: InterviewState,
+  t: Translation = translations.en,
+): string {
   const lines: string[] = []
-  const timestamp = new Date().toLocaleDateString('en-US', {
+  const labels = t.document.labels
+  const timestamp = new Date().toLocaleDateString(t.document.dateLocale, {
     year: 'numeric', month: 'long', day: 'numeric',
   })
 
-  lines.push('# Handoff Document')
+  lines.push(`# ${t.document.title}`)
   lines.push('')
-  lines.push(`**Generated:** ${timestamp}`)
+  lines.push(`**${t.document.generated}:** ${timestamp}`)
   lines.push('')
-  lines.push('> **Important:** This is not a legal document. It is a practical guide intended to help your family locate important information and understand your wishes. Consult an attorney for legal estate planning documents.')
+  lines.push(`> **${t.document.important}**`)
   lines.push('')
   lines.push('---')
   lines.push('')
 
-  // Section A: About You
   const hasAboutMe = state.aboutMe?.fullName?.trim() || state.aboutMe?.reason?.trim() || state.aboutMe?.personalContext?.trim()
   if (hasAboutMe) {
-    lines.push(`## ${getSection('aboutMe').letter}. ${getSection('aboutMe').title}`)
+    lines.push(sectionHeading('aboutMe', t))
     lines.push('')
-    if (state.aboutMe.fullName?.trim()) lines.push(`**Full Name:** ${state.aboutMe.fullName}`)
-    if (state.aboutMe.dateOfBirth?.trim()) lines.push(`**Date of Birth:** ${state.aboutMe.dateOfBirth}`)
-    if (state.aboutMe.location?.trim()) lines.push(`**Location:** ${state.aboutMe.location}`)
-    if (state.aboutMe.reason?.trim()) lines.push(`**Reason for Creating This:** ${state.aboutMe.reason}`)
-    if (state.aboutMe.intendedFor?.trim()) lines.push(`**Intended For:** ${state.aboutMe.intendedFor}`)
+    if (state.aboutMe.fullName?.trim()) lines.push(`**${labels.fullName}:** ${state.aboutMe.fullName}`)
+    if (state.aboutMe.dateOfBirth?.trim()) lines.push(`**${labels.dateOfBirth}:** ${state.aboutMe.dateOfBirth}`)
+    if (state.aboutMe.location?.trim()) lines.push(`**${labels.location}:** ${state.aboutMe.location}`)
+    if (state.aboutMe.reason?.trim()) lines.push(`**${labels.reason}:** ${translateStoredValue(state.aboutMe.reason, t)}`)
+    if (state.aboutMe.intendedFor?.trim()) lines.push(`**${labels.intendedFor}:** ${state.aboutMe.intendedFor}`)
     lines.push('')
     if (state.aboutMe.personalContext?.trim()) {
-      lines.push('### Personal Context')
+      lines.push(`### ${labels.personalContext}`)
       lines.push('')
       lines.push(state.aboutMe.personalContext.trim())
       lines.push('')
@@ -37,89 +56,87 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section B: Contacts
   if (state.contacts.some(c => c.name.trim())) {
-    lines.push(`## ${getSection('contacts').letter}. ${getSection('contacts').title}`)
+    lines.push(sectionHeading('contacts', t))
     lines.push('')
     state.contacts.filter(c => c.name.trim()).forEach(c => {
       lines.push(`### ${c.name}`)
-      if (c.role) lines.push(`- **Role:** ${c.role}`)
-      if (c.relationship) lines.push(`- **Relationship:** ${c.relationship}`)
-      if (c.phone) lines.push(`- **Phone:** ${c.phone}`)
-      if (c.email) lines.push(`- **Email:** ${c.email}`)
-      if (c.notes) lines.push(`- **Notes:** ${c.notes}`)
+      if (c.role) lines.push(`- **${labels.role}:** ${translateStoredValue(c.role, t)}`)
+      if (c.relationship) lines.push(`- **${labels.relationship}:** ${c.relationship}`)
+      if (c.phone) lines.push(`- **${labels.phone}:** ${c.phone}`)
+      if (c.email) lines.push(`- **${labels.email}:** ${c.email}`)
+      if (c.notes) lines.push(`- **${labels.notes}:** ${c.notes}`)
       lines.push('')
     })
     lines.push('---')
     lines.push('')
   }
 
-  // Section C: Financial
   if (state.financialAccounts.some(a => a.institution.trim())) {
-    lines.push(`## ${getSection('financial').letter}. ${getSection('financial').title}`)
+    lines.push(sectionHeading('financial', t))
     lines.push('')
     state.financialAccounts.filter(a => a.institution.trim()).forEach(a => {
-      lines.push(`### ${a.institution}${a.accountType ? ` (${a.accountType})` : ''}`)
-      if (a.approxValue) lines.push(`- **Approximate value:** ${a.approxValue}`)
-      if (a.hasBeneficiary) lines.push(`- **Named beneficiary:** ${a.hasBeneficiary}`)
-      if (a.accessNotes) lines.push(`- **How to access:** ${a.accessNotes}`)
+      const accountType = translateStoredValue(a.accountType, t)
+      lines.push(`### ${a.institution}${a.accountType ? ` (${accountType})` : ''}`)
+      if (a.approxValue) lines.push(`- **${labels.approximateValue}:** ${a.approxValue}`)
+      if (a.hasBeneficiary) lines.push(`- **${labels.namedBeneficiary}:** ${translateStoredValue(a.hasBeneficiary, t)}`)
+      if (a.accessNotes) lines.push(`- **${labels.howToAccess}:** ${a.accessNotes}`)
       lines.push('')
     })
     lines.push('---')
     lines.push('')
   }
 
-  // Section D: Insurance
   if (state.insurancePolicies.some(p => p.carrier.trim())) {
-    lines.push(`## ${getSection('insurance').letter}. ${getSection('insurance').title}`)
+    lines.push(sectionHeading('insurance', t))
     lines.push('')
     state.insurancePolicies.filter(p => p.carrier.trim()).forEach(p => {
-      lines.push(`### ${p.carrier}${p.insuranceType ? ` — ${p.insuranceType}` : ''}`)
-      if (p.policyNumberLocation) lines.push(`- **Policy number location:** ${p.policyNumberLocation}`)
-      if (p.agentContact) lines.push(`- **Agent:** ${p.agentContact}`)
-      if (p.isEmployerProvided) lines.push(`- **Through employer:** ${p.isEmployerProvided}`)
-      if (p.employerContact) lines.push(`- **Employer/HR contact:** ${p.employerContact}`)
-      if (p.notes) lines.push(`- **Notes:** ${p.notes}`)
+      const insuranceType = translateStoredValue(p.insuranceType, t)
+      lines.push(`### ${p.carrier}${p.insuranceType ? ` - ${insuranceType}` : ''}`)
+      if (p.policyNumberLocation) lines.push(`- **${labels.policyNumberLocation}:** ${p.policyNumberLocation}`)
+      if (p.agentContact) lines.push(`- **${labels.agent}:** ${p.agentContact}`)
+      if (p.isEmployerProvided) lines.push(`- **${labels.throughEmployer}:** ${translateStoredValue(p.isEmployerProvided, t)}`)
+      if (p.employerContact) lines.push(`- **${labels.employerContact}:** ${p.employerContact}`)
+      if (p.notes) lines.push(`- **${labels.notes}:** ${p.notes}`)
       lines.push('')
     })
     lines.push('---')
     lines.push('')
   }
 
-  // Section E: Property
   if (state.properties.some(p => p.propertyType.trim() || p.description.trim())) {
-    lines.push(`## ${getSection('property').letter}. ${getSection('property').title}`)
+    lines.push(sectionHeading('property', t))
     lines.push('')
     state.properties.filter(p => p.propertyType.trim() || p.description.trim()).forEach(p => {
-      const title = p.description || p.propertyType
+      const propertyType = translateStoredValue(p.propertyType, t)
+      const title = p.description || propertyType
       lines.push(`### ${title}`)
-      if (p.propertyType && p.description) lines.push(`- **Type:** ${p.propertyType}`)
-      if (p.location) lines.push(`- **Location:** ${p.location}`)
-      if (p.deedTitleLocation) lines.push(`- **Deed/title location:** ${p.deedTitleLocation}`)
-      if (p.hasMortgage) lines.push(`- **Has mortgage/lien:** ${p.hasMortgage}`)
-      if (p.notes) lines.push(`- **Notes:** ${p.notes}`)
+      if (p.propertyType && p.description) lines.push(`- **${labels.type}:** ${propertyType}`)
+      if (p.location) lines.push(`- **${labels.location}:** ${p.location}`)
+      if (p.deedTitleLocation) lines.push(`- **${labels.deedTitleLocation}:** ${p.deedTitleLocation}`)
+      if (p.hasMortgage) lines.push(`- **${labels.mortgageLien}:** ${translateStoredValue(p.hasMortgage, t)}`)
+      if (p.notes) lines.push(`- **${labels.notes}:** ${p.notes}`)
       lines.push('')
     })
     lines.push('---')
     lines.push('')
   }
 
-  // Section F: Digital Life
   const digitalFields = [
-    { key: 'deviceAccess', label: 'Device Access' },
-    { key: 'emailAccounts', label: 'Email Accounts' },
-    { key: 'passwordManager', label: 'Password Manager' },
-    { key: 'twoFactorAuth', label: 'Two-Factor Authentication' },
-    { key: 'socialMediaWishes', label: 'Social Media' },
-    { key: 'cloudStorage', label: 'Cloud Storage' },
-    { key: 'subscriptions', label: 'Subscriptions & Recurring Payments' },
-{ key: 'domainNames', label: 'Domain Names & Websites' },
-    { key: 'digitalPurchases', label: 'Digital Purchases & Loyalty Programs' },
-    { key: 'otherDigital', label: 'Other Digital' },
+    { key: 'deviceAccess', label: labels.deviceAccess },
+    { key: 'emailAccounts', label: labels.emailAccounts },
+    { key: 'passwordManager', label: labels.passwordManager },
+    { key: 'twoFactorAuth', label: labels.twoFactorAuth },
+    { key: 'socialMediaWishes', label: labels.socialMedia },
+    { key: 'cloudStorage', label: labels.cloudStorage },
+    { key: 'subscriptions', label: labels.subscriptions },
+    { key: 'domainNames', label: labels.domains },
+    { key: 'digitalPurchases', label: labels.digitalPurchases },
+    { key: 'otherDigital', label: labels.otherDigital },
   ]
   const hasDigital = digitalFields.some(f => (state.digital as Record<string, string>)[f.key]?.trim())
   if (hasDigital) {
-    lines.push(`## ${getSection('digital').letter}. ${getSection('digital').title}`)
+    lines.push(sectionHeading('digital', t))
     lines.push('')
     digitalFields.forEach(f => {
       const val = (state.digital as Record<string, string>)[f.key]
@@ -134,55 +151,53 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section G: Legal Documents
   if (state.legalDocuments.some(d => d.documentType.trim())) {
-    lines.push(`## ${getSection('legal').letter}. ${getSection('legal').title}`)
+    lines.push(sectionHeading('legal', t))
     lines.push('')
     state.legalDocuments.filter(d => d.documentType.trim()).forEach(d => {
-      lines.push(`### ${d.documentType}`)
-      if (d.location) lines.push(`- **Location:** ${d.location}`)
-      if (d.lastUpdated) lines.push(`- **Last updated:** ${d.lastUpdated}`)
-      if (d.notes) lines.push(`- **Notes:** ${d.notes}`)
+      lines.push(`### ${translateStoredValue(d.documentType, t)}`)
+      if (d.location) lines.push(`- **${labels.location}:** ${d.location}`)
+      if (d.lastUpdated) lines.push(`- **${labels.lastUpdated}:** ${d.lastUpdated}`)
+      if (d.notes) lines.push(`- **${labels.notes}:** ${d.notes}`)
       lines.push('')
     })
     lines.push('---')
     lines.push('')
   }
 
-  // Section H: Debts
   if (state.debts.some(d => d.lender.trim())) {
-    lines.push(`## ${getSection('debts').letter}. ${getSection('debts').title}`)
+    lines.push(sectionHeading('debts', t))
     lines.push('')
     state.debts.filter(d => d.lender.trim()).forEach(d => {
       const isOwedToMe = d.direction === 'Owed to me'
-      const dirLabel = isOwedToMe ? ' *(owed to me)*' : ''
-      lines.push(`### ${d.lender}${d.debtType ? ` — ${d.debtType}` : ''}${dirLabel}`)
-      if (d.approxBalance) lines.push(`- **Approximate balance:** ${d.approxBalance}`)
-      if (!isOwedToMe && d.isCosigned) lines.push(`- **Co-signed:** ${d.isCosigned}`)
-      if (d.payoffNotes) lines.push(`- **Notes:** ${d.payoffNotes}`)
+      const debtType = translateStoredValue(d.debtType, t)
+      const dirLabel = isOwedToMe ? ` *(${t.document.owedToMe})*` : ''
+      lines.push(`### ${d.lender}${d.debtType ? ` - ${debtType}` : ''}${dirLabel}`)
+      if (d.approxBalance) lines.push(`- **${labels.approximateBalance}:** ${d.approxBalance}`)
+      if (!isOwedToMe && d.isCosigned) lines.push(`- **${labels.cosigned}:** ${translateStoredValue(d.isCosigned, t)}`)
+      if (d.payoffNotes) lines.push(`- **${labels.notes}:** ${d.payoffNotes}`)
       lines.push('')
     })
     lines.push('---')
     lines.push('')
   }
 
-  // Section I: Business
   const hasBusiness = state.business.hasBusiness === 'Yes' &&
-    Object.entries(state.business).some(([k, v]) => k !== 'hasBusiness' && v.trim())
+    Object.entries(state.business).some(([key, value]) => key !== 'hasBusiness' && value.trim())
   if (hasBusiness) {
-    lines.push(`## ${getSection('business').letter}. ${getSection('business').title}`)
+    lines.push(sectionHeading('business', t))
     lines.push('')
-    if (state.business.businessName) lines.push(`**Business:** ${state.business.businessName}`)
-    if (state.business.entityType) lines.push(`**Entity type:** ${state.business.entityType}`)
+    if (state.business.businessName) lines.push(`**${t.document.businessFallback}:** ${state.business.businessName}`)
+    if (state.business.entityType) lines.push(`**${labels.entityType}:** ${state.business.entityType}`)
     lines.push('')
-    const bizFields = [
-      { key: 'keyContacts', label: 'Key Contacts' },
-      { key: 'operatingAgreementLocation', label: 'Operating Agreement Location' },
-      { key: 'bankAccountAccess', label: 'Bank Account Access' },
-      { key: 'successionPlan', label: 'Succession Plan' },
-      { key: 'otherBusinessNotes', label: 'Other Notes' },
+    const businessFields = [
+      { key: 'keyContacts', label: labels.keyContacts },
+      { key: 'operatingAgreementLocation', label: labels.operatingAgreement },
+      { key: 'bankAccountAccess', label: labels.bankAccess },
+      { key: 'successionPlan', label: labels.successionPlan },
+      { key: 'otherBusinessNotes', label: labels.otherBusinessNotes },
     ]
-    bizFields.forEach(f => {
+    businessFields.forEach(f => {
       const val = (state.business as Record<string, string>)[f.key]
       if (val?.trim()) {
         lines.push(`### ${f.label}`)
@@ -195,20 +210,19 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section J: Dependents
-  const depFields = [
-    { key: 'minorChildren', label: 'Minor Children' },
-    { key: 'guardianshipPreferences', label: 'Guardianship Preferences' },
-    { key: 'elderlyDependents', label: 'Elderly Dependents' },
-    { key: 'pets', label: 'Pets' },
-    { key: 'specialNeeds', label: 'Special Needs' },
-    { key: 'otherCareNotes', label: 'Other Care Notes' },
+  const dependentFields = [
+    { key: 'minorChildren', label: labels.minorChildren },
+    { key: 'guardianshipPreferences', label: labels.guardianship },
+    { key: 'elderlyDependents', label: labels.elderlyDependents },
+    { key: 'pets', label: labels.pets },
+    { key: 'specialNeeds', label: labels.specialNeeds },
+    { key: 'otherCareNotes', label: labels.otherCareNotes },
   ]
-  const hasDependents = depFields.some(f => (state.dependents as Record<string, string>)[f.key]?.trim())
+  const hasDependents = dependentFields.some(f => (state.dependents as Record<string, string>)[f.key]?.trim())
   if (hasDependents) {
-    lines.push(`## ${getSection('dependents').letter}. ${getSection('dependents').title}`)
+    lines.push(sectionHeading('dependents', t))
     lines.push('')
-    depFields.forEach(f => {
+    dependentFields.forEach(f => {
       const val = (state.dependents as Record<string, string>)[f.key]
       if (val?.trim()) {
         lines.push(`### ${f.label}`)
@@ -221,18 +235,17 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  // Section K: Wishes
   const wishFields = [
-    { key: 'healthcareWishes', label: 'Healthcare & End-of-Life Wishes' },
-    { key: 'funeralPreferences', label: 'Funeral or Memorial Preferences' },
-    { key: 'organDonation', label: 'Organ Donation' },
-    { key: 'personalMessages', label: 'Personal Messages' },
-    { key: 'valuesStatement', label: 'Values & What Matters Most' },
-    { key: 'otherWishes', label: 'Other Wishes' },
+    { key: 'healthcareWishes', label: labels.healthcareWishes },
+    { key: 'funeralPreferences', label: labels.funeralPreferences },
+    { key: 'organDonation', label: labels.organDonation },
+    { key: 'personalMessages', label: labels.personalMessages },
+    { key: 'valuesStatement', label: labels.valuesStatement },
+    { key: 'otherWishes', label: labels.otherWishes },
   ]
   const hasWishes = wishFields.some(f => (state.wishes as Record<string, string>)[f.key]?.trim())
   if (hasWishes) {
-    lines.push(`## ${getSection('wishes').letter}. ${getSection('wishes').title}`)
+    lines.push(sectionHeading('wishes', t))
     lines.push('')
     wishFields.forEach(f => {
       const val = (state.wishes as Record<string, string>)[f.key]
@@ -245,21 +258,16 @@ export function generateMarkdown(state: InterviewState): string {
     })
   }
 
-  // Section L: Verification
   if (state.verification?.fullName?.trim() || state.verification?.familyPassphrase?.trim()) {
-    lines.push(`## ${getSection('verification').letter}. ${getSection('verification').title}`)
+    lines.push(sectionHeading('verification', t))
     lines.push('')
-    if (state.verification.fullName) {
-      lines.push(`**Signed by:** ${state.verification.fullName}`)
-    }
-    if (state.verification.verificationDate) {
-      lines.push(`**Date:** ${state.verification.verificationDate}`)
-    }
+    if (state.verification.fullName) lines.push(`**${labels.signedBy}:** ${state.verification.fullName}`)
+    if (state.verification.verificationDate) lines.push(`**${labels.date}:** ${state.verification.verificationDate}`)
     lines.push('')
-    lines.push('I confirm that I created this document voluntarily, that the information is accurate to the best of my knowledge, and that it reflects my current wishes.')
+    lines.push(t.document.verificationStatement)
     lines.push('')
     if (state.verification.familyPassphrase?.trim()) {
-      lines.push('### Personal Proof')
+      lines.push(`### ${labels.personalProof}`)
       lines.push('')
       lines.push(state.verification.familyPassphrase.trim())
       lines.push('')
@@ -268,7 +276,7 @@ export function generateMarkdown(state: InterviewState): string {
     lines.push('')
   }
 
-  lines.push('*Generated with Handoff — free, private, yours to keep.*')
+  lines.push(`*${t.document.generatedWith}*`)
 
   return lines.join('\n')
 }

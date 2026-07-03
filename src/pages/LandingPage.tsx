@@ -2,48 +2,15 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { ShieldCheck, Clock, FileText, Heart, Users, Lock, ArrowRight, CheckCircle2, Eye, EyeOff, WifiOff, Timer, Save } from 'lucide-react'
+import { useI18n } from '../i18n'
+import LanguageSwitcher from '../components/common/LanguageSwitcher'
 
-const FEATURES = [
-  {
-    key: 'completeness',
-    title: 'Structured completeness',
-    description: 'Twelve sections modeled on what estate attorneys cover with clients. Surfaces everything most people forget.',
-    icon: FileText,
-  },
-  {
-    key: 'privacy',
-    title: 'Zero-trust privacy',
-    description: 'Nothing leaves your browser. No accounts, no servers, no data collection. Your information stays on your device.',
-    icon: Lock,
-  },
-  {
-    key: 'gift',
-    title: 'A gift to your family',
-    description: 'Thirty minutes now saves your family weeks of confusion and stress when it matters most.',
-    icon: Heart,
-  },
-  {
-    key: 'quick',
-    title: 'Complete in one sitting',
-    description: 'Skip what doesn\'t apply, fill in what does. Save your draft and come back anytime.',
-    icon: Clock,
-  },
-]
-
-const SECTIONS_PREVIEW = [
-  'The Basics',
-  'Key Contacts',
-  'Financial Accounts',
-  'Insurance Policies',
-  'Property & Assets',
-  'Digital Life',
-  'Legal Documents',
-  'Debts & Liabilities',
-  'Business Interests',
-  'Dependents & Pets',
-  'Personal Wishes',
-  'Sign & Finish',
-]
+const FEATURE_ICONS: Record<string, typeof FileText> = {
+  completeness: FileText,
+  privacy: Lock,
+  gift: Heart,
+  quick: Clock,
+}
 
 // Animation constants
 const EASE = [0.25, 0.1, 0.25, 1] as const
@@ -80,6 +47,9 @@ const featureFade = {
 }
 
 function FeatureVisual({ featureKey }: { featureKey: string }) {
+  const { t } = useI18n()
+  const copy = t.landing.featureVisual
+
   switch (featureKey) {
     case 'completeness':
       return (
@@ -89,12 +59,12 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
               <FileText className="w-4 h-4 text-accent-foreground" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">Your Handoff Document</p>
-              <p className="text-xs text-muted-foreground">12 sections</p>
+              <p className="text-sm font-semibold text-foreground">{copy.documentTitle}</p>
+              <p className="text-xs text-muted-foreground">{copy.sectionsCount}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            {SECTIONS_PREVIEW.map((name) => (
+            {t.landing.sectionsPreview.map((name) => (
               <div key={name} className="flex items-center gap-2 px-3 py-2 rounded-md bg-background text-xs text-secondary-foreground">
                 <CheckCircle2 className="w-3.5 h-3.5 text-ring flex-shrink-0" />
                 {name}
@@ -111,7 +81,7 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
             <div className="w-8 h-8 bg-accent rounded-md flex items-center justify-center">
               <ShieldCheck className="w-4 h-4 text-accent-foreground" />
             </div>
-            <p className="text-sm font-semibold text-foreground">How your data flows</p>
+            <p className="text-sm font-semibold text-foreground">{copy.dataFlowTitle}</p>
           </div>
           <div className="space-y-3">
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-background">
@@ -119,8 +89,8 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
                 <Eye className="w-4 h-4 text-accent-foreground" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">You type answers</p>
-                <p className="text-[11px] text-muted-foreground">Data stays in your browser tab</p>
+                <p className="text-xs font-semibold text-foreground">{copy.typeAnswersTitle}</p>
+                <p className="text-[11px] text-muted-foreground">{copy.typeAnswersBody}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-background">
@@ -128,8 +98,8 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
                 <WifiOff className="w-4 h-4 text-accent-foreground" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">No network requests</p>
-                <p className="text-[11px] text-muted-foreground">Zero data sent to any server</p>
+                <p className="text-xs font-semibold text-foreground">{copy.noNetworkTitle}</p>
+                <p className="text-[11px] text-muted-foreground">{copy.noNetworkBody}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-background">
@@ -137,8 +107,8 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
                 <EyeOff className="w-4 h-4 text-accent-foreground" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">No tracking or analytics</p>
-                <p className="text-[11px] text-muted-foreground">We don't know you exist</p>
+                <p className="text-xs font-semibold text-foreground">{copy.noTrackingTitle}</p>
+                <p className="text-[11px] text-muted-foreground">{copy.noTrackingBody}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-background">
@@ -146,8 +116,8 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
                 <Lock className="w-4 h-4 text-accent-foreground" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">Download and it's gone</p>
-                <p className="text-[11px] text-muted-foreground">Clear browser data anytime</p>
+                <p className="text-xs font-semibold text-foreground">{copy.downloadGoneTitle}</p>
+                <p className="text-[11px] text-muted-foreground">{copy.downloadGoneBody}</p>
               </div>
             </div>
           </div>
@@ -161,16 +131,10 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
             <div className="w-8 h-8 bg-accent rounded-md flex items-center justify-center">
               <Heart className="w-4 h-4 text-accent-foreground" />
             </div>
-            <p className="text-sm font-semibold text-foreground">Without a Handoff document</p>
+            <p className="text-sm font-semibold text-foreground">{copy.withoutTitle}</p>
           </div>
           <div className="space-y-2 mb-5">
-            {[
-              'Where are the insurance policies?',
-              'What bank accounts did they have?',
-              'Who is the estate attorney?',
-              'What are the login credentials?',
-              'Did they have a storage unit?',
-            ].map((q) => (
+            {copy.familyQuestions.map((q) => (
               <div key={q} className="flex items-center gap-2 px-3 py-2.5 rounded-md bg-destructive-bg/60 text-xs text-secondary-foreground">
                 <span className="text-destructive flex-shrink-0">?</span>
                 {q}
@@ -181,10 +145,10 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
             <div className="w-8 h-8 bg-accent rounded-md flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4 text-accent-foreground" />
             </div>
-            <p className="text-sm font-semibold text-foreground">With a Handoff document</p>
+            <p className="text-sm font-semibold text-foreground">{copy.withTitle}</p>
           </div>
           <div className="px-3 py-2.5 rounded-md bg-accent text-xs text-accent-foreground font-medium">
-            Everything answered, organized, in one place.
+            {copy.withBody}
           </div>
         </div>
       )
@@ -196,14 +160,14 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
             <div className="w-8 h-8 bg-accent rounded-md flex items-center justify-center">
               <Timer className="w-4 h-4 text-accent-foreground" />
             </div>
-            <p className="text-sm font-semibold text-foreground">Built for real life</p>
+            <p className="text-sm font-semibold text-foreground">{copy.builtTitle}</p>
           </div>
           <div className="space-y-3">
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-background">
               <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0 text-xs font-semibold text-accent-foreground">~30</div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">Minutes to complete</p>
-                <p className="text-[11px] text-muted-foreground">Most people finish in one sitting</p>
+                <p className="text-xs font-semibold text-foreground">{copy.minutesTitle}</p>
+                <p className="text-[11px] text-muted-foreground">{copy.minutesBody}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-background">
@@ -211,8 +175,8 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
                 <ArrowRight className="w-4 h-4 text-accent-foreground" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">Skip what doesn't apply</p>
-                <p className="text-[11px] text-muted-foreground">No section is required</p>
+                <p className="text-xs font-semibold text-foreground">{copy.skipTitle}</p>
+                <p className="text-[11px] text-muted-foreground">{copy.skipBody}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-background">
@@ -220,8 +184,8 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
                 <Save className="w-4 h-4 text-accent-foreground" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground">Save draft, come back later</p>
-                <p className="text-[11px] text-muted-foreground">Your progress is saved locally</p>
+                <p className="text-xs font-semibold text-foreground">{copy.saveTitle}</p>
+                <p className="text-[11px] text-muted-foreground">{copy.saveBody}</p>
               </div>
             </div>
           </div>
@@ -236,6 +200,11 @@ function FeatureVisual({ featureKey }: { featureKey: string }) {
 export default function LandingPage() {
   const [activeFeature, setActiveFeature] = useState(0)
   const prefersReducedMotion = useReducedMotion()
+  const { t } = useI18n()
+  const features = t.landing.features.map(feature => ({
+    ...feature,
+    icon: FEATURE_ICONS[feature.key],
+  }))
 
   // When reduced motion is preferred, skip all animations
   const noMotion = {
@@ -262,12 +231,15 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="max-w-6xl mx-auto px-5 sm:px-8 py-5 sm:py-6 flex items-center justify-between">
         <span className="text-xl font-bold text-foreground tracking-tight">Handoff</span>
-        <Link
-          to="/interview"
-          className="bg-primary text-primary-foreground px-5 py-2.5 rounded-button text-sm font-semibold hover:bg-primary/90 transition-colors"
-        >
-          Get Started
-        </Link>
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher compact />
+          <Link
+            to="/interview"
+            className="bg-primary text-primary-foreground px-5 py-2.5 rounded-button text-sm font-semibold hover:bg-primary/90 transition-colors"
+          >
+            {t.landing.navCta}
+          </Link>
+        </div>
       </nav>
 
       {/* Hero */}
@@ -282,13 +254,13 @@ export default function LandingPage() {
             className="text-4xl sm:text-6xl font-bold text-foreground tracking-tight leading-[1.1] mb-6"
             variants={item}
           >
-            One document so your family never has to guess.
+            {t.landing.heroTitle}
           </motion.h1>
           <motion.p
             className="text-lg sm:text-xl text-secondary-foreground/90 leading-relaxed mb-10 max-w-2xl"
             variants={item}
           >
-            Handoff guides you through everything your family would need to know — accounts, documents, wishes, and more — and produces a single document you control entirely.
+            {t.landing.heroBody}
           </motion.p>
           <motion.div
             className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
@@ -298,11 +270,11 @@ export default function LandingPage() {
               to="/interview"
               className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3.5 rounded-button text-base font-semibold hover:bg-primary/90 transition-colors"
             >
-              Get Started
+              {t.common.getStarted}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <p className="text-muted-foreground text-sm">
-              Free forever. No account needed. Nothing stored online.
+              {t.landing.heroNote}
             </p>
           </motion.div>
         </motion.div>
@@ -314,22 +286,22 @@ export default function LandingPage() {
           {/* Left column — heading + visual */}
           <div>
             <span className="inline-block text-xs font-medium text-muted-foreground bg-secondary border border-border px-3.5 py-1.5 rounded-full mb-5">
-              Why Handoff
+              {t.landing.whyEyebrow}
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight leading-tight mb-6">
-              Everything your family would need, in one place.
+              {t.landing.whyTitle}
             </h2>
             <p className="text-secondary-foreground leading-relaxed mb-8">
-              Most people never organize this information. When something happens, families are left scrambling — searching through drawers, guessing at passwords, calling banks. Handoff fixes that.
+              {t.landing.whyBody}
             </p>
 
             <div className="min-h-[340px] sm:min-h-[360px]">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={FEATURES[activeFeature].key}
+                  key={features[activeFeature].key}
                   {...fade}
                 >
-                  <FeatureVisual featureKey={FEATURES[activeFeature].key} />
+                  <FeatureVisual featureKey={features[activeFeature].key} />
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -337,7 +309,7 @@ export default function LandingPage() {
 
           {/* Right column — clickable feature items */}
           <div className="space-y-3 lg:pt-16">
-            {FEATURES.map((feature, i) => (
+            {features.map((feature, i) => (
               <button
                 key={feature.key}
                 onClick={() => setActiveFeature(i)}
@@ -368,10 +340,10 @@ export default function LandingPage() {
       <section className="bg-white border-y border-border">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
           <span className="inline-block text-xs font-medium text-muted-foreground bg-background border border-border px-3.5 py-1.5 rounded-full mb-5">
-            How it works
+            {t.landing.howEyebrow}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight leading-tight mb-12 max-w-xl">
-            Three steps. Thirty minutes. Done forever.
+            {t.landing.howTitle}
           </h2>
           <motion.div
             className="grid gap-8 sm:gap-12 sm:grid-cols-3"
@@ -380,27 +352,15 @@ export default function LandingPage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
           >
-            <div>
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted text-foreground font-semibold text-sm mb-4">1</span>
-              <h3 className="font-semibold text-foreground mb-2 text-lg">Answer guided questions</h3>
-              <p className="text-sm text-secondary-foreground leading-relaxed">
-                Walk through twelve sections covering contacts, accounts, insurance, digital life, legal documents, debts, dependents, and personal wishes. Skip anything that doesn't apply.
-              </p>
-            </div>
-            <div>
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted text-foreground font-semibold text-sm mb-4">2</span>
-              <h3 className="font-semibold text-foreground mb-2 text-lg">Download your document</h3>
-              <p className="text-sm text-secondary-foreground leading-relaxed">
-                Get a professionally formatted PDF or Markdown file — your Handoff document. Everything your family needs, organized and clear.
-              </p>
-            </div>
-            <div>
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted text-foreground font-semibold text-sm mb-4">3</span>
-              <h3 className="font-semibold text-foreground mb-2 text-lg">Store it, share it, done</h3>
-              <p className="text-sm text-secondary-foreground leading-relaxed">
-                Put a copy in your safe, share with your spouse, or give to your attorney. You control where it lives and who sees it.
-              </p>
-            </div>
+            {t.landing.howSteps.map((step, index) => (
+              <div key={step.title}>
+                <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted text-foreground font-semibold text-sm mb-4">{index + 1}</span>
+                <h3 className="font-semibold text-foreground mb-2 text-lg">{step.title}</h3>
+                <p className="text-sm text-secondary-foreground leading-relaxed">
+                  {step.body}
+                </p>
+              </div>
+            ))}
           </motion.div>
         </div>
       </section>
@@ -416,21 +376,16 @@ export default function LandingPage() {
         >
           <div>
             <span className="inline-block text-xs font-medium text-muted-foreground bg-secondary border border-border px-3.5 py-1.5 rounded-full mb-5">
-              Privacy
+              {t.landing.privacyEyebrow}
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight leading-tight mb-6">
-              Your data never leaves your device.
+              {t.landing.privacyTitle}
             </h2>
             <p className="text-secondary-foreground leading-relaxed mb-6">
-              Handoff runs entirely in your browser. We don't have servers, accounts, or analytics. There's no database to hack because there's no database, period.
+              {t.landing.privacyBody}
             </p>
             <div className="space-y-3">
-              {[
-                'No account creation required',
-                'No data transmitted to any server',
-                'Everything saved locally in your browser',
-                'Export your document and clear your data anytime',
-              ].map((item) => (
+              {t.landing.privacyBullets.map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-secondary-foreground">{item}</p>
@@ -441,10 +396,10 @@ export default function LandingPage() {
           <div className="bg-secondary rounded-xl border border-border p-8 sm:p-10">
             <Lock className="w-10 h-10 text-accent-foreground mb-5" />
             <p className="text-lg font-semibold text-foreground mb-3">
-              The most secure personal document tool is the one that never sees your data.
+              {t.landing.privacyCardTitle}
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Unlike cloud-based services, Handoff has zero attack surface. Your sensitive information — bank accounts, insurance policies, passwords — exists only on your machine, in your document.
+              {t.landing.privacyCardBody}
             </p>
           </div>
         </motion.div>
@@ -472,23 +427,23 @@ export default function LandingPage() {
                 <Users className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-tight mb-4">
-                Do it together
+                {t.landing.togetherTitle}
               </h2>
               <p className="text-white/70 leading-relaxed mb-8">
-                Thinking about suggesting this to a parent or partner? The easiest way to start the conversation is to do it yourself first, then share yours.
+                {t.landing.togetherBody}
               </p>
               <Link
                 to="/interview"
                 className="inline-flex items-center gap-2 bg-background text-foreground px-7 py-3.5 rounded-button text-base font-semibold hover:bg-white transition-colors"
               >
-                Get Started
+                {t.common.getStarted}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
             <p className="mt-8 text-[10px] text-white/40">
-              Auguste Allongé, <em>Autumn Landscape in the Forest of Fontainebleau</em>, c. 1860.{' '}
+              {t.landing.artCredit}{' '}
               <a href="https://www.nga.gov/artworks/219032-autumn-landscape-forest-fontainebleau" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-white/60 transition-colors">
-                National Gallery of Art
+                {t.landing.artSource}
               </a>, Washington.
             </p>
           </div>
@@ -499,14 +454,14 @@ export default function LandingPage() {
       <footer className="border-t border-border bg-background">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">Handoff</span> — Free, open-source, yours to keep.
+            <span className="font-semibold text-foreground">Handoff</span> - {t.landing.footerTagline}
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <a href="https://github.com/madebysan/handoff" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               GitHub
             </a>
             <span>
-              Made by{' '}
+              {t.landing.madeBy}{' '}
               <a href="https://santiagoalonso.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline underline-offset-2">
                 santiagoalonso.com
               </a>

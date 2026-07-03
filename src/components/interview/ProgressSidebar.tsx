@@ -1,9 +1,11 @@
 import { useRef } from 'react'
-import { SECTIONS } from '../../lib/interview-data'
+import { getSections } from '../../lib/interview-data'
 import { mockState } from '../../lib/mock-data'
 import { initialState } from '../../context/InterviewContext'
 import { Link } from 'react-router-dom'
 import { useInterview } from '../../hooks/useInterview'
+import { useI18n } from '../../i18n'
+import LanguageSwitcher from '../common/LanguageSwitcher'
 import {
   CheckCircle2, ShieldCheck, Download, Upload, CircleUser,
   Users, Landmark, Shield, Home, Monitor, FileText,
@@ -56,6 +58,8 @@ function sectionHasData(state: ReturnType<typeof useInterview>['state'], section
 
 export default function ProgressSidebar({ currentSectionId, onNavigate }: ProgressSidebarProps) {
   const { state, dispatch } = useInterview()
+  const { locale, t } = useI18n()
+  const sections = getSections(t)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const isDemoMode = state.contacts.length > 0 && state.contacts[0].name === 'David Mitchell'
@@ -104,10 +108,13 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
 
   return (
     <aside className="w-72 h-screen sticky top-0 border-r border-border bg-white p-6 overflow-y-auto">
-      <Link to="/" className="block mb-6">
-        <h2 className="text-lg font-bold text-foreground">Handoff</h2>
-        <p className="text-xs text-muted-foreground">Your Handoff document</p>
-      </Link>
+      <div className="mb-6 flex items-start justify-between gap-3">
+        <Link to="/" className="block">
+          <h2 className="text-lg font-bold text-foreground">Handoff</h2>
+          <p className="text-xs text-muted-foreground">{t.interview.sidebarSubtitle}</p>
+        </Link>
+        <LanguageSwitcher compact />
+      </div>
 
       {/* Demo mode toggle — dev only */}
       {import.meta.env.DEV && (
@@ -116,7 +123,7 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
           className="w-full flex items-center justify-between mb-6 px-3 py-2 rounded-md border border-border bg-secondary hover:bg-muted transition-colors"
         >
           <span className="text-xs font-medium text-secondary-foreground">
-            {isDemoMode ? 'Prefilled demo' : 'Empty state'}
+            {isDemoMode ? t.interview.prefilledDemo : t.interview.emptyState}
           </span>
           <div className={`relative w-9 h-5 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
             <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[18px]' : 'left-0.5'}`} />
@@ -125,7 +132,7 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
       )}
 
       <nav className="space-y-1">
-        {SECTIONS.map((section) => {
+        {sections.map((section) => {
           const isActive = section.id === currentSectionId
           const hasData = sectionHasData(state, section.id)
           const IconComponent = ICON_MAP[section.icon]
@@ -162,7 +169,7 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
           to="/review"
           className="block w-full text-center bg-primary text-primary-foreground px-4 py-2.5 rounded-button text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
-          Review & Finish
+          {t.interview.reviewAndFinish}
         </Link>
 
         {/* Export/Import */}
@@ -172,14 +179,14 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
             className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-foreground py-2 rounded-button border border-border hover:bg-secondary transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
-            Save draft
+            {t.interview.saveDraft}
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
             className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-foreground py-2 rounded-button border border-border hover:bg-secondary transition-colors"
           >
             <Upload className="w-3.5 h-3.5" />
-            Load draft
+            {t.interview.loadDraft}
           </button>
           <input
             ref={fileInputRef}
@@ -193,14 +200,14 @@ export default function ProgressSidebar({ currentSectionId, onNavigate }: Progre
 
       {state.lastSaved && (
         <p className="mt-4 text-xs text-muted-foreground text-center">
-          Saved {new Date(state.lastSaved).toLocaleTimeString()}
+          {t.common.savedAt(new Date(state.lastSaved).toLocaleTimeString(locale))}
         </p>
       )}
 
       <div className="mt-6 flex items-start gap-2 px-2">
         <ShieldCheck className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
         <p className="text-[11px] text-muted-foreground leading-relaxed">
-          Your data never leaves your device. Everything is stored locally in your browser — nothing is sent to any server.
+          {t.interview.privacyNote}
         </p>
       </div>
     </aside>

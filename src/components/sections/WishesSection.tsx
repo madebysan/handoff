@@ -1,11 +1,14 @@
 import { useInterview } from '../../hooks/useInterview'
 import { getSection } from '../../lib/interview-data'
+import { useI18n } from '../../i18n'
 import SectionIntro from '../interview/SectionIntro'
 import TextArea from '../interview/fields/TextArea'
 
 export default function WishesSection() {
   const { state, dispatch } = useInterview()
-  const section = getSection('wishes')
+  const { t } = useI18n()
+  const section = getSection('wishes', t)
+  const copy = t.forms.wishes
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'wishes', field, value })
@@ -16,52 +19,52 @@ export default function WishesSection() {
       <SectionIntro {...section} />
 
       <div className="bg-accent/50 rounded-md p-4 mb-8 text-sm text-secondary-foreground">
-        Take a moment with this section. There are no right or wrong answers — just what matters to you. Many people find this section unexpectedly meaningful.
+        {copy.intro}
       </div>
 
       <TextArea
-        label="Healthcare & end-of-life wishes"
+        label={copy.healthcare}
         value={state.wishes.healthcareWishes}
         onChange={(v) => update('healthcareWishes', v)}
-        placeholder="DNR preferences, wishes about life support, ventilators, feeding tubes, or medical treatments you want or want to avoid..."
-        helpText="Even if you have an advance directive, writing your wishes here in plain language helps your family understand your intent"
+        placeholder={copy.healthcarePlaceholder}
+        helpText={copy.healthcareHelp}
       />
 
       <TextArea
-        label="Funeral or memorial preferences"
+        label={copy.funeral}
         value={state.wishes.funeralPreferences}
         onChange={(v) => update('funeralPreferences', v)}
-        placeholder="Burial or cremation? Any specific wishes for a service? Music, readings, location? Do you want a celebration of life, a traditional service, or something else entirely?"
+        placeholder={copy.funeralPlaceholder}
       />
 
       <TextArea
-        label="Organ donation"
+        label={copy.organDonation}
         value={state.wishes.organDonation}
         onChange={(v) => update('organDonation', v)}
-        placeholder="Are you registered as an organ donor? Any specific wishes about organ or tissue donation? e.g., Yes, registered through the DMV. I'm comfortable with any organ donation."
+        placeholder={copy.organDonationPlaceholder}
       />
 
       <TextArea
-        label="Personal messages"
+        label={copy.personalMessages}
         value={state.wishes.personalMessages}
         onChange={(v) => update('personalMessages', v)}
-        placeholder="Is there anything you want specific people to know? This could be as simple as 'Tell my kids I was proud of them' or as detailed as individual letters. Write whatever feels right."
-        helpText="This is entirely optional, but many people find it the most meaningful part"
+        placeholder={copy.personalMessagesPlaceholder}
+        helpText={copy.personalMessagesHelp}
       />
 
       <TextArea
-        label="Values and what matters most"
+        label={copy.values}
         value={state.wishes.valuesStatement}
         onChange={(v) => update('valuesStatement', v)}
-        placeholder="What do you want your family to remember about what mattered to you? What principles guided your life? This is your chance to say it in your own words."
-        helpText="Sometimes called an 'ethical will' — a statement of values rather than valuables"
+        placeholder={copy.valuesPlaceholder}
+        helpText={copy.valuesHelp}
       />
 
       <TextArea
-        label="Anything else"
+        label={copy.anythingElse}
         value={state.wishes.otherWishes}
         onChange={(v) => update('otherWishes', v)}
-        placeholder="Charitable giving wishes, specific instructions, or anything else your family should know about your preferences"
+        placeholder={copy.anythingElsePlaceholder}
       />
     </div>
   )

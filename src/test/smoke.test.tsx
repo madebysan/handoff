@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { I18nProvider } from '../i18n'
 import { InterviewProvider } from '../context/InterviewContext'
 import LandingPage from '../pages/LandingPage'
 import InterviewPage from '../pages/InterviewPage'
@@ -26,9 +27,11 @@ Object.defineProperty(globalThis, 'crypto', {
 function renderWithProviders(ui: React.ReactElement, { route = '/' } = {}) {
   return render(
     <MemoryRouter initialEntries={[route]}>
-      <InterviewProvider>
-        {ui}
-      </InterviewProvider>
+      <I18nProvider>
+        <InterviewProvider>
+          {ui}
+        </InterviewProvider>
+      </I18nProvider>
     </MemoryRouter>
   )
 }
@@ -36,12 +39,14 @@ function renderWithProviders(ui: React.ReactElement, { route = '/' } = {}) {
 function renderInterviewPage({ route = '/interview' } = {}) {
   return render(
     <MemoryRouter initialEntries={[route]}>
-      <InterviewProvider>
-        <Routes>
-          <Route path="/interview" element={<InterviewPage />} />
-          <Route path="/interview/:sectionId" element={<InterviewPage />} />
-        </Routes>
-      </InterviewProvider>
+      <I18nProvider>
+        <InterviewProvider>
+          <Routes>
+            <Route path="/interview" element={<InterviewPage />} />
+            <Route path="/interview/:sectionId" element={<InterviewPage />} />
+          </Routes>
+        </InterviewProvider>
+      </I18nProvider>
     </MemoryRouter>
   )
 }
@@ -54,7 +59,7 @@ beforeEach(() => {
 describe('Landing Page', () => {
   it('renders the hero section', () => {
     renderWithProviders(<LandingPage />)
-    expect(screen.getByText(/Get your life organized/)).toBeInTheDocument()
+    expect(screen.getByText(/One document so your family never has to guess/)).toBeInTheDocument()
     expect(screen.getAllByText('Get Started').length).toBeGreaterThan(0)
   })
 
@@ -84,7 +89,7 @@ describe('Landing Page', () => {
 describe('Interview Page', () => {
   it('renders the about me section by default', () => {
     renderInterviewPage({ route: '/interview' })
-    expect(screen.getAllByText('About You').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('The Basics').length).toBeGreaterThan(0)
     expect(screen.getByText('Continue')).toBeInTheDocument()
   })
 

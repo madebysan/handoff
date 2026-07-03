@@ -1,5 +1,6 @@
 import { useInterview } from '../../hooks/useInterview'
 import { getSection, DOCUMENT_REASONS } from '../../lib/interview-data'
+import { localizeOptions, useI18n } from '../../i18n'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import SelectField from '../interview/fields/SelectField'
@@ -8,7 +9,9 @@ import { Phone } from 'lucide-react'
 
 export default function AboutMeSection() {
   const { state, dispatch } = useInterview()
-  const section = getSection('aboutMe')
+  const { t } = useI18n()
+  const section = getSection('aboutMe', t)
+  const copy = t.forms.aboutMe
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'aboutMe', field, value })
@@ -20,49 +23,49 @@ export default function AboutMeSection() {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <TextField
-          label="Your full name"
+          label={copy.fullName}
           value={state.aboutMe.fullName}
           onChange={(v) => update('fullName', v)}
-          placeholder="As you'd like it on the document"
+          placeholder={copy.fullNamePlaceholder}
         />
         <TextField
-          label="Date of birth"
+          label={copy.dateOfBirth}
           value={state.aboutMe.dateOfBirth}
           onChange={(v) => update('dateOfBirth', v)}
-          placeholder="e.g., March 15, 1982"
+          placeholder={copy.dateOfBirthPlaceholder}
         />
       </div>
 
       <TextField
-        label="Where do you live?"
+        label={copy.location}
         value={state.aboutMe.location}
         onChange={(v) => update('location', v)}
-        placeholder="City, Region — e.g., San Francisco, CA or London, UK"
-        helpText="Optional. Helps with region-specific legal considerations. Leave blank if you'd rather not say."
+        placeholder={copy.locationPlaceholder}
+        helpText={copy.locationHelp}
       />
 
       <SelectField
-        label="Why are you creating this?"
+        label={copy.reason}
         value={state.aboutMe.reason}
         onChange={(v) => update('reason', v)}
-        options={DOCUMENT_REASONS}
-        placeholder="Select a reason..."
+        options={localizeOptions(DOCUMENT_REASONS, t.options.documentReasons)}
+        placeholder={copy.reasonPlaceholder}
       />
 
       <TextField
-        label="Who is this document for?"
+        label={copy.intendedFor}
         value={state.aboutMe.intendedFor}
         onChange={(v) => update('intendedFor', v)}
-        placeholder="e.g., My spouse David, my kids Emma and Jack, my sister Lisa"
-        helpText="The people who will need this information"
+        placeholder={copy.intendedForPlaceholder}
+        helpText={copy.intendedForHelp}
       />
 
       <TextArea
-        label="Anything else you want to say upfront?"
+        label={copy.personalContext}
         value={state.aboutMe.personalContext}
         onChange={(v) => update('personalContext', v)}
-        placeholder="Share why now, what prompted this, or a few words about yourself..."
-        helpText="Optional — this helps give your family context about who you are and why you created this"
+        placeholder={copy.personalContextPlaceholder}
+        helpText={copy.personalContextHelp}
       />
 
       {/* Crisis resources — shown when a sensitive reason is selected */}
@@ -71,7 +74,7 @@ export default function AboutMeSection() {
         <div className="mt-6 flex items-start gap-3 px-4 py-3 rounded-md bg-card border border-input">
           <Phone className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-relaxed">
-            If you or someone you know is in crisis, call or text <strong className="text-foreground">988</strong> (Suicide & Crisis Lifeline) or text <strong className="text-foreground">HOME</strong> to <strong className="text-foreground">741741</strong> (Crisis Text Line). You are not alone.
+            {copy.crisis}
           </p>
         </div>
       )}

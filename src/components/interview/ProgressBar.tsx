@@ -1,8 +1,10 @@
-import { SECTIONS } from '../../lib/interview-data'
+import { getSections } from '../../lib/interview-data'
 import { mockState } from '../../lib/mock-data'
 import { initialState } from '../../context/InterviewContext'
 import { useInterview } from '../../hooks/useInterview'
 import { Link } from 'react-router-dom'
+import { useI18n } from '../../i18n'
+import LanguageSwitcher from '../common/LanguageSwitcher'
 import {
   CircleUser, Users, Landmark, Shield, Home, Monitor, FileText,
   CreditCard, Briefcase, Heart, PenLine, Fingerprint,
@@ -21,8 +23,10 @@ interface ProgressBarProps {
 
 export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBarProps) {
   const { state, dispatch } = useInterview()
-  const currentIndex = SECTIONS.findIndex(s => s.id === currentSectionId)
-  const progress = ((currentIndex + 1) / SECTIONS.length) * 100
+  const { t } = useI18n()
+  const sections = getSections(t)
+  const currentIndex = sections.findIndex(s => s.id === currentSectionId)
+  const progress = ((currentIndex + 1) / sections.length) * 100
 
   const isDemoMode = state.contacts.length > 0 && state.contacts[0].name === 'David Mitchell'
 
@@ -39,15 +43,18 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
       <div className="px-4 py-3 flex items-center justify-between">
         <Link to="/" className="text-sm font-bold text-foreground mr-3">Handoff</Link>
         <span className="text-sm font-medium text-foreground flex-1 truncate">
-          {SECTIONS[currentIndex]?.title}
+          {sections[currentIndex]?.title}
         </span>
+        <div className="ml-2 flex-shrink-0">
+          <LanguageSwitcher compact />
+        </div>
         {import.meta.env.DEV && (
           <button
             onClick={handleToggleDemo}
             className="flex items-center gap-1.5 ml-2 flex-shrink-0"
-            aria-label={isDemoMode ? 'Switch to empty state' : 'Switch to demo data'}
+            aria-label={isDemoMode ? t.interview.switchToEmpty : t.interview.switchToDemo}
           >
-            <span className="text-[10px] text-muted-foreground">{isDemoMode ? 'Demo' : 'Empty'}</span>
+            <span className="text-[10px] text-muted-foreground">{isDemoMode ? t.interview.demo : t.interview.empty}</span>
             <div className={`relative w-7 h-4 rounded-full transition-colors ${isDemoMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}>
               <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${isDemoMode ? 'left-[14px]' : 'left-0.5'}`} />
             </div>
@@ -63,7 +70,7 @@ export default function ProgressBar({ currentSectionId, onNavigate }: ProgressBa
 
       {/* Section icons for quick nav */}
       <div className="px-3 py-2 flex gap-1 overflow-x-auto scrollbar-none">
-        {SECTIONS.map((section, i) => {
+        {sections.map((section, i) => {
           const IconComponent = ICON_MAP[section.icon]
           return (
             <button

@@ -1,9 +1,3 @@
-import { createContext, useReducer, useEffect, useState, useCallback, type ReactNode } from 'react'
-import { loadFromLocalStorage, hasSavedData, hasSecurityWarningBeenShown, markSecurityWarningShown, clearLocalStorage } from '../lib/storage'
-import { useAutoSave } from '../hooks/useAutoSave'
-
-// --- Types ---
-
 export interface Contact {
   id: string
   name: string
@@ -63,7 +57,6 @@ export interface Debt {
 }
 
 export interface InterviewState {
-  // Section A: About You
   aboutMe: {
     fullName: string
     dateOfBirth: string
@@ -72,15 +65,10 @@ export interface InterviewState {
     intendedFor: string
     personalContext: string
   }
-  // Section B: Contacts
   contacts: Contact[]
-  // Section B: Financial
   financialAccounts: FinancialAccount[]
-  // Section C: Insurance
   insurancePolicies: InsurancePolicy[]
-  // Section D: Property
   properties: Property[]
-  // Section E: Digital Life
   digital: {
     deviceAccess: string
     emailAccounts: string
@@ -95,11 +83,8 @@ export interface InterviewState {
     loyaltyPrograms: string
     otherDigital: string
   }
-  // Section F: Legal Documents
   legalDocuments: LegalDocument[]
-  // Section G: Debts
   debts: Debt[]
-  // Section H: Business
   business: {
     hasBusiness: string
     entityType: string
@@ -110,7 +95,6 @@ export interface InterviewState {
     successionPlan: string
     otherBusinessNotes: string
   }
-  // Section I: Dependents
   dependents: {
     minorChildren: string
     guardianshipPreferences: string
@@ -119,7 +103,6 @@ export interface InterviewState {
     specialNeeds: string
     otherCareNotes: string
   }
-  // Section J: Wishes
   wishes: {
     healthcareWishes: string
     funeralPreferences: string
@@ -128,19 +111,15 @@ export interface InterviewState {
     valuesStatement: string
     otherWishes: string
   }
-  // Section K: Verification
   verification: {
     fullName: string
     verificationDate: string
     familyPassphrase: string
     signatureData: string
   }
-  // Meta
   lastSaved: string | null
   currentSection: string
 }
-
-// --- Initial State ---
 
 export function createEmptyContact(): Contact {
   return { id: crypto.randomUUID(), name: '', phone: '', email: '', relationship: '', role: '', notes: '' }
@@ -231,9 +210,7 @@ export const initialState: InterviewState = {
   currentSection: 'aboutMe',
 }
 
-// --- Actions ---
-
-type Action =
+export type Action =
   | { type: 'SET_FIELD'; section: string; field: string; value: string }
   | { type: 'SET_NESTED_FIELD'; section: string; field: string; value: string }
   | { type: 'UPDATE_REPEATABLE_ITEM'; section: string; index: number; field: string; value: string }
@@ -244,9 +221,7 @@ type Action =
   | { type: 'LOAD_STATE'; state: InterviewState }
   | { type: 'RESET_STATE' }
 
-// --- Reducer ---
-
-function interviewReducer(state: InterviewState, action: Action): InterviewState {
+export function interviewReducer(state: InterviewState, action: Action): InterviewState {
   switch (action.type) {
     case 'SET_NESTED_FIELD': {
       const section = action.section as keyof InterviewState
@@ -315,122 +290,4 @@ function interviewReducer(state: InterviewState, action: Action): InterviewState
     default:
       return state
   }
-}
-
-// --- Context ---
-
-interface InterviewContextType {
-  state: InterviewState
-  dispatch: React.Dispatch<Action>
-}
-
-export const InterviewContext = createContext<InterviewContextType>({
-  state: initialState,
-  dispatch: () => {},
-})
-
-export function InterviewProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(interviewReducer, initialState)
-  const [showResume, setShowResume] = useState(false)
-  const [showSecurityWarning, setShowSecurityWarning] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-
-  // Check for saved data on mount
-  useEffect(() => {
-    if (hasSavedData()) {
-      setShowResume(true)
-    }
-    setLoaded(true)
-  }, [])
-
-  // Auto-save
-  useAutoSave(state, dispatch)
-
-  const handleResume = () => {
-    const saved = loadFromLocalStorage()
-    if (saved) {
-      dispatch({ type: 'LOAD_STATE', state: saved })
-      if (!hasSecurityWarningBeenShown()) {
-        setShowSecurityWarning(true)
-      }
-    }
-    setShowResume(false)
-  }
-
-  const [confirmingFresh, setConfirmingFresh] = useState(false)
-
-  const handleStartFresh = useCallback(() => {
-    if (!confirmingFresh) {
-      setConfirmingFresh(true)
-      return
-    }
-    clearLocalStorage()
-    dispatch({ type: 'RESET_STATE' })
-    setShowResume(false)
-    setConfirmingFresh(false)
-  }, [confirmingFresh])
-
-  const handleDismissWarning = () => {
-    markSecurityWarningShown()
-    setShowSecurityWarning(false)
-  }
-
-  if (!loaded) return null
-
-  return (
-    <InterviewContext.Provider value={{ state, dispatch }}>
-      {/* Resume prompt */}
-      {showResume && (
-        <div className="fixed inset-0 z-50 bg-foreground/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
-            <h3 className="text-lg font-bold text-foreground mb-2">Welcome back</h3>
-            <p className="text-secondary-foreground text-sm mb-6">
-              You have a saved session{state.lastSaved ? ` from ${new Date(state.lastSaved).toLocaleDateString()}` : ''}. Would you like to continue where you left off?
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={handleResume}
-                className="flex-1 bg-primary text-primary-foreground px-4 py-2.5 rounded-button font-semibold hover:bg-primary/90 transition-colors"
-              >
-                Continue
-              </button>
-              <button
-                onClick={handleStartFresh}
-                className={`flex-1 px-4 py-2.5 rounded-button font-medium transition-colors ${
-                  confirmingFresh
-                    ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
-                    : 'border border-border text-secondary-foreground hover:bg-secondary'
-                }`}
-              >
-                {confirmingFresh ? 'Delete and start over?' : 'Start fresh'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Security warning */}
-      {showSecurityWarning && (
-        <div className="fixed inset-0 z-50 bg-foreground/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
-            <h3 className="text-lg font-bold text-foreground mb-2">A note about privacy</h3>
-            <p className="text-secondary-foreground text-sm mb-4">
-              Your responses are saved locally in this browser only. They are not encrypted and could be read by anyone with access to this device.
-            </p>
-            <p className="text-secondary-foreground text-sm mb-6">
-              When you're done, you can clear your data from the sidebar. Nothing is ever sent to any server.
-            </p>
-            <button
-              onClick={handleDismissWarning}
-              className="w-full bg-primary text-primary-foreground px-4 py-2.5 rounded-button font-semibold hover:bg-primary/90 transition-colors"
-            >
-              Got it
-            </button>
-          </div>
-        </div>
-      )}
-
-      {children}
-    </InterviewContext.Provider>
-  )
 }

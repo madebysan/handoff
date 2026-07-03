@@ -27,6 +27,8 @@ dist-ssr
 
 # Test artifacts
 test-results/
+playwright-report/
+blob-report/
 .vercel
 
 # Local dev artifacts
@@ -34,3 +36,4 @@ checkpoint.json
 plan.md
 BUILD_REPORT.md
 BUILD_PROMPT.md
+docs/localization/review-pack/

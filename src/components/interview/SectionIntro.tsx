@@ -3,6 +3,7 @@ import {
   CreditCard, Briefcase, Heart, PenLine, Fingerprint,
   type LucideIcon,
 } from 'lucide-react'
+import { useI18n } from '../../i18n'
 
 // Same icon map used in ProgressSidebar
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -20,6 +21,7 @@ interface SectionIntroProps {
 
 export default function SectionIntro({ title, letter, intro, scenario, icon }: SectionIntroProps) {
   const IconComponent = icon ? ICON_MAP[icon] : null
+  const { t } = useI18n()
 
   return (
     <div className="mb-10">
@@ -33,7 +35,7 @@ export default function SectionIntro({ title, letter, intro, scenario, icon }: S
       <div className="bg-accent rounded-md p-4 border-l-4 border-primary flex gap-3">
         <span className="text-primary text-lg leading-none mt-0.5">&#8220;</span>
         <p className="text-sm text-accent-foreground leading-relaxed">
-          <span className="font-medium">Why this matters: </span>
+          <span className="font-medium">{t.interview.whyThisMatters} </span>
           {scenario}
         </p>
       </div>

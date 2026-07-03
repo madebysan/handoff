@@ -1,5 +1,6 @@
 import { useInterview } from '../../hooks/useInterview'
 import { getSection } from '../../lib/interview-data'
+import { useI18n } from '../../i18n'
 import SectionIntro from '../interview/SectionIntro'
 import TextField from '../interview/fields/TextField'
 import RadioGroup from '../interview/fields/RadioGroup'
@@ -7,7 +8,13 @@ import TextArea from '../interview/fields/TextArea'
 
 export default function BusinessSection() {
   const { state, dispatch } = useInterview()
-  const section = getSection('business')
+  const { t } = useI18n()
+  const section = getSection('business', t)
+  const copy = t.forms.business
+  const yesNoOptions = [
+    { value: 'Yes', label: t.common.yes },
+    { value: 'No', label: t.common.no },
+  ]
 
   const update = (field: string, value: string) => {
     dispatch({ type: 'SET_NESTED_FIELD', section: 'business', field, value })
@@ -18,64 +25,64 @@ export default function BusinessSection() {
       <SectionIntro {...section} />
 
       <RadioGroup
-        label="Do you own a business, freelance, or have partnership interests?"
+        label={copy.ownsBusiness}
         value={state.business.hasBusiness}
         onChange={(v) => update('hasBusiness', v)}
-        options={['Yes', 'No']}
+        options={yesNoOptions}
       />
 
       {state.business.hasBusiness === 'Yes' && (
         <div className="mt-6 space-y-1 animate-fade-in">
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField
-              label="Business name"
+              label={copy.businessName}
               value={state.business.businessName}
               onChange={(v) => update('businessName', v)}
-              placeholder="Your business name"
+              placeholder={copy.businessNamePlaceholder}
             />
             <TextField
-              label="Entity type"
+              label={copy.entityType}
               value={state.business.entityType}
               onChange={(v) => update('entityType', v)}
-              placeholder="e.g., LLC, S-Corp, sole proprietor"
+              placeholder={copy.entityTypePlaceholder}
             />
           </div>
           <TextArea
-            label="Key contacts"
+            label={copy.keyContacts}
             value={state.business.keyContacts}
             onChange={(v) => update('keyContacts', v)}
-            placeholder="Business partner, accountant, attorney — names and contact info for anyone involved in running the business"
+            placeholder={copy.keyContactsPlaceholder}
           />
           <TextField
-            label="Where is the operating agreement?"
+            label={copy.operatingAgreement}
             value={state.business.operatingAgreementLocation}
             onChange={(v) => update('operatingAgreementLocation', v)}
-            placeholder="e.g., Attorney's office, Google Drive, filing cabinet"
+            placeholder={copy.operatingAgreementPlaceholder}
           />
           <TextArea
-            label="Business bank account access"
+            label={copy.bankAccess}
             value={state.business.bankAccountAccess}
             onChange={(v) => update('bankAccountAccess', v)}
-            placeholder="How can your family or business partner access business bank accounts?"
+            placeholder={copy.bankAccessPlaceholder}
           />
           <TextArea
-            label="Succession or wind-down plan"
+            label={copy.successionPlan}
             value={state.business.successionPlan}
             onChange={(v) => update('successionPlan', v)}
-            placeholder="What should happen to the business? Who takes over? Should it be sold, wound down, or continued?"
+            placeholder={copy.successionPlanPlaceholder}
           />
           <TextArea
-            label="Other business notes"
+            label={copy.otherNotes}
             value={state.business.otherBusinessNotes}
             onChange={(v) => update('otherBusinessNotes', v)}
-            placeholder="Anything else about your business your family should know"
+            placeholder={copy.otherNotesPlaceholder}
           />
         </div>
       )}
 
       {state.business.hasBusiness === 'No' && (
         <p className="mt-4 text-sm text-muted-foreground">
-          No worries — you can skip this section entirely or come back if anything changes.
+          {copy.noBusiness}
         </p>
       )}
     </div>

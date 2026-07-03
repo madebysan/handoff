@@ -1,5 +1,6 @@
 import type { InterviewState } from '../context/InterviewContext'
-import { SECTIONS, getSection } from './interview-data'
+import { getSection, getSections } from './interview-data'
+import { translations, type Translation } from '../i18n/translations'
 
 const COLORS = {
   charcoal: [28, 25, 23] as [number, number, number],
@@ -15,7 +16,20 @@ const COLORS = {
   warmGray: [232, 229, 217] as [number, number, number],
 }
 
-export async function generatePDF(state: InterviewState) {
+function translateStoredValue(value: string, t: Translation): string {
+  const optionGroups = Object.values(t.options) as Record<string, string>[]
+  const optionLabel = optionGroups.find(group => group[value])?.[value]
+  if (optionLabel) return optionLabel
+  if (value === 'Yes') return t.common.yes
+  if (value === 'No') return t.common.no
+  if (value === 'Not sure') return t.common.notSure
+  return value
+}
+
+export async function generatePDF(
+  state: InterviewState,
+  t: Translation = translations.en,
+) {
   const { default: jsPDF } = await import('jspdf')
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const pageWidth = doc.internal.pageSize.getWidth()
@@ -24,8 +38,10 @@ export async function generatePDF(state: InterviewState) {
   const contentWidth = pageWidth - margin * 2
   let y = 0
   let pageNum = 0
+  const labels = t.document.labels
+  const sections = getSections(t)
 
-  const timestamp = new Date().toLocaleDateString('en-US', {
+  const timestamp = new Date().toLocaleDateString(t.document.dateLocale, {
     year: 'numeric', month: 'long', day: 'numeric',
   })
 
@@ -274,7 +290,7 @@ export async function generatePDF(state: InterviewState) {
   doc.setTextColor(...COLORS.charcoal)
   doc.text('Handoff', pageWidth / 2, y, { align: 'center' })
   y += 14
-  doc.text('Document', pageWidth / 2, y, { align: 'center' })
+  doc.text(t.document.coverDocument, pageWidth / 2, y, { align: 'center' })
 
   y += 15
   doc.setDrawColor(...COLORS.sage)
@@ -292,13 +308,10 @@ export async function generatePDF(state: InterviewState) {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(9)
   doc.setTextColor(...COLORS.charcoalMuted)
-  doc.text('CONTENTS', pageWidth / 2, y, { align: 'center' })
+  doc.text(t.document.contents, pageWidth / 2, y, { align: 'center' })
   y += 10
 
-  const tocSections = SECTIONS.filter((_, i) => {
-    // Check if section has data
-    return sectionHasData(state, SECTIONS[i].id)
-  })
+  const tocSections = sections.filter(section => sectionHasData(state, section.id))
 
   const tocMaxY = pageHeight - 55 // stop before disclaimer
   tocSections.forEach(section => {
@@ -320,14 +333,14 @@ export async function generatePDF(state: InterviewState) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7.5)
   doc.setTextColor(...COLORS.charcoalMuted)
-  const disclaimer = 'This is not a legal document. It is a practical guide intended to help your family locate important information and understand your wishes. Consult an attorney for legal estate planning.'
+  const disclaimer = t.document.disclaimer
   const disclaimerLines = doc.splitTextToSize(disclaimer, contentWidth - 40)
   doc.text(disclaimerLines, pageWidth / 2, y + 8, { align: 'center' })
 
   // Cover footer
   doc.setFontSize(7)
   doc.setTextColor(...COLORS.charcoalMuted)
-  doc.text('Generated with Handoff', pageWidth / 2, pageHeight - 12, { align: 'center' })
+  doc.text(t.document.coverFooter, pageWidth / 2, pageHeight - 12, { align: 'center' })
 
   // ─── Emergency Quick-Reference Page ────────────────────────
 
@@ -352,14 +365,14 @@ export async function generatePDF(state: InterviewState) {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(13)
     doc.setTextColor(...COLORS.white)
-    doc.text('In Case of Emergency', margin + 6, y + 8.8)
+    doc.text(t.document.emergencyTitle, margin + 6, y + 8.8)
     y += 20
 
     // Subtitle
     doc.setFont('helvetica', 'italic')
     doc.setFontSize(9.5)
     doc.setTextColor(...COLORS.charcoalMuted)
-    doc.text('The most important information at a glance', margin + 2, y)
+    doc.text(t.document.emergencySubtitle, margin + 2, y)
     y += 10
 
     // 1. Who to call first
@@ -368,13 +381,13 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(10)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text('Who to call first', margin + 2, y)
+      doc.text(t.document.whoToCall, margin + 2, y)
       y += 5
 
       emergencyContacts.forEach(c => {
         const fields: { label: string; value: string }[] = [
-          { label: 'Role', value: c.role },
-          { label: 'Phone', value: c.phone },
+          { label: labels.role, value: translateStoredValue(c.role, t) },
+          { label: labels.phone, value: c.phone },
         ]
         const cardH = 10 + measureFields(fields, iceInnerWidth)
         checkPageBreak(cardH + 4)
@@ -398,10 +411,10 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(10)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text('Where the will is', margin + 2, y)
+      doc.text(t.document.whereWill, margin + 2, y)
       y += 5
 
-      const fields = [{ label: 'Location', value: willDoc.location }]
+      const fields = [{ label: labels.location, value: willDoc.location }]
       const cardH = 8 + measureFields(fields, iceInnerWidth)
       checkPageBreak(cardH + 4)
       const cardY = y
@@ -417,15 +430,15 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(10)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text('Primary bank access', margin + 2, y)
+      doc.text(t.document.primaryBank, margin + 2, y)
       y += 5
 
       const fields: { label: string; value: string }[] = [
-        { label: 'Institution', value: primaryAccount.institution },
-        { label: 'Type', value: primaryAccount.accountType },
+        { label: labels.institution, value: primaryAccount.institution },
+        { label: labels.type, value: translateStoredValue(primaryAccount.accountType, t) },
       ]
       if (primaryAccount.accessNotes?.trim()) {
-        fields.push({ label: 'Access notes', value: primaryAccount.accessNotes })
+        fields.push({ label: labels.howToAccess, value: primaryAccount.accessNotes })
       }
       const cardH = 8 + measureFields(fields, iceInnerWidth)
       checkPageBreak(cardH + 4)
@@ -442,12 +455,12 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(10)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text('Insurance', margin + 2, y)
+      doc.text(getSection('insurance', t).title, margin + 2, y)
       y += 5
 
       const fields = [
-        { label: 'Carrier', value: primaryPolicy.carrier },
-        { label: 'Type', value: primaryPolicy.insuranceType },
+        { label: labels.carrier, value: primaryPolicy.carrier },
+        { label: labels.type, value: translateStoredValue(primaryPolicy.insuranceType, t) },
       ]
       const cardH = 8 + measureFields(fields, iceInnerWidth)
       checkPageBreak(cardH + 4)
@@ -463,10 +476,10 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(10)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text('Family passphrase / Personal proof', margin + 2, y)
+      doc.text(t.document.familyPassphrase, margin + 2, y)
       y += 5
 
-      const fields = [{ label: 'Passphrase', value: state.verification.familyPassphrase }]
+      const fields = [{ label: labels.passphrase, value: state.verification.familyPassphrase }]
       const cardH = 8 + measureFields(fields, iceInnerWidth)
       checkPageBreak(cardH + 4)
       const cardY = y
@@ -481,7 +494,7 @@ export async function generatePDF(state: InterviewState) {
     doc.setFont('helvetica', 'italic')
     doc.setFontSize(8)
     doc.setTextColor(...COLORS.charcoalMuted)
-    doc.text('See the full document for complete details.', pageWidth / 2, y + 4, { align: 'center' })
+    doc.text(t.document.seeFullDocument, pageWidth / 2, y + 4, { align: 'center' })
   }
 
   // ─── Content Pages ─────────────────────────────────────────
@@ -489,16 +502,17 @@ export async function generatePDF(state: InterviewState) {
   // Section A: About You
   const hasAboutMe = state.aboutMe?.fullName?.trim() || state.aboutMe?.reason?.trim() || state.aboutMe?.personalContext?.trim()
   if (hasAboutMe) {
+    const section = getSection('aboutMe', t)
     newPage()
-    addSectionHeader(getSection('aboutMe').letter, getSection('aboutMe').title)
+    addSectionHeader(section.letter, section.title)
 
     const aboutFields: { label: string; value: string }[] = []
-    if (state.aboutMe.fullName?.trim()) aboutFields.push({ label: 'Full Name', value: state.aboutMe.fullName })
-    if (state.aboutMe.dateOfBirth?.trim()) aboutFields.push({ label: 'Date of Birth', value: state.aboutMe.dateOfBirth })
-    if (state.aboutMe.location?.trim()) aboutFields.push({ label: 'Location', value: state.aboutMe.location })
-    if (state.aboutMe.reason?.trim()) aboutFields.push({ label: 'Reason for Creating This', value: state.aboutMe.reason })
-    if (state.aboutMe.intendedFor?.trim()) aboutFields.push({ label: 'Intended For', value: state.aboutMe.intendedFor })
-    if (state.aboutMe.personalContext?.trim()) aboutFields.push({ label: 'Personal Context', value: state.aboutMe.personalContext })
+    if (state.aboutMe.fullName?.trim()) aboutFields.push({ label: labels.fullName, value: state.aboutMe.fullName })
+    if (state.aboutMe.dateOfBirth?.trim()) aboutFields.push({ label: labels.dateOfBirth, value: state.aboutMe.dateOfBirth })
+    if (state.aboutMe.location?.trim()) aboutFields.push({ label: labels.location, value: state.aboutMe.location })
+    if (state.aboutMe.reason?.trim()) aboutFields.push({ label: labels.reason, value: translateStoredValue(state.aboutMe.reason, t) })
+    if (state.aboutMe.intendedFor?.trim()) aboutFields.push({ label: labels.intendedFor, value: state.aboutMe.intendedFor })
+    if (state.aboutMe.personalContext?.trim()) aboutFields.push({ label: labels.personalContext, value: state.aboutMe.personalContext })
 
     addCard('', aboutFields)
   }
@@ -506,17 +520,18 @@ export async function generatePDF(state: InterviewState) {
   // Section B: Contacts
   const filledContacts = state.contacts.filter(c => c.name.trim())
   if (filledContacts.length > 0) {
+    const section = getSection('contacts', t)
     newPage()
-    addSectionHeader(getSection('contacts').letter, getSection('contacts').title)
+    addSectionHeader(section.letter, section.title)
 
     const contactCards = filledContacts.map(c => ({
       title: c.name,
       fields: [
-        { label: 'Role', value: c.role },
-        { label: 'Relationship', value: c.relationship },
-        { label: 'Phone', value: c.phone },
-        { label: 'Email', value: c.email },
-        { label: 'Notes', value: c.notes },
+        { label: labels.role, value: translateStoredValue(c.role, t) },
+        { label: labels.relationship, value: c.relationship },
+        { label: labels.phone, value: c.phone },
+        { label: labels.email, value: c.email },
+        { label: labels.notes, value: c.notes },
       ],
     }))
 
@@ -530,8 +545,9 @@ export async function generatePDF(state: InterviewState) {
   // Section C: Financial Accounts
   const filledAccounts = state.financialAccounts.filter(a => a.institution.trim())
   if (filledAccounts.length > 0) {
+    const section = getSection('financial', t)
     newPage()
-    addSectionHeader(getSection('financial').letter, getSection('financial').title)
+    addSectionHeader(section.letter, section.title)
 
     // Summary table
     checkPageBreak(10 + filledAccounts.length * 7)
@@ -545,10 +561,10 @@ export async function generatePDF(state: InterviewState) {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(7.5)
     doc.setTextColor(...COLORS.sageDark)
-    doc.text('INSTITUTION', cols[0] + 3, tableY + 5)
-    doc.text('TYPE', cols[1] + 3, tableY + 5)
-    doc.text('VALUE', cols[2] + 3, tableY + 5)
-    doc.text('BENEFICIARY', cols[3] + 3, tableY + 5)
+    doc.text(labels.institution.toUpperCase(), cols[0] + 3, tableY + 5)
+    doc.text(labels.type.toUpperCase(), cols[1] + 3, tableY + 5)
+    doc.text(labels.value.toUpperCase(), cols[2] + 3, tableY + 5)
+    doc.text(labels.beneficiary.toUpperCase(), cols[3] + 3, tableY + 5)
     y = tableY + 7
 
     // Table rows
@@ -562,13 +578,13 @@ export async function generatePDF(state: InterviewState) {
       doc.setFontSize(8.5)
       doc.setTextColor(...COLORS.charcoal)
       doc.text(truncate(a.institution, 25), cols[0] + 3, y + 5)
-      doc.text(truncate(a.accountType, 15), cols[1] + 3, y + 5)
+      doc.text(truncate(translateStoredValue(a.accountType, t), 15), cols[1] + 3, y + 5)
       doc.setFont('helvetica', 'bold')
       doc.text(a.approxValue || '—', cols[2] + 3, y + 5)
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8)
       doc.setTextColor(...COLORS.charcoalLight)
-      doc.text(truncate(a.hasBeneficiary, 30), cols[3] + 3, y + 5)
+      doc.text(truncate(translateStoredValue(a.hasBeneficiary, t), 30), cols[3] + 3, y + 5)
       y += 7
     })
     y += 6
@@ -579,12 +595,12 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(9)
       doc.setTextColor(...COLORS.charcoalMuted)
-      doc.text('ACCESS DETAILS', margin + 2, y)
+      doc.text(t.document.accessDetails, margin + 2, y)
       y += 6
 
       accountsWithNotes.forEach(a => {
-        addCard(`${a.institution} — ${a.accountType}`, [
-          { label: 'How to access', value: a.accessNotes },
+        addCard(`${a.institution} - ${translateStoredValue(a.accountType, t)}`, [
+          { label: labels.howToAccess, value: a.accessNotes },
         ])
       })
     }
@@ -593,16 +609,17 @@ export async function generatePDF(state: InterviewState) {
   // Section D: Insurance
   const filledPolicies = state.insurancePolicies.filter(p => p.carrier.trim())
   if (filledPolicies.length > 0) {
+    const section = getSection('insurance', t)
     newPage()
-    addSectionHeader(getSection('insurance').letter, getSection('insurance').title)
+    addSectionHeader(section.letter, section.title)
 
     filledPolicies.forEach(p => {
-      addCard(`${p.carrier}${p.insuranceType ? ` — ${p.insuranceType}` : ''}`, [
-        { label: 'Policy number / location', value: p.policyNumberLocation },
-        { label: 'Agent contact', value: p.agentContact },
-        { label: 'Through employer', value: p.isEmployerProvided },
-        { label: 'Employer/HR contact', value: p.employerContact },
-        { label: 'Notes', value: p.notes },
+      addCard(`${p.carrier}${p.insuranceType ? ` - ${translateStoredValue(p.insuranceType, t)}` : ''}`, [
+        { label: labels.policyNumberShort, value: p.policyNumberLocation },
+        { label: labels.agentContact, value: p.agentContact },
+        { label: labels.throughEmployer, value: translateStoredValue(p.isEmployerProvided, t) },
+        { label: labels.employerContact, value: p.employerContact },
+        { label: labels.notes, value: p.notes },
       ])
     })
   }
@@ -610,36 +627,38 @@ export async function generatePDF(state: InterviewState) {
   // Section E: Property
   const filledProperties = state.properties.filter(p => p.propertyType.trim() || p.description.trim())
   if (filledProperties.length > 0) {
+    const section = getSection('property', t)
     newPage()
-    addSectionHeader(getSection('property').letter, getSection('property').title)
+    addSectionHeader(section.letter, section.title)
 
     filledProperties.forEach(p => {
-      addCard(p.description || p.propertyType, [
-        ...(p.propertyType && p.description ? [{ label: 'Type', value: p.propertyType }] : []),
-        { label: 'Location', value: p.location },
-        { label: 'Deed / title location', value: p.deedTitleLocation },
-        { label: 'Mortgage / lien', value: p.hasMortgage },
-        { label: 'Notes', value: p.notes },
+      addCard(p.description || translateStoredValue(p.propertyType, t), [
+        ...(p.propertyType && p.description ? [{ label: labels.type, value: translateStoredValue(p.propertyType, t) }] : []),
+        { label: labels.location, value: p.location },
+        { label: labels.deedTitleShort, value: p.deedTitleLocation },
+        { label: labels.mortgageLien, value: translateStoredValue(p.hasMortgage, t) },
+        { label: labels.notes, value: p.notes },
       ])
     })
   }
 
   // Section F: Digital Life
   const digitalEntries = [
-    { key: 'emailAccounts', label: 'Email Accounts' },
-    { key: 'passwordManager', label: 'Password Manager' },
-    { key: 'twoFactorAuth', label: 'Two-Factor Authentication' },
-    { key: 'socialMediaWishes', label: 'Social Media' },
-    { key: 'cloudStorage', label: 'Cloud Storage' },
-    { key: 'subscriptions', label: 'Subscriptions & Recurring Payments' },
-    { key: 'domainNames', label: 'Domain Names & Websites' },
-    { key: 'digitalPurchases', label: 'Digital Purchases & Loyalty Programs' },
-    { key: 'otherDigital', label: 'Other' },
+    { key: 'emailAccounts', label: labels.emailAccounts },
+    { key: 'passwordManager', label: labels.passwordManager },
+    { key: 'twoFactorAuth', label: labels.twoFactorAuth },
+    { key: 'socialMediaWishes', label: labels.socialMedia },
+    { key: 'cloudStorage', label: labels.cloudStorage },
+    { key: 'subscriptions', label: labels.subscriptions },
+    { key: 'domainNames', label: labels.domains },
+    { key: 'digitalPurchases', label: labels.digitalPurchases },
+    { key: 'otherDigital', label: labels.otherDigital },
   ]
   const hasDigital = digitalEntries.some(e => (state.digital as Record<string, string>)[e.key]?.trim())
   if (hasDigital) {
+    const section = getSection('digital', t)
     newPage()
-    addSectionHeader(getSection('digital').letter, getSection('digital').title)
+    addSectionHeader(section.letter, section.title)
     digitalEntries.forEach(e => {
       const val = (state.digital as Record<string, string>)[e.key]
       if (val?.trim()) {
@@ -651,8 +670,9 @@ export async function generatePDF(state: InterviewState) {
   // Section G: Legal Documents
   const filledDocs = state.legalDocuments.filter(d => d.documentType.trim())
   if (filledDocs.length > 0) {
+    const section = getSection('legal', t)
     newPage()
-    addSectionHeader(getSection('legal').letter, getSection('legal').title)
+    addSectionHeader(section.letter, section.title)
 
     // Summary table
     checkPageBreak(10 + filledDocs.length * 7)
@@ -665,9 +685,9 @@ export async function generatePDF(state: InterviewState) {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(7.5)
     doc.setTextColor(...COLORS.sageDark)
-    doc.text('DOCUMENT', colX[0] + 3, tableY + 5)
-    doc.text('LOCATION', colX[1] + 3, tableY + 5)
-    doc.text('LAST UPDATED', colX[2] + 3, tableY + 5)
+    doc.text(labels.document.toUpperCase(), colX[0] + 3, tableY + 5)
+    doc.text(labels.location.toUpperCase(), colX[1] + 3, tableY + 5)
+    doc.text(labels.lastUpdated.toUpperCase(), colX[2] + 3, tableY + 5)
     y = tableY + 7
 
     filledDocs.forEach((d, i) => {
@@ -679,7 +699,7 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(8.5)
       doc.setTextColor(...COLORS.charcoal)
-      doc.text(truncate(d.documentType, 28), colX[0] + 3, y + 5)
+      doc.text(truncate(translateStoredValue(d.documentType, t), 28), colX[0] + 3, y + 5)
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8)
       doc.setTextColor(...COLORS.charcoalLight)
@@ -693,8 +713,8 @@ export async function generatePDF(state: InterviewState) {
     const docsWithNotes = filledDocs.filter(d => d.notes?.trim())
     if (docsWithNotes.length > 0) {
       docsWithNotes.forEach(d => {
-        addCard(d.documentType, [
-          { label: 'Notes', value: d.notes },
+        addCard(translateStoredValue(d.documentType, t), [
+          { label: labels.notes, value: d.notes },
         ])
       })
     }
@@ -703,16 +723,17 @@ export async function generatePDF(state: InterviewState) {
   // Section H: Debts
   const filledDebts = state.debts.filter(d => d.lender.trim())
   if (filledDebts.length > 0) {
+    const section = getSection('debts', t)
     newPage()
-    addSectionHeader(getSection('debts').letter, getSection('debts').title)
+    addSectionHeader(section.letter, section.title)
 
     filledDebts.forEach(d => {
       const isOwedToMe = d.direction === 'Owed to me'
-      const dirLabel = isOwedToMe ? ' (owed to me)' : ''
-      addCard(`${d.lender}${d.debtType ? ` — ${d.debtType}` : ''}${dirLabel}`, [
-        { label: 'Approximate balance', value: d.approxBalance },
-        ...(!isOwedToMe ? [{ label: 'Co-signed', value: d.isCosigned }] : []),
-        { label: isOwedToMe ? 'Details' : 'Payoff notes', value: d.payoffNotes },
+      const dirLabel = isOwedToMe ? ` (${t.document.owedToMe})` : ''
+      addCard(`${d.lender}${d.debtType ? ` - ${translateStoredValue(d.debtType, t)}` : ''}${dirLabel}`, [
+        { label: labels.approximateBalance, value: d.approxBalance },
+        ...(!isOwedToMe ? [{ label: labels.cosigned, value: translateStoredValue(d.isCosigned, t) }] : []),
+        { label: isOwedToMe ? labels.details : labels.payoffNotes, value: d.payoffNotes },
       ])
     })
   }
@@ -720,20 +741,21 @@ export async function generatePDF(state: InterviewState) {
   // Section I: Business
   if (state.business.hasBusiness === 'Yes') {
     const bizEntries = [
-      { key: 'keyContacts', label: 'Key Contacts' },
-      { key: 'operatingAgreementLocation', label: 'Operating Agreement Location' },
-      { key: 'bankAccountAccess', label: 'Bank Account Access' },
-      { key: 'successionPlan', label: 'Succession Plan' },
-      { key: 'otherBusinessNotes', label: 'Other Notes' },
+      { key: 'keyContacts', label: labels.keyContacts },
+      { key: 'operatingAgreementLocation', label: labels.operatingAgreement },
+      { key: 'bankAccountAccess', label: labels.bankAccess },
+      { key: 'successionPlan', label: labels.successionPlan },
+      { key: 'otherBusinessNotes', label: labels.otherBusinessNotes },
     ]
     const hasBizData = bizEntries.some(e => (state.business as Record<string, string>)[e.key]?.trim())
     if (hasBizData) {
+      const section = getSection('business', t)
       newPage()
-      addSectionHeader(getSection('business').letter, getSection('business').title)
+      addSectionHeader(section.letter, section.title)
 
       // Business name + entity as a header card
-      addCard(state.business.businessName || 'Business', [
-        { label: 'Entity type', value: state.business.entityType },
+      addCard(state.business.businessName || t.document.businessFallback, [
+        { label: labels.entityType, value: state.business.entityType },
         ...bizEntries.map(e => ({
           label: e.label,
           value: (state.business as Record<string, string>)[e.key],
@@ -744,17 +766,18 @@ export async function generatePDF(state: InterviewState) {
 
   // Section J: Dependents
   const depEntries = [
-    { key: 'minorChildren', label: 'Minor Children' },
-    { key: 'guardianshipPreferences', label: 'Guardianship Preferences' },
-    { key: 'elderlyDependents', label: 'Elderly Dependents' },
-    { key: 'pets', label: 'Pets' },
-    { key: 'specialNeeds', label: 'Special Needs' },
-    { key: 'otherCareNotes', label: 'Other Care Notes' },
+    { key: 'minorChildren', label: labels.minorChildren },
+    { key: 'guardianshipPreferences', label: labels.guardianship },
+    { key: 'elderlyDependents', label: labels.elderlyDependents },
+    { key: 'pets', label: labels.pets },
+    { key: 'specialNeeds', label: labels.specialNeeds },
+    { key: 'otherCareNotes', label: labels.otherCareNotes },
   ]
   const hasDepData = depEntries.some(e => (state.dependents as Record<string, string>)[e.key]?.trim())
   if (hasDepData) {
+    const section = getSection('dependents', t)
     newPage()
-    addSectionHeader(getSection('dependents').letter, getSection('dependents').title)
+    addSectionHeader(section.letter, section.title)
     depEntries.forEach(e => {
       const val = (state.dependents as Record<string, string>)[e.key]
       if (val?.trim()) {
@@ -765,17 +788,18 @@ export async function generatePDF(state: InterviewState) {
 
   // Section K: Wishes
   const wishEntries = [
-    { key: 'healthcareWishes', label: 'Healthcare & End-of-Life Wishes' },
-    { key: 'funeralPreferences', label: 'Funeral or Memorial Preferences' },
-    { key: 'organDonation', label: 'Organ Donation' },
-    { key: 'personalMessages', label: 'Personal Messages' },
-    { key: 'valuesStatement', label: 'Values & What Matters Most' },
-    { key: 'otherWishes', label: 'Other Wishes' },
+    { key: 'healthcareWishes', label: labels.healthcareWishes },
+    { key: 'funeralPreferences', label: labels.funeralPreferences },
+    { key: 'organDonation', label: labels.organDonation },
+    { key: 'personalMessages', label: labels.personalMessages },
+    { key: 'valuesStatement', label: labels.valuesStatement },
+    { key: 'otherWishes', label: labels.otherWishes },
   ]
   const hasWishData = wishEntries.some(e => (state.wishes as Record<string, string>)[e.key]?.trim())
   if (hasWishData) {
+    const section = getSection('wishes', t)
     newPage()
-    addSectionHeader(getSection('wishes').letter, getSection('wishes').title)
+    addSectionHeader(section.letter, section.title)
     wishEntries.forEach(e => {
       const val = (state.wishes as Record<string, string>)[e.key]
       if (val?.trim()) {
@@ -786,14 +810,15 @@ export async function generatePDF(state: InterviewState) {
 
   // Section L: Verification
   if (state.verification?.fullName?.trim() || state.verification?.familyPassphrase?.trim()) {
+    const section = getSection('verification', t)
     newPage()
-    addSectionHeader(getSection('verification').letter, getSection('verification').title)
+    addSectionHeader(section.letter, section.title)
 
     // Verification statement card
     doc.setFont('helvetica', 'italic')
     doc.setFontSize(9)
     const statementLines = doc.splitTextToSize(
-      'I confirm that I created this document voluntarily, that the information is accurate to the best of my knowledge, and that it reflects my current wishes.',
+      t.document.verificationStatement,
       contentWidth - 10
     )
     const statementBoxH = statementLines.length * 4.5 + 10
@@ -805,8 +830,8 @@ export async function generatePDF(state: InterviewState) {
     y += statementBoxH + 4
 
     // Name and date
-    if (state.verification.fullName) addField('Signed by', state.verification.fullName)
-    if (state.verification.verificationDate) addField('Date', state.verification.verificationDate)
+    if (state.verification.fullName) addField(labels.signedBy, state.verification.fullName)
+    if (state.verification.verificationDate) addField(labels.date, state.verification.verificationDate)
 
     // Signature
     if (state.verification.signatureData) {
@@ -814,7 +839,7 @@ export async function generatePDF(state: InterviewState) {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(8)
       doc.setTextColor(...COLORS.charcoalMuted)
-      doc.text('SIGNATURE', margin + 2, y)
+      doc.text(t.document.signature, margin + 2, y)
       y += 4
 
       if (state.verification.signatureData.startsWith('typed:')) {
@@ -847,7 +872,7 @@ export async function generatePDF(state: InterviewState) {
 
     // Family passphrase
     if (state.verification.familyPassphrase?.trim()) {
-      addField('Personal Proof', state.verification.familyPassphrase)
+      addField(labels.personalProof, state.verification.familyPassphrase)
     }
   }
 
