@@ -1,0 +1,42 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+.env
+.env.*
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test artifacts
+test-results/
+playwright-report/
+blob-report/
+.vercel
+
+# Local dev artifacts
+checkpoint.json
+plan.md
+BUILD_REPORT.md
+BUILD_PROMPT.md
+docs/localization/review-pack/
+
+# Local QA screenshots (src/test/visual-qa.ts writes them here)
+screenshots/

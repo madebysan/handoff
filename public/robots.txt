@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /interview
+Disallow: /review
+Disallow: /export
+
+Sitemap: https://handoff.santiagoalonso.com/sitemap.xml
