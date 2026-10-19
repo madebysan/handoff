@@ -33,9 +33,6 @@ blob-report/
 
 # Local dev artifacts
 checkpoint.json
-plan.md
-BUILD_REPORT.md
-BUILD_PROMPT.md
 docs/localization/review-pack/
 
 # Local QA screenshots (src/test/visual-qa.ts writes them here)
